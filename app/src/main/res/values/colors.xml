@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  下图为设计的颜色  -->
+    <!--  主题 accent  -->
+    <color name="accent_default">@color/PrimaryBlue_03</color>
+    <color name="accent_hover">@color/PrimaryBlue_02</color>
+    <color name="accent_press">@color/PrimaryBlue_01</color>
+    <color name="accent_disabled">@color/PrimaryBlue_06</color>
+    <!--  主题背景 accent background  -->
+    <color name="accent_bg_default">@color/PrimaryBlue_07</color>
+    <color name="accent_bg_hover">@color/PrimaryBlue_06</color>
+    <color name="accent_bg_press">@color/PrimaryBlue_05</color>
+
+    <!--  警示 critical  -->
+    <color name="critical_default">@color/Red_03</color>
+    <color name="critical_hover">@color/Red_02</color>
+    <color name="critical_press">@color/Red_01</color>
+    <color name="critical_disabled">@color/Red_06</color>
+    <!--  警示背景 critical background  -->
+    <color name="critical_bg_default">@color/Red_07</color>
+    <color name="critical_bg_hover">@color/Red_06</color>
+    <color name="critical_bg_press">@color/Red_05</color>
+
+    <color name="success_default">@color/Green_04</color>
+    <color name="notic_default">@color/Yellow_03</color>
+
+    <color name="text_ultrastrong">#E0000000</color><!--  一级主文本  -->
+    <color name="text_strong">#A3000000</color>     <!--  二级辅助文本  -->
+    <color name="text_medium">#66000000</color>     <!--  三级辅助文本; 引用字  -->
+    <color name="text_weak">#3D000000</color>       <!--  四级辅助主文本; 不可用文本; 引导性文本  -->
+    <color name="text_ultraweak">#29000000</color>  <!--  五级辅助主文本; 不可用文本; 兜底/装饰性文本  -->
+
+    <color name="text_link">@color/PrimaryBlue_02</color><!--  文本链接  -->
+    <color name="text_error">@color/Red_02</color><!--  红色警示/错误文本  -->
+
+    <color name="icon_strong"   >@color/Grayblue_01</color><!--  主图标  -->
+    <color name="icon_medium"   >@color/Grayblue_02</color><!--  辅助图标  -->
+    <color name="icon_weak"     >@color/Grayblue_03</color><!--  弱图标  -->
+
+    <color name="border_weak"       >#0A000000</color><!--  浅分割线  -->
+    <color name="border_medium"     >#14000000</color><!--  次浅分割线  -->
+    <color name="border_strong"     >#1F000000</color><!--  深分割线  -->
+    <color name="border_ultrastrong">#29000000</color><!--  更深的分割线  -->
+
+    <!--  半透明填充色,用于不确定颜色的控件背景  -->
+    <color name="tsp_fill_weak"         >#0A000000</color>
+    <color name="tsp_fill_medium"       >#14000000</color>
+    <color name="tsp_fill_strong"       >#1F000000</color>
+    <color name="tsp_fill_ultrastrong"  >#29000000</color>
+
+    <!--  实色充色,用于已确定颜色的控件背景  -->
+    <color name="fill_weak"         >@color/Grayblue_06</color>
+    <color name="fill_medium"       >@color/Grayblue_05</color><!--  搜索框; input; 灰色tag  -->
+    <color name="fill_strong"       >@color/Grayblue_04</color><!--  灰色button  -->
+    <color name="fill_ultrastrong"  >@color/Grayblue_03</color>
+    <color name="fill_white">#ffffff</color>
+
+    <!-- 交互反馈 -->
+    <color name="feedback_hover">#0A000000</color><!--  默认交互反馈色，图标/list悬停底色  -->
+    <color name="feedback_active">#14000000</color><!--  默认交互反馈色，图标/list点击底色  -->
+    <color name="feedback_accent">#141e6fff</color><!--  文本高亮底色  -->
+    <color name="feedback_notice">@color/Yellow_07</color><!--  文本选中底色  -->
+
+    <!-- 背景色，用于容器之间的嵌套使用 -->
+    <color name="bg_default">#F6F6F6</color>
+    <color name="bg_weak"   >#FFFFFF</color>
+
+    <!--    深色模式-->
+    <color name="dark_accent_default">@color/PrimaryBlue_03</color>
+    <color name="dark_accent_hover">@color/PrimaryBlue_02</color>
+    <color name="dark_accent_press">@color/PrimaryBlue_01</color>
+    <color name="dark_accent_disabled">@color/PrimaryBlue_06</color>
+
+    <!--  警示 critical  -->
+    <color name="dark_critical_default">@color/Red_03</color>
+    <color name="dark_critical_hover">@color/Red_02</color>
+    <color name="dark_critical_press">@color/Red_01</color>
+    <color name="dark_critical_disabled">@color/Red_06</color>
+
+    <color name="dark_text_ultrastrong">#E0FFFFFF</color>   <!--  深色模式一级主文本  -->
+    <color name="dark_text_strong">     #A3FFFFFF</color>   <!--  深色模式二级辅助文本  -->
+    <color name="dark_text_medium">     #66FFFFFF</color>   <!--  深色模式三级辅助文本; 引用字  -->
+    <color name="dark_text_weak">       #3DFFFFFF</color>   <!--  深色模式四级辅助主文本; 不可用文本; 引导性文本  -->
+    <color name="dark_text_ultraweak">  #29FFFFFF</color>   <!--  深色模式五级辅助主文本; 不可用文本; 兜底/装饰性文本  -->
+
+    <color name="dark_text_link">@color/PrimaryBlue_04</color><!--  文本链接  -->
+    <color name="dark_text_error">@color/Red_04</color><!--  红色警示/错误文本  -->
+
+    <color name="dark_icon_strong">#BEC4D4</color><!--  深色模式主图标  -->
+    <color name="dark_icon_medium">#999EB1</color><!--  深色模式辅助图标  -->
+    <color name="dark_icon_weak">  #697080</color><!--  深色模式弱图标  -->
+
+    <color name="dark_border_weak">         #0AFFFFFF</color><!--  深色模式浅分割线  -->
+    <color name="dark_border_medium">       #14FFFFFF</color><!--  深色模式次浅分割线  -->
+    <color name="dark_border_strong">       #1FFFFFFF</color><!--  深色模式深分割线  -->
+    <color name="dark_border_ultrastrong">  #29FFFFFF</color><!--  深色模式更深的分割线  -->
+
+    <color name="dark_tsp_fill_weak">       #0AFFFFFF</color>
+    <color name="dark_tsp_fill_medium">     #14FFFFFF</color>
+    <color name="dark_tsp_fill_strong">     #1FFFFFFF</color>
+    <color name="dark_tsp_fill_ultrastrong">#29FFFFFF</color>
+
+    <color name="dark_fill_weak">        #141D2E</color>
+    <color name="dark_fill_medium">      #1D2437</color>
+    <color name="dark_fill_strong">      #51586A</color>
+    <color name="dark_fill_ultrastrong"> #697080</color>
+
+    <color name="dark_bg_default">  #121212</color>
+    <color name="dark_bg_weak">     #2F2F2F</color>
+
+    <!--  中性灰色_Gray  -->
+    <color name="Gray_01">#1f1f1f</color>
+    <color name="Gray_02">#5c5c5c</color>
+    <color name="Gray_03">#999999</color>
+    <color name="Gray_04">#c2c2c2</color>
+    <color name="Gray_05">#d6d6d6</color>
+    <color name="Gray_06">#e0e0e0</color>
+    <color name="Gray_07">#ebebeb</color>
+    <color name="Gray_08">#f5f5f5</color>
+
+    <!--  蓝灰色_Grayblue  -->
+    <color name="Grayblue_01">#454d5a</color>
+    <color name="Grayblue_02">#81868f</color>
+    <color name="Grayblue_03">#cbcdd1</color>
+    <color name="Grayblue_04">#e9ebed</color>
+    <color name="Grayblue_05">#f3f5f7</color>
+    <color name="Grayblue_06">#f9fafb</color>
+
+    <!--  紫色_Purple  -->
+    <color name="Purple_01">#833fdf</color>
+    <color name="Purple_02">#8e4be0</color>
+    <color name="Purple_03">#a55bf5</color>
+    <color name="Purple_04">#c87ffa</color>
+    <color name="Purple_05">#dfb2fc</color>
+    <color name="Purple_06">#f0d6fe</color>
+    <color name="Purple_07">#fbf2fe</color>
+
+    <!--  靛蓝色_Indigoblue  -->
+    <color name="Indigoblue_01">#2a3ed6</color>
+    <color name="Indigoblue_02">#3e53eb</color>
+    <color name="Indigoblue_03">#546dff</color>
+    <color name="Indigoblue_04">#7691ff</color>
+    <color name="Indigoblue_05">#aebeff</color>
+    <color name="Indigoblue_06">#d2dbff</color>
+    <color name="Indigoblue_07">#f1f4ff</color>
+
+    <!--  品牌蓝_PrimaryBlue  -->
+    <color name="PrimaryBlue_01">#134ae0</color>
+    <color name="PrimaryBlue_02">#175ceb</color>
+    <color name="PrimaryBlue_03">#1e6fff</color>
+    <color name="PrimaryBlue_04">#5c99ff</color>
+    <color name="PrimaryBlue_05">#98beff</color>
+    <color name="PrimaryBlue_06">#c2d8ff</color>
+    <color name="PrimaryBlue_07">#edf4ff</color>
+
+    <!--  湖蓝_Acidblue  -->
+    <color name="Acidblue_01">#069fcc</color>
+    <color name="Acidblue_02">#08a7cc</color>
+    <color name="Acidblue_03">#0cc1e2</color>
+    <color name="Acidblue_04">#12ddf2</color>
+    <color name="Acidblue_05">#71ebf7</color>
+    <color name="Acidblue_06">#aaf7fc</color>
+    <color name="Acidblue_07">#effdfe</color>
+
+    <!--  青色_Cyan  -->
+    <color name="Cyan_01">#069fcc</color>
+    <color name="Cyan_02">#08a7cc</color>
+    <color name="Cyan_03">#0cc1e2</color>
+    <color name="Cyan_04">#12ddf2</color>
+    <color name="Cyan_05">#71ebf7</color>
+    <color name="Cyan_06">#aaf7fc</color>
+    <color name="Cyan_07">#effdfe</color>
+
+    <!--  绿色_Green  -->
+    <color name="Green_01">#007a41</color>
+    <color name="Green_02">#118f58</color>
+    <color name="Green_03">#00aa5b</color>
+    <color name="Green_04">#00d689</color>
+    <color name="Green_05">#66dfb0</color>
+    <color name="Green_06">#a3f0d4</color>
+    <color name="Green_07">#ecfbf5</color>
+
+    <!--  黄色_Yellow  -->
+    <color name="Yellow_01">#e07800</color>
+    <color name="Yellow_02">#eb9000</color>
+    <color name="Yellow_03">#ffab00</color>
+    <color name="Yellow_04">#ffcd00</color>
+    <color name="Yellow_05">#ffe266</color>
+    <color name="Yellow_06">#fff2a3</color>
+    <color name="Yellow_07">#fffceb</color>
+
+    <!--  橙色_Orange  -->
+    <color name="Orange_01">#e03118</color>
+    <color name="Orange_02">#eb4825</color>
+    <color name="Orange_03">#ff5e2f</color>
+    <color name="Orange_04">#ff8246</color>
+    <color name="Orange_05">#ffb490</color>
+    <color name="Orange_06">#ffd7bf</color>
+    <color name="Orange_07">#fff5f0</color>
+
+    <!--  红色_Red  -->
+    <color name="Red_01">#e02424</color>
+    <color name="Red_02">#eb3639</color>
+    <color name="Red_03">#ff4747</color>
+    <color name="Red_04">#ff7272</color>
+    <color name="Red_05">#ffa3a3</color>
+    <color name="Red_06">#ffcccc</color>
+    <color name="Red_07">#ffeeee</color>
+
+    <!--tjh：自定义颜色-->
+    <color name="ps_color_grey">#393a3e</color>
+    <color name="ps_color_white">#FFFFFF</color>
+    <color name="ps_color_53575e">#53575e</color>
+    <color name="ps_color_9b">#9b9b9b</color>
+    <color name="ps_color_half_grey">#E6393a3e</color>
+    <color name="ps_color_black">#000000</color>
+</resources>

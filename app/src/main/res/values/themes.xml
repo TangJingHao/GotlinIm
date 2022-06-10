@@ -1,0 +1,88 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--    自己声明的一些颜色变量名-->
+    <attr name="accent_default"         format="color" />
+    <attr name="accent_hover"           format="color" />
+    <attr name="accent_press"           format="color" />
+    <attr name="accent_disabled"        format="color" />
+
+    <attr name="critical_default"       format="color" />
+    <attr name="critical_hover"         format="color" />
+    <attr name="critical_press"         format="color" />
+    <attr name="critical_disabled"      format="color" />
+
+    <attr name="text_ultrastrong"       format="color" />
+    <attr name="text_strong"            format="color" />
+    <attr name="text_medium"            format="color" />
+    <attr name="text_weak"              format="color" />
+    <attr name="text_ultraweak"         format="color" />
+
+    <attr name="text_link"              format="color" />
+    <attr name="text_error"             format="color" />
+
+    <attr name="icon_strong"            format="color" />
+    <attr name="icon_medium"            format="color" />
+    <attr name="icon_weak"              format="color" />
+
+    <attr name="border_weak"            format="color" />
+    <attr name="border_medium"          format="color" />
+    <attr name="border_strong"          format="color" />
+    <attr name="border_ultrastrong"     format="color" />
+
+    <attr name="fill_weak"              format="color" />
+    <attr name="fill_medium"            format="color" />
+    <attr name="fill_strong"            format="color" />
+    <attr name="fill_ultrastrong"       format="color" />
+
+    <attr name="tsp_fill_weak"          format="color" />
+    <attr name="tsp_fill_medium"        format="color" />
+    <attr name="tsp_fill_strong"        format="color" />
+    <attr name="tsp_fill_ultrastrong"   format="color" />
+
+    <attr name="bg_default"             format="color" />
+    <attr name="bg_weak"                format="color" />
+
+
+    <style name="Theme.GotlinIm" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+
+        <item name="accent_default"         >@color/accent_default         </item>
+        <item name="accent_hover"           >@color/accent_hover           </item>
+        <item name="accent_press"           >@color/accent_press           </item>
+        <item name="accent_disabled"        >@color/accent_disabled        </item>
+
+        <item name="critical_default"       >@color/critical_default        </item>
+        <item name="critical_hover"         >@color/critical_hover          </item>
+        <item name="critical_press"         >@color/critical_press          </item>
+        <item name="critical_disabled"      >@color/critical_disabled       </item>
+
+        <item name="text_ultrastrong"       >@color/text_ultrastrong        </item>
+        <item name="text_strong"            >@color/text_strong             </item>
+        <item name="text_medium"            >@color/text_medium             </item>
+        <item name="text_weak"              >@color/text_weak               </item>
+        <item name="text_ultraweak"         >@color/text_ultraweak          </item>
+
+        <item name="text_link"              >@color/text_link               </item>
+        <item name="text_error"             >@color/text_error              </item>
+
+        <item name="icon_strong"            >@color/icon_strong             </item>
+        <item name="icon_medium"            >@color/icon_medium             </item>
+        <item name="icon_weak"              >@color/icon_weak               </item>
+
+        <item name="border_weak"            >@color/border_weak             </item>
+        <item name="border_medium"          >@color/border_medium           </item>
+        <item name="border_strong"          >@color/border_strong           </item>
+        <item name="border_ultrastrong"     >@color/border_ultrastrong      </item>
+
+        <item name="fill_weak"              >@color/fill_weak               </item>
+        <item name="fill_medium"            >@color/fill_medium             </item>
+        <item name="fill_strong"            >@color/fill_strong             </item>
+        <item name="fill_ultrastrong"       >@color/fill_ultrastrong        </item>
+
+        <item name="tsp_fill_weak"          >@color/tsp_fill_weak           </item>
+        <item name="tsp_fill_medium"        >@color/tsp_fill_medium         </item>
+        <item name="tsp_fill_strong"        >@color/tsp_fill_strong         </item>
+        <item name="tsp_fill_ultrastrong"   >@color/tsp_fill_ultrastrong    </item>
+
+        <item name="bg_default"             >@color/bg_default              </item>
+        <item name="bg_weak"                >@color/bg_weak                 </item>
+    </style>
+</resources>

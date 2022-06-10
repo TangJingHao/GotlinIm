@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.GotlinIm" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+
+        <item name="accent_default"         >@color/dark_accent_default         </item>
+        <item name="accent_hover"           >@color/dark_accent_hover           </item>
+        <item name="accent_press"           >@color/dark_accent_press           </item>
+        <item name="accent_disabled"        >@color/dark_accent_disabled        </item>
+
+        <item name="critical_default"       >@color/dark_critical_default        </item>
+        <item name="critical_hover"         >@color/dark_critical_hover          </item>
+        <item name="critical_press"         >@color/dark_critical_press          </item>
+        <item name="critical_disabled"      >@color/dark_critical_disabled       </item>
+
+        <item name="text_ultrastrong"       >@color/dark_text_ultrastrong        </item>
+        <item name="text_strong"            >@color/dark_text_strong             </item>
+        <item name="text_medium"            >@color/dark_text_medium             </item>
+        <item name="text_weak"              >@color/dark_text_weak               </item>
+        <item name="text_ultraweak"         >@color/dark_text_ultraweak          </item>
+
+        <item name="text_link"              >@color/dark_text_link               </item>
+        <item name="text_error"             >@color/dark_text_error              </item>
+
+        <item name="icon_strong"            >@color/dark_icon_strong             </item>
+        <item name="icon_medium"            >@color/dark_icon_medium             </item>
+        <item name="icon_weak"              >@color/dark_icon_weak               </item>
+
+        <item name="border_weak"            >@color/dark_border_weak             </item>
+        <item name="border_medium"          >@color/dark_border_medium           </item>
+        <item name="border_strong"          >@color/dark_border_strong           </item>
+        <item name="border_ultrastrong"     >@color/dark_border_ultrastrong      </item>
+
+        <item name="fill_weak"              >@color/dark_fill_weak               </item>
+        <item name="fill_medium"            >@color/dark_fill_medium             </item>
+        <item name="fill_strong"            >@color/dark_fill_strong             </item>
+        <item name="fill_ultrastrong"       >@color/dark_fill_ultrastrong        </item>
+
+        <item name="tsp_fill_weak"          >@color/dark_tsp_fill_weak           </item>
+        <item name="tsp_fill_medium"        >@color/dark_tsp_fill_medium         </item>
+        <item name="tsp_fill_strong"        >@color/dark_tsp_fill_strong         </item>
+        <item name="tsp_fill_ultrastrong"   >@color/dark_tsp_fill_ultrastrong    </item>
+
+        <item name="bg_default"             >@color/dark_bg_default              </item>
+        <item name="bg_weak"                >@color/dark_bg_weak                 </item>
+    </style>
+</resources>
