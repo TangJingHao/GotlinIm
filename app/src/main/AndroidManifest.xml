@@ -36,6 +36,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GotlinIm">
+
+        <activity
+            android:name=".view.activity.SearchMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.GroupInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.FriendInfoActivity"
+            android:exported="false" />
+
         <activity
             android:name=".view.activity.SearchActivity"
             android:exported="false" />
