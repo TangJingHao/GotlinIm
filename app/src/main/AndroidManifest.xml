@@ -37,13 +37,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GotlinIm">
         <activity
-            android:name=".SearchMessageActivity"
+            android:name=".view.activity.SearchMessageActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.GroupInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".FriendInfoActivity"
+            android:name=".view.activity.FriendInfoActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.LoginActivity"
