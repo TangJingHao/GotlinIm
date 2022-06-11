@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/test_bar"
-        layout="@layout/d_my_toolbar"/>
+        layout="@layout/d_include_my_toolbar"/>
 
     <Button
         android:id="@+id/btn_new_friend"

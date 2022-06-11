@@ -38,9 +38,6 @@
         android:theme="@style/Theme.GotlinIm">
 
         <activity
-            android:name=".view.activity.SearchMessageActivity"
-            android:exported="false" />
-        <activity
             android:name=".view.activity.GroupInfoActivity"
             android:exported="false" />
         <activity
