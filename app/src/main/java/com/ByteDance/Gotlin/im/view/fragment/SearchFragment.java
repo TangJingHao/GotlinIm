@@ -25,6 +25,7 @@ public class SearchFragment extends Fragment {
     private static final int SEARCH_GROUP_CHAT_NICKNAME = 4;
     private static final int MY_GROUP_CHAR_APPLICATION = 5;
     private static final int SEARCH_HISTORY_MESSAGE = 6;
+    
 
     public SearchFragment() {
         // Required empty public constructor
