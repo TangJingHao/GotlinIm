@@ -5,5 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.activity.FriendInfoActivity">
+    <include
+        android:id="@+id/toolbar_info"
+        layout="@layout/m_my_toolbar"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

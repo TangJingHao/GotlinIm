@@ -34,7 +34,7 @@
 
     <dimen name="user_item_height">48dp</dimen>
     <dimen name="user_item_detail_height">64dp</dimen>
-
 <!--    <dimen name="user_item_simple_height">48p</dimen>-->
+
 
 </resources>

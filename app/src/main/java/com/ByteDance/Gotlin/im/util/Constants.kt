@@ -15,4 +15,9 @@ object Constants {
     const val DARK_MODE=1
     const val LIGHT_MODE=2
     const val BASE_URL="http://chatspace.iceclean.top/space/"
+
+    //好友类型选择
+    const val FRIEND_TYPE = "FriendType"
+    const val FRIEND_IS = 1
+    const val FRIEND_NO = 0
 }

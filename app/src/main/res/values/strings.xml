@@ -18,9 +18,15 @@
     <string name="title_search_new_friend">查找新好友</string>
     <string name="title_search_new_group_chat">查找新群聊</string>
 
-
     <string name="preview_text">预览文本</string>
     <string name="search_result">搜索结果</string>
+
+    <!--by莫舒欣==================================================================-->
+
+    <!--Toolbar标题-->
+    <string name="title_info_friend">好友信息</string>
+    <string name="title_info_group">群聊信息</string>
+
 
 
 

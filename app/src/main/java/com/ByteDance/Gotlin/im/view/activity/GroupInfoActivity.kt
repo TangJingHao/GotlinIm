@@ -4,6 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ByteDance.Gotlin.im.R
 
+/**
+ * @Description：群聊信息页面
+ * @Author：Suzy.Mo
+ * @Date：2022/6/11 22:03
+ */
+
 class GroupInfoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
