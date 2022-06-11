@@ -1,5 +1,29 @@
 <resources>
     <string name="app_name">GotlinIm</string>
-<!-- TODO: Remove or change this placeholder text -->
+
+    <!--by邓志聪==================================================================-->
+    <string-array name="search_new_friend_title">
+        <item>邮箱</item>
+        <item>昵称</item>
+        <item>我的申请</item>
+    </string-array>
+
+    <string-array name="search_new_group_chat_title">
+        <item>群号</item>
+        <item>群昵称</item>
+        <item>我的加群申请</item>
+    </string-array>
+
+    <!--Toolbar标题-->
+    <string name="title_search_new_friend">查找新好友</string>
+    <string name="title_search_new_group_chat">查找新群聊</string>
+
+
+    <string name="preview_text">预览文本</string>
+    <string name="search_result">搜索结果</string>
+
+
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
