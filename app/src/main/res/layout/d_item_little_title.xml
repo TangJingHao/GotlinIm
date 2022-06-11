@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tv_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/im_spacing_huge"
+        android:background="?attr/bg_weak"
+        android:gravity="center|left"
+        android:paddingHorizontal="@dimen/im_common_horizontal"
+        android:text="@string/preview_text"
+        android:textColor="@color/text_strong"
+        android:textSize="@dimen/im_text_small" />
+</FrameLayout>
