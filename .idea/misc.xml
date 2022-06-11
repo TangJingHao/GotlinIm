@@ -3,6 +3,30 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_16_multi_select.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_16_multi_select_unchecked.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_16_select.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_16_select_unchecked.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_24_chevron_down.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_24_chevron_right.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_24_chevron_up.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_24_moon.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_24_sun.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_24_x.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_28_chevron_left.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_28_image.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_28_more_horizontal.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_login_button_bg.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_login_input_bg.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_login_point.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_ps_album_bg.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_ps_default_num_selector.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_ps_image_placeholder.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_ps_preview_checkbox_selector.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_ps_preview_gallery_bg.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_ps_select_complete_bg.xml" value="0.1" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_ps_select_complete_normal_bg.xml" value="0.1" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/drawable/ic_16_multi_select.xml" value="0.2345" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/drawable/ic_16_multi_select_unchecked.xml" value="0.2345" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/drawable/ic_16_select.xml" value="0.2345" />
