@@ -26,7 +26,6 @@ import com.luck.picture.lib.config.SelectModeConfig
 import com.luck.picture.lib.style.PictureSelectorStyle
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
-import java.io.File
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mViewModel: LoginViewModel
@@ -129,8 +128,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         mSelectorStyle = TMyPictureSelectorStyle.getSelectorStyle(this)
-        mMyEditMediaIListener = TMyEditMediaIListener(TPhoneUtil.getSandboxPath(mContext),mContext,Constants.DEFAULT_TYPE)
-        mLauncherResult=createActivityResultLauncher()
+        mMyEditMediaIListener = TMyEditMediaIListener(
+            TPhoneUtil.getSandboxPath(mContext),
+            mContext,
+            Constants.DEFAULT_TYPE
+        )
+        mLauncherResult = createActivityResultLauncher()
     }
 
     /**

@@ -3,6 +3,37 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/h_chat_send.xml" value="0.3025" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/h_et_message_input.xml" value="0.3025" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_multi_select_unchecked.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_plus_square.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_select.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_chevron_down.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_chevron_up.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_moon.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_search.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_sun.xml" value="0.3025" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_28_chevron_left.xml" value="0.3025" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_28_emoji.xml" value="0.3025" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_28_image.xml" value="0.236" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_28_more_horizontal.xml" value="0.236" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_login_button_bg.xml" value="0.236" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_login_input_bg.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_login_point.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_album_bg.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_image_placeholder.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_preview_gallery_bg.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_select_complete_bg.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/activity_chat.xml" value="0.33" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/d_fragment_search_new.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/d_input_box.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/d_item_little_title.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/d_my_toolbar.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_activity_chat.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/t_activity_login.xml" value="0.23697916666666666" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/menu/nav_menu.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/menu/toolbar.xml" value="0.371875" />
+        <entry key="..\:/Applications/sdk/.gradle/caches/transforms-3/ce3328fb863c40ecd65777ef4314290b/transformed/jetified-pictureselector-v3.0.9/res/layout/ps_title_bar.xml" value="0.371875" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/drawable/ic_16_multi_select.xml" value="0.2345" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/drawable/ic_16_multi_select_unchecked.xml" value="0.2345" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/drawable/ic_16_select.xml" value="0.2345" />
@@ -13,21 +44,6 @@
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_activity_login.xml" value="0.21302083333333333" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2345" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/xml/net_work_config.xml" value="0.40217391304347827" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_login_button_bg.xml" value="0.111" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_login_input_bg.xml" value="0.237" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_ps_image_placeholder.xml" value="0.221" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_search_new_friends.xml" value="0.3509963768115942" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_fragment_my_application.xml" value="0.254981884057971" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_fragment_search_by_nickname.xml" value="0.254981884057971" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_fragment_search_new.xml" value="0.33" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_fragment_search_new_frind_by_nickname.xml" value="0.254981884057971" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_input_box.xml" value="0.17239583333333333" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_item_little_title.xml" value="0.33" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_item_search_box.xml" value="0.22" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_my_toolbar.xml" value="0.33" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_revycleview_with_title.xml" value="0.254981884057971" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_search_box.xml" value="0.33" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_login.xml" value="0.33" />
       </map>
     </option>
   </component>

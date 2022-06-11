@@ -13,15 +13,16 @@ import com.ByteDance.Gotlin.im.model.LoginLiveData
  * @Description
  */
 
-class LoginViewModel:ViewModel() {
-    private val mLoginLiveData= MutableLiveData<LoginLiveData>()
-    val loginObserverData=Transformations.switchMap(mLoginLiveData){
-        Repository.login(it.userName,it.userPass)
+class LoginViewModel : ViewModel() {
+    private val mLoginLiveData = MutableLiveData<LoginLiveData>()
+    val loginObserverData = Transformations.switchMap(mLoginLiveData) {
+        Repository.login(it.userName, it.userPass)
     }
+
     /**
      * 暴露给外部调用
      */
-    fun login(loginLiveData: LoginLiveData){
-        mLoginLiveData.value=loginLiveData
+    fun login(loginLiveData: LoginLiveData) {
+        mLoginLiveData.value = loginLiveData
     }
 }
