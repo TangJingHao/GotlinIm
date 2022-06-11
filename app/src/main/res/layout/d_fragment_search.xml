@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/bg_default"
-    tools:context=".view.fragment.SearchNewFragment">
+    tools:context=".view.fragment.SearchFragment"
+    android:orientation="vertical">
 
     <include
-        android:id="@+id/search_box"
-        layout="@layout/d_input_box" />
+        android:id="@+id/search_bar"
+        layout="@layout/d_include_input_box" />
+
+    <include
+        android:id="@+id/time_bar"
+        layout="@layout/d_include_time_select_bar"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/search_box">
+        android:layout_below="@id/search_bar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/im_common_horizontal" />
-
+            android:layout_height="wrap_content" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

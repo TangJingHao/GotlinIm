@@ -14,14 +14,18 @@
         <item>我的加群申请</item>
     </string-array>
 
+    <string-array name="search_history_message_title">
+        <item>消息</item>
+    </string-array>
+
     <!--Toolbar标题-->
     <string name="title_search_new_friend">查找新好友</string>
     <string name="title_search_new_group_chat">查找新群聊</string>
+    <string name="title_search_history_message">消息搜索</string>
 
 
     <string name="preview_text">预览文本</string>
     <string name="search_result">搜索结果</string>
-
 
 
     <!-- TODO: Remove or change this placeholder text -->

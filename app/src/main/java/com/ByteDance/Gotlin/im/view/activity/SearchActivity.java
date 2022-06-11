@@ -12,8 +12,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ByteDance.Gotlin.im.R;
-import com.ByteDance.Gotlin.im.databinding.DActivitySearchNewFriendsBinding;
-import com.ByteDance.Gotlin.im.view.fragment.SearchNewFragment;
+import com.ByteDance.Gotlin.im.databinding.DActivitySearchBinding;
+import com.ByteDance.Gotlin.im.view.fragment.SearchFragment;
 
 import net.lucode.hackware.magicindicator.FragmentContainerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -31,11 +31,11 @@ import java.util.List;
  * on 2022/6/11 11:17
  * https://github.com/LumosDZC
  * <p>
- * 从查找新好友/新群聊跳转来，从Intent中获取类别参数判断是好友/群聊
+ * 从查找新好友/查找新群聊/消息搜索跳转来，从Intent中获取类别参数判断
  */
-public class SearchNewFriendsActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
-    private DActivitySearchNewFriendsBinding b;
+    private DActivitySearchBinding b;
 
     private List<Fragment> mFragments = new ArrayList<>();
     private FragmentContainerHelper mFragmentContainerHelper = new FragmentContainerHelper();
@@ -45,6 +45,7 @@ public class SearchNewFriendsActivity extends AppCompatActivity {
     private static final String SEARCH_TYPE = "search_type";
     private static final int SEARCH_TYPE_FRIEND = 0;
     private static final int SEARCH_TYPE_GROUP_CHAT = 1;
+    private static final int SEARCH_TYPE_MESSAGE = 2;
     private int curSearchType;
     // 启动fragment的参数
     private static final int SEARCH_MAILBOX = 0;
@@ -53,11 +54,12 @@ public class SearchNewFriendsActivity extends AppCompatActivity {
     private static final int SEARCH_GROUP_CHAT_ID = 3;
     private static final int SEARCH_GROUP_CHAT_NICKNAME = 4;
     private static final int MY_GROUP_CHAR_APPLICATION = 5;
+    private static final int SEARCH_HISTORY_MESSAGE = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        b = DActivitySearchNewFriendsBinding.inflate(getLayoutInflater());
+        b = DActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
 
         initData();
@@ -71,6 +73,8 @@ public class SearchNewFriendsActivity extends AppCompatActivity {
             mTitles = this.getResources().getStringArray(R.array.search_new_friend_title);
         } else if (curSearchType == SEARCH_TYPE_GROUP_CHAT) {
             mTitles = this.getResources().getStringArray(R.array.search_new_group_chat_title);
+        } else if(curSearchType == SEARCH_TYPE_MESSAGE){
+            mTitles = this.getResources().getStringArray(R.array.search_history_message_title);
         }
     }
 
@@ -79,7 +83,16 @@ public class SearchNewFriendsActivity extends AppCompatActivity {
             b.myToolbar.title.setText(R.string.title_search_new_friend);
         } else if (curSearchType == SEARCH_TYPE_GROUP_CHAT) {
             b.myToolbar.title.setText(R.string.title_search_new_group_chat);
+        } else if(curSearchType == SEARCH_TYPE_MESSAGE){
+            b.myToolbar.title.setText(R.string.title_search_history_message);
         }
+
+        b.myToolbar.imgChevronLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         initFragments(curSearchType);
         initNewFriendsMagicIndicator();
@@ -110,36 +123,49 @@ public class SearchNewFriendsActivity extends AppCompatActivity {
     }
 
     private void initFragments(int curSearchType) {
-        if (curSearchType == SEARCH_TYPE_FRIEND) {
-            // 邮箱搜索界面
-            SearchNewFragment searchNewByMailboxFragment
-                    = SearchNewFragment.newInstance(SEARCH_MAILBOX);
-            // 昵称搜索界面
-            SearchNewFragment searchNewByNickNameFragment
-                    = SearchNewFragment.newInstance(SEARCH_NICKNAME);
-            // 我的申请界面
-            SearchNewFragment myApplicationFragment
-                    = SearchNewFragment.newInstance(MY_APPLICATION);
+        switch (curSearchType){
+            case SEARCH_TYPE_FRIEND:{
+                // 邮箱搜索界面
+                SearchFragment searchNewByMailboxFragment
+                        = SearchFragment.newInstance(SEARCH_MAILBOX);
+                // 昵称搜索界面
+                SearchFragment searchNewByNickNameFragment
+                        = SearchFragment.newInstance(SEARCH_NICKNAME);
+                // 我的申请界面
+                SearchFragment myApplicationFragment
+                        = SearchFragment.newInstance(MY_APPLICATION);
 
-            mFragments.add(searchNewByMailboxFragment);
-            mFragments.add(searchNewByNickNameFragment);
-            mFragments.add(myApplicationFragment);
-        } else if (curSearchType == SEARCH_TYPE_GROUP_CHAT) {
-            // 群号搜索界面
-            SearchNewFragment searchNewByGroupIdFragment
-                    = SearchNewFragment.newInstance(SEARCH_GROUP_CHAT_ID);
-            // 群昵称搜索界面
-            SearchNewFragment searchNewByGroupNickNameFragment
-                    = SearchNewFragment.newInstance(SEARCH_GROUP_CHAT_NICKNAME);
-            // 我的群聊申请界面
-            SearchNewFragment myGroupCharApplicationFragment
-                    = SearchNewFragment.newInstance(MY_GROUP_CHAR_APPLICATION);
+                mFragments.add(searchNewByMailboxFragment);
+                mFragments.add(searchNewByNickNameFragment);
+                mFragments.add(myApplicationFragment);
+                break;
+            }
+            case SEARCH_TYPE_GROUP_CHAT:{
+                // 群号搜索界面
+                SearchFragment searchNewByGroupIdFragment
+                        = SearchFragment.newInstance(SEARCH_GROUP_CHAT_ID);
+                // 群昵称搜索界面
+                SearchFragment searchNewByGroupNickNameFragment
+                        = SearchFragment.newInstance(SEARCH_GROUP_CHAT_NICKNAME);
+                // 我的群聊申请界面
+                SearchFragment myGroupCharApplicationFragment
+                        = SearchFragment.newInstance(MY_GROUP_CHAR_APPLICATION);
 
-            mFragments.add(searchNewByGroupIdFragment);
-            mFragments.add(searchNewByGroupNickNameFragment);
-            mFragments.add(myGroupCharApplicationFragment);
+                mFragments.add(searchNewByGroupIdFragment);
+                mFragments.add(searchNewByGroupNickNameFragment);
+                mFragments.add(myGroupCharApplicationFragment);
+                break;
+            }
+            case SEARCH_TYPE_MESSAGE:{
+                // 搜索消息记录界面
+                SearchFragment searchHistoryMessageFragment
+                        = SearchFragment.newInstance(SEARCH_HISTORY_MESSAGE);
+                mFragments.add(searchHistoryMessageFragment);
+                break;
+            }
+            default:
+                break;
         }
-
     }
 
     private void initNewFriendsMagicIndicator() {

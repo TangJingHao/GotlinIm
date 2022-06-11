@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/bg_default"
-    tools:context=".view.activity.SearchNewFriendsActivity"
+    tools:context=".view.activity.SearchActivity"
     android:orientation="vertical">
 
     <include

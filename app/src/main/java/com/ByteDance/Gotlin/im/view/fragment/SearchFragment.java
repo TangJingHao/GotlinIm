@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.ByteDance.Gotlin.im.databinding.DFragmentSearchNewBinding;
+import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding;
 
-public class SearchNewFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
-    private DFragmentSearchNewBinding b;
+    private DFragmentSearchBinding b;
 
     private static final String SEARCH_PARAM = "search_param";
 
@@ -24,8 +24,9 @@ public class SearchNewFragment extends Fragment {
     private static final int SEARCH_GROUP_CHAT_ID = 3;
     private static final int SEARCH_GROUP_CHAT_NICKNAME = 4;
     private static final int MY_GROUP_CHAR_APPLICATION = 5;
+    private static final int SEARCH_HISTORY_MESSAGE = 6;
 
-    public SearchNewFragment() {
+    public SearchFragment() {
         // Required empty public constructor
     }
 
@@ -34,8 +35,8 @@ public class SearchNewFragment extends Fragment {
      * @param searchParam 当前页面指示器选项卡
      * @return 实例化Fragment.
      */
-    public static SearchNewFragment newInstance(int searchParam) {
-        SearchNewFragment fragment = new SearchNewFragment();
+    public static SearchFragment newInstance(int searchParam) {
+        SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
         args.putInt(SEARCH_PARAM, searchParam);
         fragment.setArguments(args);
@@ -53,8 +54,15 @@ public class SearchNewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        b = DFragmentSearchNewBinding.inflate(inflater,container,false);
+        b = DFragmentSearchBinding.inflate(inflater,container,false);
         // TODO 处理不同条件下的搜索资料
+
+        initViewAndEvent();
+
+        return b.getRoot();
+    }
+
+    private void initViewAndEvent() {
         switch (searchParam){
             case SEARCH_MAILBOX:{
                 break;
@@ -64,7 +72,7 @@ public class SearchNewFragment extends Fragment {
                 break;
             }
             case MY_APPLICATION:{
-                b.searchBox.fLayout.setVisibility(View.GONE);
+                b.searchBar.fLayout.setVisibility(View.GONE);
                 break;
             }
             case SEARCH_GROUP_CHAT_ID:{
@@ -75,12 +83,15 @@ public class SearchNewFragment extends Fragment {
                 break;
             }
             case MY_GROUP_CHAR_APPLICATION:{
-                b.searchBox.fLayout.setVisibility(View.GONE);
+                b.searchBar.fLayout.setVisibility(View.GONE);
+                break;
+            }
+            case SEARCH_HISTORY_MESSAGE:{
+                b.timeBar.lLayout.setVisibility(View.VISIBLE);
                 break;
             }
             default:
                 break;
         }
-        return b.getRoot();
     }
 }
