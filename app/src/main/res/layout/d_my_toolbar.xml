@@ -18,9 +18,10 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/im_icon_medium"
         android:layout_gravity="center"
+        android:gravity="center"
         android:textColor="?attr/text_ultrastrong"
         android:textSize="@dimen/im_text_medium"
-        android:text="@string/preview_text"/>
+        android:text="@string/preview_text" />
 
     <ImageButton
         android:id="@+id/img_more"
