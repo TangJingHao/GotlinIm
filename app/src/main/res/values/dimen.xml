@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--距离屏幕左右边距-->
+    <dimen name="im_common_horizontal">24dp</dimen>
+    <!--登录/注册页距离屏幕左右边距-->
+    <dimen name="im_common_horizontal_large">32dp</dimen>
+    <!--Toolbar-->
+    <dimen name="im_toolbar_height">72dp</dimen>
+    <!--底部栏-->
+    <dimen name="im_bottom_height">72dp</dimen>
+    <!--输入框-->
+    <dimen name="im_input_box_height">40dp</dimen>
+    <dimen name="im_input_box_paddingVertical">8dp</dimen>
+    <dimen name="im_input_box_paddingHorizontal">12dp</dimen>
+    <dimen name="im_input_box_bg_height">64dp</dimen>
+    <!--间距-->
+    <dimen name="im_spacing_small">4dp</dimen>
+    <dimen name="im_spacing_medium">8dp</dimen>
+    <dimen name="im_spacing_large">12dp</dimen>
+    <dimen name="im_spacing_huge">24dp</dimen>
+    <!--登录/注册按钮高度-->
+    <dimen name="im_login_button_height">48dp</dimen>
+    <!--图标-->
+    <dimen name="im_icon_small">16dp</dimen>
+    <dimen name="im_icon_medium">24dp</dimen>
+    <dimen name="im_icon_large">28dp</dimen>
+    <dimen name="im_icon_huge">36dp</dimen><!--用于主界面下方三个大图标-->
+    <!--文字-->
+    <dimen name="im_text_tiny">10sp</dimen><!--小红点-->
+    <dimen name="im_text_small">12sp</dimen><!--小字，辅助信息-->
+    <dimen name="im_text_medium">14sp</dimen><!--大多数正文，选项卡-->
+    <dimen name="im_text_large">16sp</dimen><!--标题,注册页输入框上方备注-->
+    <dimen name="im_text_huge">24dp</dimen><!--注册页欢迎大字-->
+    <!--用户项，用于用户列表展现-->
+    <dimen name="im_user_item_height">48dp</dimen>
+    <dimen name="im_user_item_detail_height">64dp</dimen>
+    <!--时间选择条-->
+    <dimen name="im_time_select_bar_height">48dp</dimen>
+    <!--头像大小-->
+    <dimen name="user_pic">48dp</dimen>
+    <dimen name="user_pic_small">36dp</dimen>
+
+</resources>

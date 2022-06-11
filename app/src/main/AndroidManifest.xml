@@ -35,10 +35,26 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.GotlinIm"
-        >
+        android:theme="@style/Theme.GotlinIm">
+
+        <activity
+            android:name=".view.activity.SearchMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.GroupInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.FriendInfoActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".view.activity.SearchActivity"
+            android:exported="false" />
         <activity
             android:name=".view.activity.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.TestActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
