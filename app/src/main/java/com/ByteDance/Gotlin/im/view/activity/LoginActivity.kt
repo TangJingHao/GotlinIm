@@ -26,7 +26,7 @@ import com.luck.picture.lib.config.SelectModeConfig
 import com.luck.picture.lib.style.PictureSelectorStyle
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
-import java.io.File
+
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var mViewModel: LoginViewModel

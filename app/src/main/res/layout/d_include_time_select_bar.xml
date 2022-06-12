@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/l_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/im_time_select_bar_height"
+    android:paddingHorizontal="@dimen/im_common_horizontal"
+    android:background="?attr/bg_weak"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:visibility="gone">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="时间筛选:"
+        android:layout_marginRight="8dp"
+        android:textColor="?attr/text_medium"
+        android:textSize="@dimen/im_text_small" />
+
+    <TextView
+        android:id="@+id/tv_time_from"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/d_time_select_bg"
+        android:gravity="center"
+        android:padding="8dp"
+        android:paddingHorizontal="8dp"
+        android:text="2022 - 05 - 22"
+        android:textColor="?attr/accent_default"
+        android:textSize="@dimen/im_text_small" />
+
+
+    <TextView
+        android:id="@+id/tv_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginHorizontal="8dp"
+        android:text=" - "
+        android:textSize="@dimen/im_text_small"
+        android:textColor="?attr/text_medium"/>
+
+    <TextView
+        android:id="@+id/tv_time_to"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/d_time_select_bg"
+        android:gravity="center"
+        android:padding="8dp"
+        android:paddingHorizontal="8dp"
+        android:text="2022 - 05 - 22"
+        android:textColor="?attr/accent_default"
+        android:textSize="@dimen/im_text_small" />
+
+
+
+
+</LinearLayout>
