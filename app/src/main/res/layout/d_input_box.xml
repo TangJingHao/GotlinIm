@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/f_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/im_input_box_bg_height"
+    android:background="?attr/bg_weak">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/im_common_horizontal"
+        android:paddingVertical="@dimen/im_input_box_paddingVertical"
+        android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
+        android:background="?attr/tsp_fill_medium"
+        android:textSize="@dimen/im_text_medium"
+        android:textColor="@color/text_ultrastrong"
+        android:hint="@string/preview_text">
+    </EditText>
+
+</FrameLayout>
