@@ -11,7 +11,7 @@
 
     <include
         android:id="@+id/my_toolbar"
-        layout="@layout/d_my_toolbar"/>
+        layout="@layout/d_include_my_toolbar"/>
 
     <net.lucode.hackware.magicindicator.MagicIndicator
         android:id="@+id/newFriends_indicator"
