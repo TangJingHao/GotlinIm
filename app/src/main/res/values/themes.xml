@@ -42,7 +42,7 @@
     <attr name="bg_weak"                format="color" />
 
 
-    <style name="Theme.GotlinIm" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <style name="Theme.GotlinIm" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
 
         <item name="accent_default"         >@color/accent_default         </item>
         <item name="accent_hover"           >@color/accent_hover           </item>
@@ -84,5 +84,11 @@
 
         <item name="bg_default"             >@color/bg_default              </item>
         <item name="bg_weak"                >@color/bg_weak                 </item>
+    </style>
+    <!--底部导航栏按钮主题-->
+    <style name="navigation_button_bg" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="android:textSize">@dimen/im_text_tiny</item>
+        <item name="colorPrimary">?attr/text_strong</item>
+        <item name="android:textColorSecondary">?attr/text_ultraweak</item>
     </style>
 </resources>

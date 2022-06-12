@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 
@@ -28,7 +29,6 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         b = DActivityTestBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
-
         b.testBar.imgChevronLeft.setVisibility(View.GONE);
         b.testBar.title.setText("测试页面");
 

@@ -3,6 +3,7 @@ package com.ByteDance.Gotlin.im.util.Tutils
 import android.content.Context
 import android.widget.Toast
 import com.ByteDance.Gotlin.im.util.Constants
+import com.xuexiang.xui.XUI
 import java.io.File
 
 /**
@@ -42,4 +43,13 @@ object TPhoneUtil {
         }
         return customFile.absolutePath + File.separator
     }
+
+    /**
+     * 单位换算
+     */
+    fun dp2px(context: Context, pxValue: Float): Int {
+        val density = context.resources.displayMetrics.density
+        return (pxValue * density + 0.5f).toInt()
+    }
+
 }

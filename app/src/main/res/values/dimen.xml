@@ -40,4 +40,6 @@
     <dimen name="user_pic">48dp</dimen>
     <dimen name="user_pic_small">36dp</dimen>
 
+    <!--状态栏高度-->
+    <dimen name="im_status_height">30dp</dimen>
 </resources>

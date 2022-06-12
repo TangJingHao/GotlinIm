@@ -44,6 +44,12 @@ android {
 
 dependencies {
     //===================== 引入的库：==============================
+    //底部导航栏
+    def nav_version = "2.3.5"
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.0'
     //PictureSelector基础 (必须)
     implementation 'io.github.lucksiege:pictureselector:v3.0.9'
     // 图片压缩 (按需引入)
