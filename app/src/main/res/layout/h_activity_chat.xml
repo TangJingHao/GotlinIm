@@ -21,7 +21,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="?attr/bg_default"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,7 +81,7 @@
             android:background="@drawable/h_chat_send"
             android:enabled="false"
             android:gravity="center"
-            android:text="@string/send"
+            android:text="@string/chat_send"
             android:textColor="#ffffffff"
             android:textSize="@dimen/im_text_small"
             app:layout_constraintBottom_toBottomOf="parent"

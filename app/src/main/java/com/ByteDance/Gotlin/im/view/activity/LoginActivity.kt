@@ -132,8 +132,12 @@ class LoginActivity : AppCompatActivity() {
         }
 
         mSelectorStyle = TMyPictureSelectorStyle.getSelectorStyle(this)
-        mMyEditMediaIListener = TMyEditMediaIListener(TPhoneUtil.getSandboxPath(mContext),mContext,Constants.DEFAULT_TYPE)
-        mLauncherResult=createActivityResultLauncher()
+        mMyEditMediaIListener = TMyEditMediaIListener(
+            TPhoneUtil.getSandboxPath(mContext),
+            mContext,
+            Constants.DEFAULT_TYPE
+        )
+        mLauncherResult = createActivityResultLauncher()
     }
 
     /**

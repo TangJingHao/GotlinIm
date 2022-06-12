@@ -36,9 +36,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GotlinIm">
-        <activity
-            android:name=".view.activity.SetFriendInfoActivity"
+		<activity
+			android:name=".view.activity.SetFriendInfoActivity"
             android:exported="false" >
+		</activity>
 
         <activity
             android:name=".application.BaseActivity"
@@ -52,6 +53,7 @@
 
         <activity
             android:name=".view.activity.GroupInfoActivity"
+
             android:exported="false" />
         <activity
             android:name=".view.activity.FriendInfoActivity"
@@ -76,6 +78,16 @@
             <!-- </intent-filter> -->
 
         </activity>
+
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.SearchNewFriendsActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".view.activity.LoginActivity"
+            android:exported="false" />
 
     </application>
 

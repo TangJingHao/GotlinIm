@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chat_error"
+        android:textColor="@color/text_strong"
+        android:textSize="@dimen/im_text_small"
+        android:paddingHorizontal="@dimen/im_spacing_small"/>
+
+    <ImageView
+        android:layout_width="@dimen/im_icon_small"
+        android:layout_height="@dimen/im_icon_small"
+        android:layout_marginStart="1dp"
+        android:background="@drawable/ic_16_alert" />
+
+</LinearLayout>
