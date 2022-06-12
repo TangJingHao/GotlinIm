@@ -38,10 +38,14 @@
         android:theme="@style/Theme.GotlinIm">
         <activity
             android:name=".view.activity.SetFriendInfoActivity"
-            android:exported="true" >
+            android:exported="false" >
+
+        <activity
+            android:name=".application.BaseActivity"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -72,6 +76,7 @@
             <!-- </intent-filter> -->
 
         </activity>
+
     </application>
 
 </manifest>

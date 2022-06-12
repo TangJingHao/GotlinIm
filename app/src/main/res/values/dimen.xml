@@ -46,11 +46,16 @@
     <dimen name="user_pic">48dp</dimen>
     <dimen name="user_pic_small">36dp</dimen>
 
+
     <!--按钮大小-->
     <dimen name="button_high">38dp</dimen>
     <dimen name="button_weigh">56dp</dimen>
 
     <!--圆弧角度-->
     <dimen name="tab_small">2dp</dimen>
+
+
+    <!--状态栏高度-->
+    <dimen name="im_status_height">30dp</dimen>
 
 </resources>

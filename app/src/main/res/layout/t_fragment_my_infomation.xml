@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/bg_default">
+    <RelativeLayout
+        android:id="@+id/toolbar_rl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/im_toolbar_height"
+        android:background="?attr/bg_weak"
+        android:paddingHorizontal="@dimen/im_common_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的"
+            android:textColor="?attr/text_ultrastrong"
+            android:textSize="@dimen/im_text_large" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/top_slice_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_rl"
+        android:layout_marginLeft="@dimen/im_common_horizontal"
+        android:layout_marginTop="@dimen/im_common_horizontal"
+        android:layout_marginRight="@dimen/im_common_horizontal"
+        android:background="@drawable/t_view_slice_bg"
+        android:paddingHorizontal="@dimen/im_spacing_large"
+        android:paddingVertical="@dimen/im_spacing_large">
+
+        <ImageView
+            android:id="@+id/icon_iv"
+            android:layout_width="@dimen/user_pic"
+            android:layout_height="@dimen/user_pic"
+            android:layout_centerVertical="true"
+            android:background="@drawable/t_icon_iv_bg" />
+
+        <LinearLayout
+            android:id="@+id/info_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/im_spacing_medium"
+            android:layout_toRightOf="@id/icon_iv"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nickname_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="一个帅小伙"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_medium" />
+
+            <LinearLayout
+                android:id="@+id/status_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="显示状态："
+                    android:textColor="?attr/text_medium"
+                    android:textSize="@dimen/im_text_small" />
+
+                <ImageView
+                    android:id="@+id/stauts_iv"
+                    android:layout_width="@dimen/im_icon_small"
+                    android:layout_height="@dimen/im_icon_small" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注册邮箱：1520483847@qq.com"
+                android:textColor="?attr/text_medium"
+                android:textSize="@dimen/im_text_small" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mid_slice_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_slice_rl"
+        android:layout_marginLeft="@dimen/im_common_horizontal"
+        android:layout_marginTop="@dimen/im_common_horizontal"
+        android:layout_marginRight="@dimen/im_common_horizontal"
+        android:background="@drawable/t_view_slice_bg"
+        android:paddingHorizontal="@dimen/im_spacing_large"
+        android:paddingVertical="@dimen/im_spacing_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="个人设置"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_medium"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/nickname_config_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/im_spacing_huge">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="修改昵称"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_24_chevron_right" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/sex_config_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/im_spacing_huge">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="修改性别"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_24_chevron_right" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_slice_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mid_slice_rl"
+        android:layout_marginLeft="@dimen/im_common_horizontal"
+        android:layout_marginTop="@dimen/im_common_horizontal"
+        android:layout_marginRight="@dimen/im_common_horizontal"
+        android:background="@drawable/t_view_slice_bg"
+        android:paddingHorizontal="@dimen/im_spacing_large"
+        android:paddingVertical="@dimen/im_spacing_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="系统设置"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_medium"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:id="@+id/theme_config_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/im_spacing_huge">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="应用主题"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_24_sun" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

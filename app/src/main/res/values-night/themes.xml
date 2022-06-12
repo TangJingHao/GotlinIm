@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <style name="Theme.GotlinIm" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
 
         <item name="accent_default"         >@color/dark_accent_default         </item>
@@ -33,6 +33,7 @@
         <item name="fill_medium"            >@color/dark_fill_medium             </item>
         <item name="fill_strong"            >@color/dark_fill_strong             </item>
         <item name="fill_ultrastrong"       >@color/dark_fill_ultrastrong        </item>
+        <item name="fill_white"             >@color/dark_fill_white              </item>
 
         <item name="tsp_fill_weak"          >@color/dark_tsp_fill_weak           </item>
         <item name="tsp_fill_medium"        >@color/dark_tsp_fill_medium         </item>
@@ -41,5 +42,11 @@
 
         <item name="bg_default"             >@color/dark_bg_default              </item>
         <item name="bg_weak"                >@color/dark_bg_weak                 </item>
+    </style>
+    <!--底部导航栏按钮主题-->
+    <style name="navigaion_button_bg" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="android:textSize">@dimen/im_text_tiny</item>
+        <item name="colorPrimary">?attr/text_strong</item>
+        <item name="android:textColorSecondary">?attr/text_ultraweak</item>
     </style>
 </resources>
