@@ -3,11 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/h_chat_item.xml" value="0.255" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/h_chat_list.xml" value="0.2695" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/h_chat_right_item.xml" value="0.255" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/h_chat_send.xml" value="0.3025" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/h_et_message_input.xml" value="0.3025" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_alert.xml" value="0.255" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_multi_select_unchecked.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_plus_square.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_select.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_16_select_unchecked.xml" value="0.255" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_chevron_down.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_chevron_up.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_24_moon.xml" value="0.2105" />
@@ -21,6 +26,7 @@
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_login_input_bg.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_login_point.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_album_bg.xml" value="0.2105" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_default_num_selector.xml" value="0.2695" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_image_placeholder.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_preview_gallery_bg.xml" value="0.2105" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/t_ps_select_complete_bg.xml" value="0.2105" />
@@ -31,6 +37,13 @@
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/d_item_little_title.xml" value="0.371875" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/d_my_toolbar.xml" value="0.371875" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_activity_chat.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_header.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_message_error.xml" value="0.89" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_message_item.xml" value="0.5" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_msg_r_item.xml" value="0.2604166666666667" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/m_activity_friend_info.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/m_activity_group_info.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/m_activity_group_members.xml" value="0.371875" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/t_activity_login.xml" value="0.23697916666666666" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/menu/nav_menu.xml" value="0.371875" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/menu/toolbar.xml" value="0.371875" />
