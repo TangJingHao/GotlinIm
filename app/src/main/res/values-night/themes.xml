@@ -33,6 +33,7 @@
         <item name="fill_medium"            >@color/dark_fill_medium             </item>
         <item name="fill_strong"            >@color/dark_fill_strong             </item>
         <item name="fill_ultrastrong"       >@color/dark_fill_ultrastrong        </item>
+        <item name="fill_white"             >@color/dark_fill_white              </item>
 
         <item name="tsp_fill_weak"          >@color/dark_tsp_fill_weak           </item>
         <item name="tsp_fill_medium"        >@color/dark_tsp_fill_medium         </item>

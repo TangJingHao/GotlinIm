@@ -1,9 +1,7 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.databinding.DActivitySearchBinding;
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.view.fragment.SearchFragment;
 
 import net.lucode.hackware.magicindicator.FragmentContainerHelper;
@@ -70,11 +69,11 @@ public class SearchActivity extends AppCompatActivity {
         // TODO 从Intent获取搜索类型（好友/群聊）,KEY 为 SEARCH_TYPE
         curSearchType = getIntent().getIntExtra(SEARCH_TYPE, 0);
         if (curSearchType == SEARCH_TYPE_FRIEND) {
-            mTitles = this.getResources().getStringArray(R.array.search_new_friend_title);
+            mTitles = this.getResources().getStringArray(R.array.indicator_search_new_friend_title);
         } else if (curSearchType == SEARCH_TYPE_GROUP_CHAT) {
-            mTitles = this.getResources().getStringArray(R.array.search_new_group_chat_title);
-        } else if(curSearchType == SEARCH_TYPE_MESSAGE){
-            mTitles = this.getResources().getStringArray(R.array.search_history_message_title);
+            mTitles = this.getResources().getStringArray(R.array.indicator_search_new_group_chat_title);
+        } else if (curSearchType == SEARCH_TYPE_MESSAGE) {
+            mTitles = this.getResources().getStringArray(R.array.indicator_search_history_message_title);
         }
     }
 
@@ -83,7 +82,7 @@ public class SearchActivity extends AppCompatActivity {
             b.myToolbar.title.setText(R.string.title_search_new_friend);
         } else if (curSearchType == SEARCH_TYPE_GROUP_CHAT) {
             b.myToolbar.title.setText(R.string.title_search_new_group_chat);
-        } else if(curSearchType == SEARCH_TYPE_MESSAGE){
+        } else if (curSearchType == SEARCH_TYPE_MESSAGE) {
             b.myToolbar.title.setText(R.string.title_search_history_message);
         }
 
@@ -123,8 +122,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initFragments(int curSearchType) {
-        switch (curSearchType){
-            case SEARCH_TYPE_FRIEND:{
+        switch (curSearchType) {
+            case SEARCH_TYPE_FRIEND: {
                 // 邮箱搜索界面
                 SearchFragment searchNewByMailboxFragment
                         = SearchFragment.newInstance(SEARCH_MAILBOX);
@@ -140,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
                 mFragments.add(myApplicationFragment);
                 break;
             }
-            case SEARCH_TYPE_GROUP_CHAT:{
+            case SEARCH_TYPE_GROUP_CHAT: {
                 // 群号搜索界面
                 SearchFragment searchNewByGroupIdFragment
                         = SearchFragment.newInstance(SEARCH_GROUP_CHAT_ID);
@@ -156,7 +155,7 @@ public class SearchActivity extends AppCompatActivity {
                 mFragments.add(myGroupCharApplicationFragment);
                 break;
             }
-            case SEARCH_TYPE_MESSAGE:{
+            case SEARCH_TYPE_MESSAGE: {
                 // 搜索消息记录界面
                 SearchFragment searchHistoryMessageFragment
                         = SearchFragment.newInstance(SEARCH_HISTORY_MESSAGE);
@@ -170,9 +169,9 @@ public class SearchActivity extends AppCompatActivity {
 
     private void initNewFriendsMagicIndicator() {
 
-        int ACCENT_PRESS = getValueOfColorAttr(this, R.attr.accent_press);
-        int BG_WEAK = getValueOfColorAttr(this, R.attr.bg_weak);
-        int TEXT_MEDIUM = getValueOfColorAttr(this, R.attr.text_medium);
+        int TEXT_LINK = AttrColorUtils.getValueOfColorAttr(this, R.attr.text_link);
+        int BG_WEAK = AttrColorUtils.getValueOfColorAttr(this, R.attr.bg_weak);
+        int TEXT_MEDIUM = AttrColorUtils.getValueOfColorAttr(this, R.attr.text_medium);
 
         b.newFriendsIndicator.setBackgroundColor(BG_WEAK);
 
@@ -190,7 +189,7 @@ public class SearchActivity extends AppCompatActivity {
                 clipPagerTitleView.setText(mTitles[index]);
                 clipPagerTitleView.setTextColor(TEXT_MEDIUM);
                 clipPagerTitleView.setTextSize(getResources().getDimension(R.dimen.im_text_medium));
-                clipPagerTitleView.setClipColor(ACCENT_PRESS);
+                clipPagerTitleView.setClipColor(TEXT_LINK);
                 clipPagerTitleView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -206,7 +205,7 @@ public class SearchActivity extends AppCompatActivity {
             public IPagerIndicator getIndicator(Context context) {
                 LinePagerIndicator linePagerIndicator = new LinePagerIndicator(context);
                 linePagerIndicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
-                linePagerIndicator.setColors(ACCENT_PRESS);
+                linePagerIndicator.setColors(TEXT_LINK);
                 return linePagerIndicator;
             }
         });
@@ -215,9 +214,4 @@ public class SearchActivity extends AppCompatActivity {
         mFragmentContainerHelper.attachMagicIndicator(b.newFriendsIndicator);
     }
 
-    public static int getValueOfColorAttr(Context context, int attr) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(attr, typedValue, true);
-        return Color.parseColor(String.valueOf(typedValue.coerceToString()));
-    }
 }

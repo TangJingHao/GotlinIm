@@ -32,6 +32,7 @@
     <attr name="fill_medium"            format="color" />
     <attr name="fill_strong"            format="color" />
     <attr name="fill_ultrastrong"       format="color" />
+    <attr name="fill_white"             format="color" />
 
     <attr name="tsp_fill_weak"          format="color" />
     <attr name="tsp_fill_medium"        format="color" />
@@ -76,6 +77,7 @@
         <item name="fill_medium"            >@color/fill_medium             </item>
         <item name="fill_strong"            >@color/fill_strong             </item>
         <item name="fill_ultrastrong"       >@color/fill_ultrastrong        </item>
+        <item name="fill_white"             >@color/fill_white              </item>
 
         <item name="tsp_fill_weak"          >@color/tsp_fill_weak           </item>
         <item name="tsp_fill_medium"        >@color/tsp_fill_medium         </item>

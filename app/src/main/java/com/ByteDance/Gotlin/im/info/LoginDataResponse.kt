@@ -9,6 +9,7 @@ data class Data(
     val success: Boolean,
     val user: User
 )
+
 data class User(
     val online: Boolean,
     val userAvatar: String,

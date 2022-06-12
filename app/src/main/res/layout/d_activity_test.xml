@@ -4,29 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.TestActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".view.activity.TestActivity">
 
     <include
         android:id="@+id/test_bar"
-        layout="@layout/d_include_my_toolbar"/>
+        layout="@layout/d_include_my_toolbar" />
 
     <Button
         android:id="@+id/btn_new_friend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="查找新好友"/>
+        android:text="查找新好友" />
 
     <Button
         android:id="@+id/btn_new_group_chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="查找新群聊"/>
+        android:text="查找新群聊" />
 
     <Button
         android:id="@+id/btn_history_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="查找历史记录"/>
+        android:text="查找历史记录" />
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="登录" />
+
+    <include
+        android:id="@+id/item_search"
+        layout="@layout/d_item_user_info_message" />
+
 
 </LinearLayout>

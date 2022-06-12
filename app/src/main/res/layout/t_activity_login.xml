@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fill_weak">
+    android:background="?attr/fill_weak">
 
     <RelativeLayout
         android:id="@+id/top_rl"
@@ -21,7 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hi"
-                android:textColor="@color/text_ultrastrong"
+                android:textColor="?attr/text_ultrastrong"
                 android:textSize="@dimen/im_text_huge"
                 android:textStyle="bold" />
 
@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="，欢迎使用"
-                android:textColor="@color/text_ultrastrong"
+                android:textColor="?attr/text_ultrastrong"
                 android:textSize="@dimen/im_text_huge"
                 android:textStyle="bold" />
 
@@ -57,7 +57,7 @@
             android:layout_below="@id/title_rl"
             android:layout_marginTop="@dimen/im_spacing_small"
             android:text="简约好用的聊天工具"
-            android:textColor="@color/text_medium"
+            android:textColor="?attr/text_medium"
             android:textSize="@dimen/im_text_medium"
             android:textStyle="normal" />
 
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="邮箱"
-            android:textColor="@color/text_strong"
+            android:textColor="?attr/text_strong"
             android:textSize="@dimen/im_text_large" />
 
         <EditText
@@ -96,7 +96,7 @@
             android:background="@drawable/t_login_input_bg"
             android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
             android:paddingVertical="@dimen/im_input_box_paddingVertical"
-            android:textColor="@color/text_ultrastrong"
+            android:textColor="?attr/text_ultrastrong"
             android:textSize="@dimen/im_text_medium" />
 
         <TextView
@@ -106,7 +106,7 @@
             android:layout_below="@id/email_et"
             android:layout_marginTop="@dimen/im_spacing_medium"
             android:text="密码"
-            android:textColor="@color/text_strong"
+            android:textColor="?attr/text_strong"
             android:textSize="@dimen/im_text_large" />
 
         <EditText
@@ -118,7 +118,7 @@
             android:background="@drawable/t_login_input_bg"
             android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
             android:paddingVertical="@dimen/im_input_box_paddingVertical"
-            android:textColor="@color/text_ultrastrong"
+            android:textColor="?attr/text_ultrastrong"
             android:textSize="@dimen/im_text_medium" />
     </RelativeLayout>
 
@@ -147,7 +147,7 @@
             android:background="@drawable/t_login_button_bg"
             android:gravity="center"
             android:text="登  录"
-            android:textColor="@color/fill_weak"
+            android:textColor="?attr/fill_white"
             android:textSize="@dimen/im_text_large" />
 
         <View
@@ -167,7 +167,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="48dp"
             android:text="我已阅读并同意xxxxxxxxxxx"
-            android:textColor="@color/text_medium"
+            android:textColor="?attr/text_medium"
             android:textSize="@dimen/im_text_small" />
     </RelativeLayout>
 </RelativeLayout>
