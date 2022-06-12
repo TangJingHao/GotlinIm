@@ -50,9 +50,6 @@
             android:exported="true"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".view.activity.SearchNewFriendsActivity"
-            android:exported="true" />
-        <activity
             android:name=".view.activity.RegisterActivity"
             android:exported="true"
             android:launchMode="singleInstance" />

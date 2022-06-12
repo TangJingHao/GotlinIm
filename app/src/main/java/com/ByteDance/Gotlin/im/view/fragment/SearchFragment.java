@@ -6,12 +6,30 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ByteDance.Gotlin.im.R;
+import com.ByteDance.Gotlin.im.adapter.SearchAdapter;
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding;
+import com.ByteDance.Gotlin.im.info.SearchUser;
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.view.activity.SearchActivity;
+import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 
 public class SearchFragment extends Fragment {
 
+    private static final String TAG = "SearchFragment";
     private DFragmentSearchBinding b;
+
+    private SearchViewModel searchViewModel;
+    private List<List<SearchUser>> searchUserList = null;
 
     private static final String SEARCH_PARAM = "search_param";
 
@@ -25,14 +43,10 @@ public class SearchFragment extends Fragment {
     private static final int SEARCH_GROUP_CHAT_NICKNAME = 4;
     private static final int MY_GROUP_CHAR_APPLICATION = 5;
     private static final int SEARCH_HISTORY_MESSAGE = 6;
-    
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
 
     /**
      * 工厂模式创建Fragment实例类
+     *
      * @param searchParam 当前页面指示器选项卡
      * @return 实例化Fragment.
      */
@@ -50,44 +64,68 @@ public class SearchFragment extends Fragment {
         if (getArguments() != null) {
             searchParam = getArguments().getInt(SEARCH_PARAM);
         }
+        searchViewModel = new ViewModelProvider(getActivity()).get(SearchViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        b = DFragmentSearchBinding.inflate(inflater,container,false);
-        // TODO 处理不同条件下的搜索资料
-
+        b = DFragmentSearchBinding.inflate(inflater, container, false);
+        // 测试用
+        initDataTest();
         initViewAndEvent();
 
         return b.getRoot();
     }
 
+    /**
+     * 测试用数据
+     */
+    private void initDataTest() {
+        searchUserList = searchViewModel.searchNewFriendByMail("123456789@qq.com");
+    }
+
+    /**
+     * 初始化不同搜索类型下的界面和交互时事件
+     */
     private void initViewAndEvent() {
-        switch (searchParam){
-            case SEARCH_MAILBOX:{
+        String[] littleTitleArray;
+        switch (searchParam) {
+            case SEARCH_MAILBOX: {
+                DLogUtils.i(TAG, "SEARCH_MAILBOX");
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
             }
-            case SEARCH_NICKNAME:{
-
+            case SEARCH_NICKNAME: {
+                DLogUtils.i(TAG, "SEARCH_NICKNAME");
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
             }
-            case MY_APPLICATION:{
+            case MY_APPLICATION: {
+                DLogUtils.i(TAG, "MY_APPLICATION");
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_my_application_little_title);
                 b.searchBar.fLayout.setVisibility(View.GONE);
                 break;
             }
-            case SEARCH_GROUP_CHAT_ID:{
-
-                break;
-            }case SEARCH_GROUP_CHAT_NICKNAME:{
-
+            case SEARCH_GROUP_CHAT_ID: {
+                DLogUtils.i(TAG, "SEARCH_GROUP_CHAT_ID");
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
             }
-            case MY_GROUP_CHAR_APPLICATION:{
+            case SEARCH_GROUP_CHAT_NICKNAME: {
+                DLogUtils.i(TAG, "SEARCH_GROUP_CHAT_NICKNAME");
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
+                break;
+            }
+            case MY_GROUP_CHAR_APPLICATION: {
+                DLogUtils.i(TAG, "MY_GROUP_CHAR_APPLICATION");
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_my_application_little_title);
                 b.searchBar.fLayout.setVisibility(View.GONE);
                 break;
             }
-            case SEARCH_HISTORY_MESSAGE:{
+            case SEARCH_HISTORY_MESSAGE: {
+                DLogUtils.i(TAG, "SEARCH_HISTORY_MESSAGE");
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 b.timeBar.lLayout.setVisibility(View.VISIBLE);
                 b.timeBar.tvTimeFrom.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -104,7 +142,47 @@ public class SearchFragment extends Fragment {
                 break;
             }
             default:
+                littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
         }
+
+
+        // 测试，初始化recycle
+        SearchAdapter adapter = new SearchAdapter(getActivity(), searchUserList, Arrays.asList(littleTitleArray));
+        adapter.setSearchItemOnClickListener(new SearchAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                // 暂时没有回调
+            }
+        });
+        b.rvLayout.setLayoutManager(new LinearLayoutManager(getActivity()));
+        b.rvLayout.setAdapter(adapter);
+        if (searchUserList.size() != 0 && littleTitleArray.length != 0)
+            adapter.notifyDataSetChanged();
+
+        b.srLayout.setColorSchemeColors(AttrColorUtils
+                .getValueOfColorAttr(getActivity(), R.attr.accent_default));
+        b.srLayout.setProgressBackgroundColorSchemeColor(AttrColorUtils
+                .getValueOfColorAttr(getActivity(), R.attr.bg_weak));
+        b.srLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshData();
+            }
+        });
     }
+
+    /**
+     * 刷新数据，一般需要参数，这里测试用
+     */
+    private void refreshData() {
+        // TODO 网络请求获取资料（viewmodel），此处还未考虑线程
+
+        // TODO 通知Adapter更新
+
+        // 停止刷新动画
+        b.srLayout.setRefreshing(false);
+    }
+
+
 }
