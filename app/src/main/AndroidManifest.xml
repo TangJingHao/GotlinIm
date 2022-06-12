@@ -37,6 +37,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GotlinIm">
         <activity
+            android:name=".view.activity.GroupInfoActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".view.activity.ChatActivity"
             android:exported="true">
             <intent-filter>

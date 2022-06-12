@@ -89,6 +89,18 @@ public class SearchFragment extends Fragment {
             }
             case SEARCH_HISTORY_MESSAGE:{
                 b.timeBar.lLayout.setVisibility(View.VISIBLE);
+                b.timeBar.tvTimeFrom.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO 拉起时间选择器，选择初始时间
+                    }
+                });
+                b.timeBar.tvTimeTo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO 拉起时间选择器，选择结束时间
+                    }
+                });
                 break;
             }
             default:
