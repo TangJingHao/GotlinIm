@@ -16,10 +16,11 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/im_icon_medium"
+        android:layout_height="@dimen/im_icon_huge"
         android:layout_gravity="center"
+        android:gravity="center"
         android:textColor="?attr/text_ultrastrong"
-        android:textSize="@dimen/im_text_medium"
+        android:textSize="@dimen/im_text_large"
         android:text="@string/preview_text"/>
 
     <ImageButton

@@ -32,6 +32,8 @@
     <!--Toolbar标题-->
     <string name="title_info_friend">好友信息</string>
     <string name="title_info_group">群聊信息</string>
+    <!--选项卡文本-->
+    <string name="tab_text_care">特别关注</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

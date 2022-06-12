@@ -3,8 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/im_login_button_height"
-    tools:ignore="MissingDefaultResource">
-
+    android:background="?attr/bg_default"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:cardCornerRadius="@dimen/im_spacing_small"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/preview_text"
+            android:textColor="?attr/text_error"
+            android:textSize="@dimen/im_text_medium" />
+    </androidx.cardview.widget.CardView>
 
 
 </FrameLayout>
