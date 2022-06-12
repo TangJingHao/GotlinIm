@@ -177,13 +177,13 @@
                     android:textSize="@dimen/im_text_medium" />
 
 
+                <!--android:thumb="@drawable/m_track"-->
                 <Switch
                     android:id="@+id/switch1"
                     android:layout_width="96dp"
                     android:layout_height="48dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:thumb="@drawable/m_track"
                     tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 
@@ -213,6 +213,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="?attr/bg_weak"
         android:layout_marginTop="@dimen/im_spacing_medium"
         android:layout_marginRight="@dimen/im_common_horizontal"
         android:layout_marginLeft="@dimen/im_common_horizontal"
@@ -220,19 +221,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView4">
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?attr/bg_default"
+            app:cardCornerRadius="@dimen/im_spacing_small"
+            >
         <include
             android:id="@+id/tab_add_or_start"
             layout="@layout/m_info_item_blue" />
+        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/im_spacing_medium"
             android:background="?attr/bg_default" />
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?attr/bg_default"
+            android:layout_marginBottom="@dimen/im_spacing_small"
+            app:cardCornerRadius="@dimen/im_spacing_small"
+            >
         <include
             android:id="@+id/tab_delete_friend"
             layout="@layout/m_info_item_red" />
-
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
 

@@ -32,7 +32,8 @@ class FriendInfoActivity : AppCompatActivity() {
     private fun initView() {
         //获取类型并设置
         mFriendType = intent.getIntExtra(FRIEND_TYPE,1)
-        mBinding.toolbarInfo.title.text = this.resources.getString(R.string.title_info_friend)
+
+        mBinding.toolbarFriendInfo.title.text = this.resources.getString(R.string.title_info_friend)
 //        if (mFriendType == FRIEND_IS) {
 //
 //        } else if (mFriendType == FRIEND_NO) {
