@@ -2,6 +2,7 @@ package com.ByteDance.Gotlin.im.application
 
 import android.app.Application
 import android.content.Context
+import com.tencent.mmkv.MMKV
 
 /**
  * @Author 唐靖豪
@@ -22,6 +23,10 @@ class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
         mContext = this
+        // MMKV存储路径
+        val dir = filesDir.absolutePath + "/mmkv"
+        // MMKV初始化
+        val rootDir = MMKV.initialize(dir)
     }
 
 }

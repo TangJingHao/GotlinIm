@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.ByteDance.Gotlin.im.databinding.DMyToolbarBinding;
+import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 
@@ -30,7 +30,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final String TAG = "TAG_ChatActivity";
     private HActivityChatBinding view;
-    private DMyToolbarBinding toolbar;
+    private DIncludeMyToolbarBinding toolbar;
     private EditText input;
     private TextView send;
     private ChatViewModel model;

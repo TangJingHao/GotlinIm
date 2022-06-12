@@ -1,15 +1,13 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.ByteDance.Gotlin.im.R;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
-import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil;
 
 /**
  * by邓志聪

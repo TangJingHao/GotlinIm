@@ -22,8 +22,6 @@
     </string-array>
 
     <!--Toolbar标题-->
-    <string name="title_search_new_friend">查找新好友</string>
-    <string name="title_search_new_group_chat">查找新群聊</string>
     <string name="title_search_history_message">消息搜索</string>
 
 
