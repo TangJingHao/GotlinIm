@@ -37,38 +37,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GotlinIm">
         <activity
-            android:name=".view.activity.GroupInfoActivity"
+            android:name=".view.activity.SetFriendInfoActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
+            android:name=".view.activity.GroupInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activity.FriendInfoActivity"
             android:exported="false">
 
-            
         </activity>
-
         <activity
             android:name=".view.activity.ChatActivity"
-            android:exported="false">
-
-        </activity>
-
+            android:exported="false"></activity>
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.SearchNewFriendsActivity"
             android:exported="false">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
 
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
 
         </activity>
     </application>

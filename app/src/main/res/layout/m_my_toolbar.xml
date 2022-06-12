@@ -23,12 +23,14 @@
         android:textSize="@dimen/im_text_large"
         android:text="@string/preview_text"/>
 
-    <ImageButton
+    <Button
         android:id="@+id/img_more"
-        android:layout_width="@dimen/im_icon_medium"
-        android:layout_height="@dimen/im_icon_medium"
+        android:layout_width="@dimen/button_weigh"
+        android:layout_height="@dimen/button_high"
+        android:text="保存"
+        android:textColor="?attr/text_strong"
+        android:textSize="@dimen/im_text_small"
         android:layout_gravity="center_vertical|right"
-        android:background="@drawable/ic_28_more_horizontal"
         android:visibility="gone"/>
 
 </FrameLayout>
