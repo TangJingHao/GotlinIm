@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/bg_default">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/im_toolbar_height"
+        android:background="?attr/bg_weak"
+        android:paddingHorizontal="@dimen/im_common_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="通讯录"
+            android:textColor="?attr/text_ultrastrong"
+            android:textSize="@dimen/im_text_large" />
+    </RelativeLayout>
+</RelativeLayout>
