@@ -36,39 +36,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GotlinIm">
-		<activity
-			android:name=".view.activity.SetFriendInfoActivity"
-            android:exported="false" >
-		</activity>
-
+        <activity
+            android:name=".view.activity.MyGroupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.FriendApplicationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.SetFriendInfoActivity"
+            android:exported="false" />
         <activity
             android:name=".application.BaseActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".view.activity.GroupInfoActivity"
-
             android:exported="false" />
         <activity
             android:name=".view.activity.FriendInfoActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".view.activity.MainActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".view.activity.ChatActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".view.activity.LoginActivity"
             android:exported="false" />
@@ -77,13 +74,10 @@
             android:exported="false" />
         <activity
             android:name=".view.activity.SearchActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".view.activity.TestActivity"
-            android:exported="false">
-        </activity>
-
+            android:exported="false" />
     </application>
 
 </manifest>

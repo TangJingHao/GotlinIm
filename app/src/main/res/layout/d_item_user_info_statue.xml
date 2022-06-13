@@ -55,7 +55,6 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:layout_marginLeft="8dp"
-        android:background="?attr/fill_medium"
         android:gravity="center"
         android:lines="1"
         android:paddingHorizontal="@dimen/im_spacing_large"

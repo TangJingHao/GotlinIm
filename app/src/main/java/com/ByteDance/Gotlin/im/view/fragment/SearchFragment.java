@@ -27,7 +27,7 @@ public class SearchFragment extends Fragment {
     private DFragmentSearchBinding b;
 
     private SearchViewModel searchViewModel;
-    private List<List<TestUser>> searchUserList = null;
+    private List<List<TestUser>> userInfoData = null;
 
     private static final String SEARCH_PARAM = "search_param";
 
@@ -41,6 +41,10 @@ public class SearchFragment extends Fragment {
     private static final int SEARCH_GROUP_CHAT_NICKNAME = 4;
     private static final int MY_GROUP_CHAR_APPLICATION = 5;
     private static final int SEARCH_HISTORY_MESSAGE = 6;
+
+    private TabWithTitleAdapter adapter;
+    private String[] littleTitleArray;
+    private int adapterType;
 
     /**
      * 工厂模式创建Fragment实例类
@@ -70,7 +74,6 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         b = DFragmentSearchBinding.inflate(inflater, container, false);
         // 测试用
-        initDataTest();
         initViewAndEvent();
 
         return b.getRoot();
@@ -79,81 +82,101 @@ public class SearchFragment extends Fragment {
     /**
      * 测试用数据
      */
-    private void initDataTest() {
-        searchUserList = searchViewModel.searchNewFriendByMail("123456789@qq.com");
+    private void initDataOneGroup() {
+        userInfoData = searchViewModel.getOneUserGroup("123456789@qq.com");
+    }
+
+    private void initDataMoreThanOneGroup() {
+        userInfoData = searchViewModel.getUserGroupMoreThanOne("123456789@qq.com");
     }
 
     /**
      * 初始化不同搜索类型下的界面和交互时事件
      */
     private void initViewAndEvent() {
-        String[] littleTitleArray;
         switch (searchParam) {
             case SEARCH_MAILBOX: {
                 DLogUtils.i(TAG, "SEARCH_MAILBOX");
+                initDataOneGroup();
+                adapterType = TabWithTitleAdapter.TYPE_USER_INFO_STATUE;
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
             }
             case SEARCH_NICKNAME: {
                 DLogUtils.i(TAG, "SEARCH_NICKNAME");
+                initDataOneGroup();
+                adapterType = TabWithTitleAdapter.TYPE_USER_INFO_STATUE;
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
             }
             case MY_APPLICATION: {
                 DLogUtils.i(TAG, "MY_APPLICATION");
+                initDataMoreThanOneGroup();
+                adapterType = TabWithTitleAdapter.TYPE_USER_INFO_STATUE;
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_my_application_little_title);
                 b.searchBar.fLayout.setVisibility(View.GONE);
                 break;
             }
             case SEARCH_GROUP_CHAT_ID: {
                 DLogUtils.i(TAG, "SEARCH_GROUP_CHAT_ID");
+                initDataOneGroup();
+                adapterType = TabWithTitleAdapter.TYPE_USER_INFO_STATUE;
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
             }
             case SEARCH_GROUP_CHAT_NICKNAME: {
                 DLogUtils.i(TAG, "SEARCH_GROUP_CHAT_NICKNAME");
+                initDataOneGroup();
+                adapterType = TabWithTitleAdapter.TYPE_USER_INFO_STATUE;
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 break;
             }
             case MY_GROUP_CHAR_APPLICATION: {
                 DLogUtils.i(TAG, "MY_GROUP_CHAR_APPLICATION");
+                initDataMoreThanOneGroup();
+                adapterType = TabWithTitleAdapter.TYPE_USER_INFO_STATUE;
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_my_application_little_title);
                 b.searchBar.fLayout.setVisibility(View.GONE);
                 break;
             }
             case SEARCH_HISTORY_MESSAGE: {
                 DLogUtils.i(TAG, "SEARCH_HISTORY_MESSAGE");
+                initDataOneGroup();
+                adapterType = TabWithTitleAdapter.TYPE_USER_MESSAGE;
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
                 b.timeBar.lLayout.setVisibility(View.VISIBLE);
-                b.timeBar.tvTimeFrom.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO 拉起时间选择器，选择初始时间
-                    }
+                b.timeBar.tvTimeFrom.setOnClickListener(view -> {
+                    // TODO 拉起时间选择器，选择初始时间
+
                 });
-                b.timeBar.tvTimeTo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO 拉起时间选择器，选择结束时间
-                    }
+                b.timeBar.tvTimeTo.setOnClickListener(view -> {
+                    // TODO 拉起时间选择器，选择结束时间
+
                 });
                 break;
             }
             default:
                 littleTitleArray = getResources().getStringArray(R.array.rvLayout_search_result_little_title);
+                adapterType = TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE;
                 break;
         }
 
-
         // 多布局复合recycle
-        TabWithTitleAdapter adapter = new TabWithTitleAdapter(
+        adapter = new TabWithTitleAdapter<TestUser>(
                 getActivity(),
-                searchUserList,
+                userInfoData,
                 Arrays.asList(littleTitleArray),
-                TabWithTitleAdapter.TYPE_USER_MESSAGE);
+                adapterType);
+        adapter.setItemOnClickListener(new TabWithTitleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int groupPosition, int relativePosition) {
+                DLogUtils.i(TAG, "onItemClick, do nothing");
+            }
+        });
+
         b.rvLayout.setLayoutManager(new LinearLayoutManager(getActivity()));
         b.rvLayout.setAdapter(adapter);
-        if (searchUserList.size() != 0 && littleTitleArray.length != 0)
+        if (userInfoData.size() != 0 && littleTitleArray.length != 0)
             adapter.notifyDataSetChanged();
 
 
@@ -174,9 +197,10 @@ public class SearchFragment extends Fragment {
      */
     private void refreshData() {
         // TODO 网络请求获取资料（viewmodel），此处还未考虑线程
-
-        // TODO 通知Adapter更新
-
+        userInfoData = searchViewModel.getOneUserGroup("");
+        if (adapter != null && userInfoData.size() != 0 &&
+                userInfoData.size() == littleTitleArray.length)
+            adapter.notifyDataSetChanged();
         // 停止刷新动画
         b.srLayout.setRefreshing(false);
     }

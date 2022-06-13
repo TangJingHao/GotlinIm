@@ -14,7 +14,9 @@ import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoSimpleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoStatueBinding;
 import com.ByteDance.Gotlin.im.info.TestUser;
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -34,7 +36,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
 
     private final Context mContext;
     // 要展示的信息
-    private final List<List<E>> mSearchUserInfoList;
+    private final List<List<E>> mUserInfoList;
     // 各组组名
     private final List<String> mGroupNameList;
     // 记录标题下标
@@ -67,10 +69,10 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         void onMoreClick(View v, int groupPosition, int relativePosition);
     }
 
-    public OnItemClickListener mItemOnClickListener;
-    public OnMoreClickListener mOnMoreClickListener;
+    public OnItemClickListener mItemOnClickListener = null;
+    public OnMoreClickListener mOnMoreClickListener = null;
 
-    public void setMoreOnClickListener(OnItemClickListener listener) {
+    public void setItemOnClickListener(OnItemClickListener listener) {
         this.mItemOnClickListener = listener;
     }
 
@@ -83,7 +85,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
      *
      * @param context        context
      * @param searchUserList 需要展示的用户信息集合
-     * @param groupTitleList 对应用户信息的各组标题
+     * @param groupTitleList 对应用户信息的各组标题（使用必须注意两参数是否大小一致）
      * @param tabType        展示类型，如 TYPE_USER_INFO_STATUE
      */
     public TabWithTitleAdapter(Context context,
@@ -91,17 +93,17 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                                List<String> groupTitleList,
                                int tabType) {
         mContext = context;
-        mSearchUserInfoList = searchUserList;
+        mUserInfoList = searchUserList;
         mGroupNameList = groupTitleList;
         mTabType = tabType;
 
-        totalLen = mSearchUserInfoList.size();
+        totalLen = mUserInfoList.size();
         mTitleIndexList = new ArrayList<>(totalLen);
         int titlePositionIndex = 0;
         // 确定总item数量，titleItem出现的position
-        for (int i = 0; i < mSearchUserInfoList.size(); i++) {
+        for (int i = 0; i < mUserInfoList.size(); i++) {
             mTitleIndexList.add(i, titlePositionIndex);
-            int curGroupsize = mSearchUserInfoList.get(i).size();
+            int curGroupsize = mUserInfoList.get(i).size();
             titlePositionIndex += 1 + curGroupsize;
             totalLen += curGroupsize;
         }
@@ -147,7 +149,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         } else {
             // 一些数学推导,重定位position相对位置
             int curGroupLen;
-            if (curGroupIndex == mSearchUserInfoList.size()) { // 到了最后一组
+            if (curGroupIndex == mUserInfoList.size()) { // 到了最后一组
                 curGroupLen = totalLen - mTitleIndexList.get(curGroupIndex - 1) - 1;
             } else {
                 curGroupLen = mTitleIndexList.get(curGroupIndex) - mTitleIndexList.get(curGroupIndex - 1) - 1;
@@ -159,58 +161,68 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
             // TODO 泛型适配不同的User类，需要修改的靓仔请找到自己的case修改
             switch (mTabType) {
                 case TYPE_USER_INFO_STATUE: {
+
                     // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    TestUser user = (TestUser) mUserInfoList.get(curGroupIndex - 1).get(relativePosition);
                     UserStatueInfoViewHolder userHolder = (UserStatueInfoViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
                     Glide.with(mContext)
                             .load(DEFAULT_IMG)
-                            .apply(RequestOptions.bitmapTransform(new RoundedCorners(4)))
                             .into(userHolder.b.imgUserPic);//四周都是圆角的圆角矩形图片。
                     userHolder.b.tvUserName.setText(user.getUserName());
                     userHolder.b.tvUserMail.setText(user.getUserMail());
-                    userHolder.b.tvStatue.setText(user.getStatue());
-                    userHolder.b.rLayout.setOnClickListener(view ->
-                            mItemOnClickListener.onItemClick(view,
-                            curGroupIndex - 1, relativePosition));
-                    userHolder.b.tvStatue.setOnClickListener(view ->
-                            mOnMoreClickListener.onMoreClick(view,
-                            curGroupIndex - 1, relativePosition));
+
+                    if (mItemOnClickListener != null)
+                        userHolder.b.rLayout.setOnClickListener(view ->
+                                mItemOnClickListener.onItemClick(view,
+                                        curGroupIndex - 1, relativePosition));
+                    if (mOnMoreClickListener != null) {
+                        userHolder.b.tvStatue.setOnClickListener(view ->
+                                mOnMoreClickListener.onMoreClick(view,
+                                        curGroupIndex - 1, relativePosition));
+                        userHolder.b.tvStatue.setBackgroundColor(
+                                AttrColorUtils.getValueOfColorAttr(mContext, R.attr.accent_default));
+                        userHolder.b.tvStatue.setText("操作");
+                        userHolder.b.tvStatue.setTextColor(AttrColorUtils
+                                .getValueOfColorAttr(mContext, R.attr.fill_white));
+                    } else {
+                        userHolder.b.tvStatue.setText(user.getStatue());
+                    }
                     break;
                 }
                 case TYPE_USER_INFO_SIMPLE: {
                     // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    TestUser user = (TestUser) mUserInfoList.get(curGroupIndex - 1).get(relativePosition);
                     SimpleUserInfoViewHolder simpleUserHolder = (SimpleUserInfoViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
                     Glide.with(mContext)
                             .load(DEFAULT_IMG)
-                            .apply(RequestOptions.bitmapTransform(new RoundedCorners(4)))
                             .into(simpleUserHolder.b.imgUserPic);
                     simpleUserHolder.b.tvUserName.setText(user.getUserName());
-                    simpleUserHolder.b.rLayout.setOnClickListener(view ->
-                            mItemOnClickListener.onItemClick(view,
-                            curGroupIndex - 1, relativePosition));
+                    if (mItemOnClickListener != null)
+                        simpleUserHolder.b.rLayout.setOnClickListener(view ->
+                                mItemOnClickListener.onItemClick(view,
+                                        curGroupIndex - 1, relativePosition));
                     break;
                 }
                 case TYPE_USER_MESSAGE: {
                     // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    TestUser user = (TestUser) mUserInfoList.get(curGroupIndex - 1).get(relativePosition);
                     UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
                     Glide.with(mContext)
                             .load(DEFAULT_IMG)
-                            .apply(RequestOptions.bitmapTransform(new RoundedCorners(4)))
                             .into(MessageHolder.b.imgUserPic);
                     MessageHolder.b.tvUserName.setText(user.getUserName());
                     MessageHolder.b.tvUserMsg.setText(user.getMsg());
                     MessageHolder.b.tvTime.setText("当前时间");
-                    MessageHolder.b.rLayout.setOnClickListener(view ->
-                            mItemOnClickListener.onItemClick(view,
-                            curGroupIndex - 1, relativePosition));
+                    if (mItemOnClickListener != null)
+                        MessageHolder.b.rLayout.setOnClickListener(view ->
+                                mItemOnClickListener.onItemClick(view,
+                                        curGroupIndex - 1, relativePosition));
                     break;
                 }
                 default:
