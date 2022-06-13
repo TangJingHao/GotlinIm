@@ -21,7 +21,7 @@ public class SearchViewModel extends ViewModel {
     private List<List<TestUser>> searchUserList;
 
     // TODO 本应通过网络请求返回LiveData数据，目前仅测试用
-    public List<List<TestUser>> searchNewFriendByMail(String mail) {
+    public List<List<TestUser>> getUserGroupMoreThanOne(String mail) {
         TestUser u1 = new TestUser("null", "123456789@qq.com", "张三", "状态显示", "无消息");
         TestUser u2 = new TestUser("null", "123456789@qq.com", "李四", "状态显示", "无消息");
         TestUser u3 = new TestUser("null", "123456789@qq.com", "王五", "状态显示", "无消息");
@@ -40,6 +40,19 @@ public class SearchViewModel extends ViewModel {
         G2.add(u7);
         searchUserList = new ArrayList<>();
         searchUserList.add(G1);
+        searchUserList.add(G2);
+        return searchUserList;
+    }
+
+    public List<List<TestUser>> getOneUserGroup(String mail) {
+        TestUser u5 = new TestUser("null", "123456789@qq.com", "小福贵", "厨子", "做饭");
+        TestUser u6 = new TestUser("null", "123456789@qq.com", "小飞碟", "格格", "刺杀");
+        TestUser u7 = new TestUser("null", "123456789@qq.com", "小李子", "公公", "捣乱");
+        ArrayList<TestUser> G2 = new ArrayList<>();
+        G2.add(u5);
+        G2.add(u6);
+        G2.add(u7);
+        searchUserList = new ArrayList<>();
         searchUserList.add(G2);
         return searchUserList;
     }

@@ -30,10 +30,16 @@
         android:text="查找历史记录" />
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_friend_application"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="登录" />
+        android:text="好友申请" />
+
+    <Button
+        android:id="@+id/btn_my_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="我的群聊" />
 
     <include
         android:id="@+id/item_search"

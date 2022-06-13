@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 
@@ -58,6 +59,12 @@ public class TestActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        b.btnFriendApplication.setOnClickListener(view ->
+                startActivity(new Intent(TestActivity.this, FriendApplicationActivity.class)));
+
+        b.btnMyGroup.setOnClickListener(view ->
+                startActivity(new Intent(TestActivity.this, MyGroupActivity.class)));
+
         // 小红点使用Demo=============================================================================
         // 文章可查阅 https://mp.weixin.qq.com/s/rdAjBQ2DRCjiEKLc6EoChw
         // 创建小红点BadgeDrawable
@@ -91,6 +98,7 @@ public class TestActivity extends AppCompatActivity {
         // 更改小红点的数值----------------------------------------------------------------------------
         b.itemSearch.rLayout.setOnClickListener(new View.OnClickListener() {
             int i = 1;
+
             @Override
             public void onClick(View view) {
                 redPoint.setNumber(i++);
