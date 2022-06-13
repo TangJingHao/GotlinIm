@@ -4,17 +4,17 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.ByteDance.Gotlin.im.databinding.DMyToolbarBinding;
+import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 
@@ -24,12 +24,17 @@ import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
  */
 public class ChatActivity extends AppCompatActivity {
 
-    static final String TAG = "TAG_ChatActivity";
-    HActivityChatBinding view = null;
-    DMyToolbarBinding toolbar;
-    EditText input;
-    TextView send;
-    ChatViewModel model;
+    //聊天类型[1单人/2群聊]
+    private static final int TYPE_SINGLE = 1;
+    private static final int TYPE_GROUPS = 2;
+
+    private static final String TAG = "TAG_ChatActivity";
+    private HActivityChatBinding view;
+    private DIncludeMyToolbarBinding toolbar;
+    private EditText input;
+    private TextView send;
+    private ChatViewModel model;
+    private ImageButton back;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class ChatActivity extends AppCompatActivity {
         toolbar.imgMore.setVisibility(View.VISIBLE);
         input = view.input;
         send = view.send;
+        back = toolbar.imgChevronLeft;
         model = new ViewModelProvider(this).get(ChatViewModel.class);
 
         //文本监测
@@ -64,17 +70,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         //回车监测
-        input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                send();
-                return true;
-            }
+        input.setOnEditorActionListener((v, actionId, event) -> {
+            send();
+            return true;
         });
 
-        send.setOnClickListener(view -> {
-            send();
-        });
+        send.setOnClickListener(view -> send());
+        back.setOnClickListener(view -> back());
+
     }
 
     /**
@@ -106,5 +109,12 @@ public class ChatActivity extends AppCompatActivity {
         input.clearFocus();
         input.setText("");
         hideKeyboard();
+    }
+
+    /**
+     * 返回
+     */
+    private void back() {
+        //TODO:back
     }
 }

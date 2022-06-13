@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/fill_weak">
+
+    <RelativeLayout
+        android:id="@+id/top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/im_common_horizontal_large"
+        android:layout_marginTop="@dimen/im_toolbar_height">
+
+        <LinearLayout
+            android:id="@+id/title_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="欢迎注册"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_huge"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IM"
+                android:textColor="?attr/accent_default"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="通讯账号"
+                android:textColor="?attr/text_link"
+                android:textSize="@dimen/im_text_huge"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title_tv_02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_ll"
+            android:layout_marginTop="@dimen/im_spacing_small"
+            android:text="请按照提示完成账号注册"
+            android:textColor="?attr/text_medium"
+            android:textSize="@dimen/im_text_medium"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mid_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_rl"
+        android:layout_marginHorizontal="@dimen/im_common_horizontal_large"
+        android:layout_marginTop="@dimen/im_common_horizontal_large">
+
+        <TextView
+            android:id="@+id/sex_tv"
+            android:layout_width="36dp"
+            android:layout_height="26dp"
+            android:text="性别"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_large" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sex_tv"
+            android:layout_marginTop="@dimen/im_spacing_huge">
+
+            <RadioGroup
+                android:id="@+id/sex_rg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/male_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/t_radio_group_selector"
+                    android:checked="true"
+                    android:text="  男"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium"
+                    android:textStyle="normal" />
+
+                <RadioButton
+                    android:id="@+id/female_rb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/im_icon_large"
+                    android:button="@drawable/t_radio_group_selector"
+                    android:checked="false"
+                    android:text="  女"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium"
+                    android:textStyle="normal" />
+            </RadioGroup>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/input_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mid_rl"
+        android:layout_marginHorizontal="@dimen/im_common_horizontal_large"
+        android:layout_marginTop="@dimen/im_spacing_huge">
+
+        <TextView
+            android:id="@+id/nickname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="昵称"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium" />
+
+        <EditText
+            android:id="@+id/nickname_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/im_input_box_height"
+            android:layout_below="@id/nickname_tv"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:background="@drawable/t_input_bg" />
+
+        <TextView
+            android:id="@+id/email_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nickname_et"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:text="注册邮箱"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium" />
+
+        <EditText
+            android:id="@+id/email_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/im_input_box_height"
+            android:layout_below="@id/email_tv"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:background="@drawable/t_input_bg" />
+
+        <TextView
+            android:id="@+id/password_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/email_et"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:text="密码"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium" />
+
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/im_input_box_height"
+            android:layout_below="@id/password_tv"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:background="@drawable/t_input_bg" />
+
+        <TextView
+            android:id="@+id/confirm_password_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/password_et"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:text="确定密码"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium" />
+
+        <EditText
+            android:id="@+id/confirm_password_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/im_input_box_height"
+            android:layout_below="@id/confirm_password_tv"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:background="@drawable/t_input_bg" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_rl"
+        android:layout_marginHorizontal="@dimen/im_common_horizontal_large"
+        android:layout_marginTop="@dimen/im_common_horizontal_large">
+
+        <TextView
+            android:id="@+id/login_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已有账号，马上登陆"
+            android:textColor="?attr/text_link"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/register_btn"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_below="@id/login_tv"
+            android:layout_marginTop="@dimen/im_spacing_huge"
+            android:background="@drawable/t_login_button_bg"
+            android:gravity="center"
+            android:text="注  册"
+            android:textColor="?attr/fill_weak"
+            android:textSize="@dimen/im_text_large" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/navigation_message">
+    <fragment
+        android:id="@+id/navigation_message"
+        android:name="com.ByteDance.Gotlin.im.view.fragment.MessageFragment"
+        android:label="消息"
+        tools:layout="@layout/t_fragment_message" />
+    <fragment
+        android:id="@+id/navigation_address_book"
+        android:name="com.ByteDance.Gotlin.im.view.fragment.AddressBookFragment"
+        android:label="通讯录"
+        tools:layout="@layout/t_fragment_address_book" />
+    <fragment
+        android:id="@+id/navigation_my_information"
+        android:name="com.ByteDance.Gotlin.im.view.fragment.MyInformationFragment"
+        android:label="我的"
+        tools:layout="@layout/t_fragment_my_infomation" />
+</navigation>

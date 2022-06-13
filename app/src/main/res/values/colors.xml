@@ -69,7 +69,7 @@
     <color name="dark_accent_default">@color/PrimaryBlue_03</color>
     <color name="dark_accent_hover">@color/PrimaryBlue_02</color>
     <color name="dark_accent_press">@color/PrimaryBlue_01</color>
-    <color name="dark_accent_disabled">@color/PrimaryBlue_06</color>
+    <color name="dark_accent_disabled">@color/dark_fill_medium</color>
 
     <!--  警示 critical  -->
     <color name="dark_critical_default">@color/Red_03</color>
@@ -104,6 +104,7 @@
     <color name="dark_fill_medium">      #1D2437</color>
     <color name="dark_fill_strong">      #51586A</color>
     <color name="dark_fill_ultrastrong"> #697080</color>
+    <color name="dark_fill_white">       #E0ffffff</color>
 
     <color name="dark_bg_default">  #121212</color>
     <color name="dark_bg_weak">     #2F2F2F</color>

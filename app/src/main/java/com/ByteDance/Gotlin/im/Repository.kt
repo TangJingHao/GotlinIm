@@ -21,7 +21,7 @@ object Repository {
     private var mmkv: MMKV = MMKV.defaultMMKV()
 
     // 使用MMKV进行存储示例
-    private const val MMKV_CUR_THEME = "key";
+    private const val MMKV_CUR_THEME = "key"
 
     /**
      * MMKV添加/更新当前主题

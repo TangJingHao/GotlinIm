@@ -31,6 +31,13 @@
     <dimen name="im_text_medium">14sp</dimen><!--大多数正文，选项卡-->
     <dimen name="im_text_large">16sp</dimen><!--标题,注册页输入框上方备注-->
     <dimen name="im_text_huge">24dp</dimen><!--注册页欢迎大字-->
+
+
+    <dimen name="user_item_height">48dp</dimen>
+    <dimen name="user_item_detail_height">64dp</dimen>
+
+<!--    <dimen name="user_item_simple_height">48p</dimen>-->
+
     <!--用户项，用于用户列表展现-->
     <dimen name="im_user_item_height">48dp</dimen>
     <dimen name="im_user_item_detail_height">64dp</dimen>
@@ -39,5 +46,17 @@
     <!--头像大小-->
     <dimen name="user_pic">48dp</dimen>
     <dimen name="user_pic_small">36dp</dimen>
+
+
+    <!--按钮大小-->
+    <dimen name="button_high">38dp</dimen>
+    <dimen name="button_weigh">56dp</dimen>
+
+    <!--圆弧角度-->
+    <dimen name="tab_small">2dp</dimen>
+
+
+    <!--状态栏高度-->
+    <dimen name="im_status_height">30dp</dimen>
 
 </resources>

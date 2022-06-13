@@ -29,7 +29,8 @@
         android:padding="8dp"
         android:paddingHorizontal="8dp"
         android:text="2022 - 05 - 22"
-        android:textColor="?attr/accent_default"
+        android:textStyle="bold"
+        android:textColor="?attr/text_link"
         android:textSize="@dimen/im_text_small" />
 
 
@@ -53,7 +54,8 @@
         android:padding="8dp"
         android:paddingHorizontal="8dp"
         android:text="2022 - 05 - 22"
-        android:textColor="?attr/accent_default"
+        android:textStyle="bold"
+        android:textColor="?attr/text_link"
         android:textSize="@dimen/im_text_small" />
 
 

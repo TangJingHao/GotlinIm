@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:width="327dp" android:height="128dp">
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/bg_weak" />
+            <corners
+                android:topLeftRadius="@dimen/im_spacing_large"
+                android:topRightRadius="@dimen/im_spacing_large"
+                android:bottomLeftRadius="@dimen/im_spacing_large"
+                android:bottomRightRadius="@dimen/im_spacing_large" />
+        </shape>
+    </item>
+</selector>

@@ -51,10 +51,10 @@ class LoginActivity : AppCompatActivity() {
         mContext = this
         super.onCreate(savedInstanceState)
         initConfig()
+        setContentView(mBinding.root)
         initPermission()
         initViewListener()
         initCallBack()
-        setContentView(mBinding.root)
     }
 
     /**
@@ -76,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
                 TPhoneUtil.showToast(mContext, "返回值为NULL")
             } else {
                 TPhoneUtil.showToast(mContext, responseData.msg)
+                startActivity(Intent(this@LoginActivity,MainActivity::class.java))
             }
         }
     }
@@ -99,6 +100,9 @@ class LoginActivity : AppCompatActivity() {
                 TPhoneUtil.showToast(mContext, "邮箱或者密码不可以为空")
             }
         }
+        mBinding.registerTv.setOnClickListener {
+            startActivity(Intent(this,RegisterActivity::class.java))
+        }
 
         //测试用：
         mBinding.userLoginReadTv.setOnClickListener {
@@ -121,16 +125,19 @@ class LoginActivity : AppCompatActivity() {
         val phoneMode = TPhoneUtil.getPhoneMode(this)
         if (phoneMode == Constants.DARK_MODE) {
             TLogUtil.d("暗色模式")
-            QMUIStatusBarHelper.setStatusBarLightMode(this)
-            //QMUIStatusBarHelper.setStatusBarDarkMode(this)
+            QMUIStatusBarHelper.setStatusBarDarkMode(this)
         } else if (phoneMode == Constants.LIGHT_MODE) {
             TLogUtil.d("亮色模式")
             QMUIStatusBarHelper.setStatusBarLightMode(this)
         }
 
         mSelectorStyle = TMyPictureSelectorStyle.getSelectorStyle(this)
-        mMyEditMediaIListener = TMyEditMediaIListener(TPhoneUtil.getSandboxPath(mContext),mContext,Constants.DEFAULT_TYPE)
-        mLauncherResult=createActivityResultLauncher()
+        mMyEditMediaIListener = TMyEditMediaIListener(
+            TPhoneUtil.getSandboxPath(mContext),
+            mContext,
+            Constants.DEFAULT_TYPE
+        )
+        mLauncherResult = createActivityResultLauncher()
     }
 
     /**

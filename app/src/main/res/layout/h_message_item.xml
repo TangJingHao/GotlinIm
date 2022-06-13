@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_default">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/im_spacing_huge"
+        android:paddingVertical="6dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/header_left"
+            layout="@layout/h_header" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@id/header_left"
+            app:layout_constraintTop_toTopOf="@id/header_left">
+
+            <TextView
+                android:id="@+id/name_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/im_spacing_medium"
+                android:text="@string/preview_text"
+                android:textColor="?attr/text_medium"
+                android:textSize="@dimen/im_text_tiny" />
+
+
+            <TextView
+                android:id="@+id/msg_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/im_spacing_medium"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/h_chat_left_item"
+                android:maxWidth="240dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="6dp"
+                android:text="@string/preview_text"
+                android:textSize="@dimen/im_text_medium" />
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/im_spacing_huge"
+        android:paddingVertical="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/header_right"
+            layout="@layout/h_header"
+            android:layout_width="@dimen/im_icon_huge"
+            android:layout_height="@dimen/im_icon_huge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@id/header_right"
+            app:layout_constraintTop_toTopOf="@id/header_right">
+
+            <TextView
+                android:id="@+id/name_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/im_spacing_medium"
+                android:text="@string/preview_text"
+                android:textColor="?attr/text_medium"
+                android:textSize="@dimen/im_text_tiny" />
+
+            <TextView
+                android:id="@+id/msg_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="@dimen/im_spacing_medium"
+                android:layout_marginBottom="2dp"
+                android:background="@drawable/h_chat_right_item"
+                android:maxWidth="240dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="6dp"
+                android:text="@string/preview_text"
+                android:textColor="@color/bg_weak"
+                android:textSize="@dimen/im_text_medium" />
+
+            <include
+                android:id="@+id/error"
+                layout="@layout/h_message_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="@dimen/im_spacing_medium"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
