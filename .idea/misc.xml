@@ -34,7 +34,9 @@
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/t_view_slice_bg.xml" value="0.1" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_activity_friend_info.xml" value="0.24947916666666667" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_activity_group_info.xml" value="0.253125" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_activity_group_invite.xml" value="0.1" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_activity_group_members.xml" value="0.23489583333333333" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_activity_group_my_list.xml" value="0.32395833333333335" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_activity_search_message.xml" value="0.45" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_activity_set_friend_info.xml" value="0.335" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_fragment_search_message_icon.xml" value="0.2520833333333333" />
@@ -42,6 +44,7 @@
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_info_item_blue.xml" value="0.2755208333333333" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_info_item_in_back.xml" value="0.2755208333333333" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_info_item_red.xml" value="0.2755208333333333" />
+        <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_item_people.xml" value="0.21875" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_my_toolbar.xml" value="0.2755208333333333" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_recycle_item_gtouping.xml" value="0.1339918946301925" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/layout/m_recycle_item_shearch_result.xml" value="0.75" />

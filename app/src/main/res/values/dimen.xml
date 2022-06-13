@@ -32,7 +32,6 @@
     <dimen name="im_text_large">16sp</dimen><!--标题,注册页输入框上方备注-->
     <dimen name="im_text_huge">24dp</dimen><!--注册页欢迎大字-->
 
-
     <dimen name="user_item_height">48dp</dimen>
     <dimen name="user_item_detail_height">64dp</dimen>
 
