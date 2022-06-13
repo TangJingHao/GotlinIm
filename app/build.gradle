@@ -51,13 +51,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.0'
     //PictureSelector基础 (必须)
-    implementation 'io.github.lucksiege:pictureselector:2.6.3'
+    implementation 'io.github.lucksiege:pictureselector:v3.0.9'
     // 图片压缩 (按需引入)
-    implementation 'io.github.lucksiege:compress:v3.10.1'
+    implementation 'io.github.lucksiege:compress:v3.0.9'
     // 图片裁剪 (按需引入)
-    implementation 'io.github.lucksiege:ucrop:v3.10.1'
+    implementation 'io.github.lucksiege:ucrop:v3.0.9'
     // 自定义相机 (按需引入)
-    implementation 'io.github.lucksiege:camerax:v3.10.1'
+    implementation 'io.github.lucksiege:camerax:v3.0.9'
     // 权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:13.6'
     implementation 'com.github.bumptech.glide:glide:4.13.2'
