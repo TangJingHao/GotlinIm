@@ -1,38 +1,34 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import static com.ByteDance.Gotlin.im.info.Message.FRIENDS;
 import static com.ByteDance.Gotlin.im.info.Message.TYPE_TEXT;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ByteDance.Gotlin.im.R;
+import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
-import com.ByteDance.Gotlin.im.databinding.HMessageItemBinding;
 import com.ByteDance.Gotlin.im.info.Message;
+import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * @author: Hx
@@ -52,6 +48,9 @@ public class ChatActivity extends AppCompatActivity {
     private ChatViewModel model;
     private ImageButton back;
     private RecyclerView chatList;
+    private SwipeRefreshLayout refresh;
+    private ArrayList<Message> list = new ArrayList<>();
+    private ChatListAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +68,21 @@ public class ChatActivity extends AppCompatActivity {
         back = toolbar.imgChevronLeft;
         model = new ViewModelProvider(this).get(ChatViewModel.class);
         chatList = view.chatList;
+        refresh = view.refresh;
+
+        //刷新监听
+        model.refreshMsgList().observe(this, new Observer<ArrayList<Message>>() {
+            @Override
+            public void onChanged(ArrayList<Message> messages) {
+                ArrayList<Message> list = adapter.getData();
+                adapter.setList(messages);
+                DiffUtil.DiffResult diffResult
+                        = DiffUtil.calculateDiff(new DifferCallback(list, messages));
+                diffResult.dispatchUpdatesTo(adapter);
+                chatList.scrollToPosition(0);
+                refresh.setRefreshing(false);
+            }
+        });
 
         //文本监测
         input.addTextChangedListener(new TextWatcher() {
@@ -96,21 +110,22 @@ public class ChatActivity extends AppCompatActivity {
         send.setOnClickListener(view -> send());
         back.setOnClickListener(view -> back());
 
-        String[] strings = {"轻轻敲碎沉睡的心灵", "慢慢睁开你地眼睛",
-                "看看这世界是否依然", "忙碌的转个不停", "春风不解风情", "吹动少年的心"};
-
-        ArrayList<Message> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            list.add(new Message(strings[new Random().nextInt(5)],
-                    TYPE_TEXT, new Random().nextInt(1)));
+            list.add(new Message(String.valueOf(10 - i),
+                    TYPE_TEXT, i % 2, System.currentTimeMillis()));
         }
-        ChatListAdapter adapter = new ChatListAdapter(list);
+
+        adapter = new ChatListAdapter(list);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(RecyclerView.VERTICAL);
         manager.setSmoothScrollbarEnabled(true);
         chatList.setLayoutManager(manager);
         chatList.setAdapter(adapter);
 
+        //刷新
+        refresh.setOnRefreshListener(() -> {
+            model.refresh(adapter.getData());
+        });
     }
 
     /**
@@ -151,49 +166,4 @@ public class ChatActivity extends AppCompatActivity {
         //TODO:back
     }
 
-
-}
-
-class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
-
-    ArrayList<Message> list;
-
-    public ChatListAdapter(ArrayList<Message> list) {
-        this.list = list;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.h_message_item, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        HMessageItemBinding binding = holder.binding;
-        Message message = list.get(position);
-        if (message.from == FRIENDS) {
-            binding.left.setVisibility(View.VISIBLE);
-            binding.msgLeft.setText(message.content);
-        } else {
-            binding.right.setVisibility(View.VISIBLE);
-            binding.msgRight.setText(message.content);
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        HMessageItemBinding binding;
-
-        public ViewHolder(View v) {
-            super(v);
-            binding = HMessageItemBinding.bind(v);
-        }
-    }
 }

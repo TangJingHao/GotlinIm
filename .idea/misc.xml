@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_activity_chat.xml" value="0.1" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_header.xml" value="0.36203703703703705" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/d_img_useravatar2.xml" value="0.1" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_16_multi_select.xml" value="0.1" />
         <entry key="..\:/AndroidProject/BytedanceProject/bytedance/GotlinIm/app/src/main/res/drawable/ic_16_multi_select_unchecked.xml" value="0.1" />

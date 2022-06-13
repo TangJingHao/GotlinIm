@@ -14,10 +14,12 @@ public class Message {
     public String content;
     public int type;
     public int from;
+    public long time;
 
-    public Message(String content, int type, int from) {
+    public Message(String content, int type, int from, long time) {
         this.content = content;
         this.type = type;
         this.from = from;
+        this.time = time;
     }
 }
