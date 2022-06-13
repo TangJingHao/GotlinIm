@@ -46,7 +46,7 @@
                 android:layout_marginLeft="@dimen/im_spacing_medium"
                 android:layout_marginRight="@dimen/im_spacing_medium"
                 android:layout_height="@dimen/im_input_box_height"
-                android:background="@drawable/t_login_input_bg"/>
+                android:background="@drawable/t_input_bg"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
