@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/r_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/im_user_item_height"
+    android:background="@color/bg_weak"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/im_common_horizontal">
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/im_spacing_large"
+        android:layout_toEndOf="@+id/img_user_pic"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxEms="12"
+        android:text="用户名"
+        android:textColor="?attr/text_ultrastrong"
+        android:textSize="@dimen/im_text_large" />
+
+    <ImageView
+        android:id="@+id/img_user_pic"
+        android:layout_width="@dimen/user_pic_small"
+        android:layout_height="@dimen/user_pic_small"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
+        android:src="@drawable/d_img_useravatar1" />
+
+
+
+</RelativeLayout>
