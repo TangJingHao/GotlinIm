@@ -12,5 +12,5 @@ data class TestUser(
     val userMail: String,
     val userName: String,
     val statue: String,
-    val userMsg: String
+    val msg: String,
 )

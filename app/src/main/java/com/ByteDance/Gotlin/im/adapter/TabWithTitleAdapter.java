@@ -27,14 +27,14 @@ import java.util.List;
  * @Email 1520483847@qq.com
  * @Description 复合多布局的RecycleView适配器
  * 适用于标题+用户选项的展示
- * 
+ * <p>
  * 【注】目前还未做集合类型适配
  */
-public class TabWithTitleAdapter extends RecyclerView.Adapter {
+public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
 
     private final Context mContext;
     // 要展示的信息
-    private final List<List<TestUser>> mSearchUserInfoList;
+    private final List<List<E>> mSearchUserInfoList;
     // 各组组名
     private final List<String> mGroupNameList;
     // 记录标题下标
@@ -55,7 +55,7 @@ public class TabWithTitleAdapter extends RecyclerView.Adapter {
     // 当前状态（只能是1/2/3）
     public int mTabType;
 
-    private static int IMG_DEFAULT = R.drawable.d_img_useravatar1;
+    private static int DEFAULT_IMG = R.drawable.d_img_useravatar1;
 
     // 点击tab的事件
     public interface OnItemClickListener {
@@ -80,13 +80,14 @@ public class TabWithTitleAdapter extends RecyclerView.Adapter {
 
     /**
      * adapter构造方法
+     *
      * @param context        context
      * @param searchUserList 需要展示的用户信息集合
      * @param groupTitleList 对应用户信息的各组标题
      * @param tabType        展示类型，如 TYPE_USER_INFO_STATUE
      */
     public TabWithTitleAdapter(Context context,
-                               List<List<TestUser>> searchUserList,
+                               List<List<E>> searchUserList,
                                List<String> groupTitleList,
                                int tabType) {
         mContext = context;
@@ -158,74 +159,58 @@ public class TabWithTitleAdapter extends RecyclerView.Adapter {
             // TODO 泛型适配不同的User类，需要修改的靓仔请找到自己的case修改
             switch (mTabType) {
                 case TYPE_USER_INFO_STATUE: {
-
-                    TestUser user = mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    // TODO 在此处处理泛型类的转换
+                    TestUser user = (TestUser) mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
                     UserStatueInfoViewHolder userHolder = (UserStatueInfoViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
                     Glide.with(mContext)
-                            .load(IMG_DEFAULT)
+                            .load(DEFAULT_IMG)
                             .apply(RequestOptions.bitmapTransform(new RoundedCorners(4)))
                             .into(userHolder.b.imgUserPic);//四周都是圆角的圆角矩形图片。
                     userHolder.b.tvUserName.setText(user.getUserName());
                     userHolder.b.tvUserMail.setText(user.getUserMail());
                     userHolder.b.tvStatue.setText(user.getStatue());
-                    userHolder.b.rLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    userHolder.b.rLayout.setOnClickListener(view ->
                             mItemOnClickListener.onItemClick(view,
-                                    curGroupIndex - 1, relativePosition);
-                        }
-                    });
-                    userHolder.b.tvStatue.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                            curGroupIndex - 1, relativePosition));
+                    userHolder.b.tvStatue.setOnClickListener(view ->
                             mOnMoreClickListener.onMoreClick(view,
-                                    curGroupIndex - 1, relativePosition);
-                        }
-                    });
+                            curGroupIndex - 1, relativePosition));
                     break;
                 }
                 case TYPE_USER_INFO_SIMPLE: {
-
-                    TestUser user = mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    // TODO 在此处处理泛型类的转换
+                    TestUser user = (TestUser) mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
                     SimpleUserInfoViewHolder simpleUserHolder = (SimpleUserInfoViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
                     Glide.with(mContext)
-                            .load(IMG_DEFAULT)
+                            .load(DEFAULT_IMG)
                             .apply(RequestOptions.bitmapTransform(new RoundedCorners(4)))
                             .into(simpleUserHolder.b.imgUserPic);
                     simpleUserHolder.b.tvUserName.setText(user.getUserName());
-                    simpleUserHolder.b.rLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    simpleUserHolder.b.rLayout.setOnClickListener(view ->
                             mItemOnClickListener.onItemClick(view,
-                                    curGroupIndex - 1, relativePosition);
-                        }
-                    });
+                            curGroupIndex - 1, relativePosition));
                     break;
                 }
                 case TYPE_USER_MESSAGE: {
-
-                    TestUser user = mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    // TODO 在此处处理泛型类的转换
+                    TestUser user = (TestUser) mSearchUserInfoList.get(curGroupIndex - 1).get(relativePosition);
                     UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
                     Glide.with(mContext)
-                            .load(IMG_DEFAULT)
+                            .load(DEFAULT_IMG)
                             .apply(RequestOptions.bitmapTransform(new RoundedCorners(4)))
                             .into(MessageHolder.b.imgUserPic);
                     MessageHolder.b.tvUserName.setText(user.getUserName());
-                    MessageHolder.b.tvUserMsg.setText(user.getUserMsg());
+                    MessageHolder.b.tvUserMsg.setText(user.getMsg());
                     MessageHolder.b.tvTime.setText("当前时间");
-                    MessageHolder.b.rLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    MessageHolder.b.rLayout.setOnClickListener(view ->
                             mItemOnClickListener.onItemClick(view,
-                                    curGroupIndex - 1, relativePosition);
-                        }
-                    });
+                            curGroupIndex - 1, relativePosition));
                     break;
                 }
                 default:
