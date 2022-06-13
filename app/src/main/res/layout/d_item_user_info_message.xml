@@ -22,7 +22,7 @@
         android:textColor="?attr/text_ultrastrong" />
 
     <TextView
-        android:id="@+id/tv_user_detail"
+        android:id="@+id/tv_user_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_user_name"
@@ -32,8 +32,8 @@
         android:ellipsize="end"
         android:lines="1"
         android:text="用户消息"
-        android:textSize="@dimen/im_text_small"
-        android:textColor="?attr/text_medium" />
+        android:textColor="?attr/text_medium"
+        android:textSize="@dimen/im_text_small" />
 
     <TextView
         android:id="@+id/tv_time"

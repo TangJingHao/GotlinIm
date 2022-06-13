@@ -25,7 +25,7 @@ import com.xuexiang.xui.XUI
 class BaseActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, TestActivity::class.java)
         startActivity(intent)
         finish()
     }

@@ -11,15 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ByteDance.Gotlin.im.R;
-import com.ByteDance.Gotlin.im.adapter.SearchAdapter;
+import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter;
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding;
-import com.ByteDance.Gotlin.im.info.SearchUser;
+import com.ByteDance.Gotlin.im.info.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
-import com.ByteDance.Gotlin.im.view.activity.SearchActivity;
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class SearchFragment extends Fragment {
     private DFragmentSearchBinding b;
 
     private SearchViewModel searchViewModel;
-    private List<List<SearchUser>> searchUserList = null;
+    private List<List<TestUser>> searchUserList = null;
 
     private static final String SEARCH_PARAM = "search_param";
 
@@ -147,18 +145,17 @@ public class SearchFragment extends Fragment {
         }
 
 
-        // 测试，初始化recycle
-        SearchAdapter adapter = new SearchAdapter(getActivity(), searchUserList, Arrays.asList(littleTitleArray));
-        adapter.setSearchItemOnClickListener(new SearchAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                // 暂时没有回调
-            }
-        });
+        // 多布局复合recycle
+        TabWithTitleAdapter adapter = new TabWithTitleAdapter(
+                getActivity(),
+                searchUserList,
+                Arrays.asList(littleTitleArray),
+                TabWithTitleAdapter.TYPE_USER_MESSAGE);
         b.rvLayout.setLayoutManager(new LinearLayoutManager(getActivity()));
         b.rvLayout.setAdapter(adapter);
         if (searchUserList.size() != 0 && littleTitleArray.length != 0)
             adapter.notifyDataSetChanged();
+
 
         b.srLayout.setColorSchemeColors(AttrColorUtils
                 .getValueOfColorAttr(getActivity(), R.attr.accent_default));
