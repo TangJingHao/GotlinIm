@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im
 
+import android.provider.ContactsContract
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataScope
 import androidx.lifecycle.MutableLiveData
@@ -73,7 +74,37 @@ object Repository {
         emit(groupId)
     }
 
+    /**
+     * 保存备注
+     */
+    fun saveNickName(friendId:String,nickname: String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---保存${friendId}的新备注${nickname}---")
+        //emit(groupId)
+    }
 
+    /**
+     * 获取分组
+     */
+    fun getAllGrouping(myId:String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---获取分组---")
+        emit(myId)
+    }
+
+    /**
+     * 获取分组
+     */
+    fun getSelectedGrouping(myId:String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---获取分组---")
+        emit(myId)
+    }
+
+    /**
+     * 保存分组
+     */
+    fun saveGrouping(myId:String,grouping: List<Map<String,Boolean>>) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---保存分组---")
+        emit(myId)
+    }
 
     /**
      * 返回一个liveData(统一处理异常信息)

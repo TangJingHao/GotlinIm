@@ -25,9 +25,9 @@ import com.xuexiang.xui.XUI
 class BaseActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, GroupInfoActivity::class.java)
-        intent.putExtra(OWNER_TYPE,1)
-        intent.putExtra(GROUP_ID,"2938200000")
+        val intent = Intent(this, FriendSettingActivity::class.java)
+        //intent.putExtra(OWNER_TYPE,1)
+        //intent.putExtra(GROUP_ID,"2938200000")
         startActivity(intent)
         finish()
     }

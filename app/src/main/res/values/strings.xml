@@ -47,6 +47,7 @@
     <!--Toolbar标题-->
     <string name="title_info_friend">好友信息</string>
     <string name="title_info_group">群聊信息</string>
+    <string name="title_info_friend_setting">设置备注和分组</string>
     <!--选项卡文本-->
     <string name="tab_text_care">特别关注</string>
     <string name="tab_text_care_not">未加好友不能设置特别关注</string>
@@ -61,6 +62,8 @@
     <string name="tab_red_delete_friend">删除好友</string>
     <string name="tab_red_group_delete">解散群聊</string>
     <string name="tab_red_group_out">退出群聊</string>
+    <!--输入框文本-->
+    <string name="edit_hint_new_grouping">点击输入新的分组名</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
