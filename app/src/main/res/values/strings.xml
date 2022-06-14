@@ -49,6 +49,17 @@
     <string name="title_info_group">群聊信息</string>
     <!--选项卡文本-->
     <string name="tab_text_care">特别关注</string>
+    <string name="tab_text_care_not">未加好友不能设置特别关注</string>
+    <string name="tab_text_set_friend_info">设置备注和分组</string>
+    <string name="tab_text_search_info">消息搜索</string>
+    <string name="tab_text_group_name">群聊名称</string>
+    <string name="tab_text_group_members">群聊成员</string>
+    <string name="tab_text_group_my_nickname">群聊成员</string>
+    <string name="tab_blue_add">添加好友</string>
+    <string name="tab_blue_start">开始聊天</string>
+    <string name="tab_red_delete_friend">删除好友</string>
+    <string name="tab_red_group_delete">解散群聊</string>
+    <string name="tab_red_group_out">退出群聊</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

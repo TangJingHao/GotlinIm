@@ -45,7 +45,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/tv_group_name"
+                    android:id="@+id/tv_friend_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/im_spacing_medium"
@@ -56,52 +56,52 @@
                     app:layout_constraintTop_toTopOf="@+id/iv_picture" />
 
                 <TextView
-                    android:id="@+id/tv_chuang_jian_ren"
+                    android:id="@+id/tv_nn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/im_spacing_small"
                     android:text="创建人："
                     android:textColor="?attr/text_strong"
                     android:textSize="@dimen/im_text_small"
-                    app:layout_constraintStart_toStartOf="@+id/tv_group_name"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_group_name" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_friend_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_friend_name" />
 
                 <TextView
-                    android:id="@+id/tv_id"
+                    android:id="@+id/tv_s"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="群账号："
                     android:textColor="?attr/text_strong"
                     android:textSize="@dimen/im_text_small"
-                    app:layout_constraintStart_toStartOf="@+id/tv_chuang_jian_ren"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_chuang_jian_ren" />
+                    app:layout_constraintStart_toStartOf="@+id/tv_nn"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_nn" />
 
                 <TextView
-                    android:id="@+id/tv_group_builder"
+                    android:id="@+id/tv_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="群主"
                     android:textColor="?attr/text_strong"
                     android:textSize="@dimen/im_text_small"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_chuang_jian_ren"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_nn"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/tv_chuang_jian_ren"
-                    app:layout_constraintTop_toTopOf="@+id/tv_chuang_jian_ren"
+                    app:layout_constraintStart_toEndOf="@+id/tv_nn"
+                    app:layout_constraintTop_toTopOf="@+id/tv_nn"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/tv_group_id"
+                    android:id="@+id/tv_sex"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1234354654"
                     android:textColor="?attr/text_strong"
                     android:textSize="@dimen/im_text_small"
                     android:layout_marginBottom="@dimen/im_spacing_large"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_id"
-                    app:layout_constraintStart_toStartOf="@+id/tv_group_builder"
-                    app:layout_constraintTop_toTopOf="@+id/tv_id"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_s"
+                    app:layout_constraintStart_toStartOf="@+id/tv_nickname"
+                    app:layout_constraintTop_toTopOf="@+id/tv_s"
                     app:layout_constraintVertical_bias="0.0" />
 
 
@@ -150,7 +150,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cv_info_top_item">
 
         <include
-            android:id="@+id/layout_item_info_search"
+            android:id="@+id/tab_item_info_search"
             layout="@layout/m_info_item_in_back" />
     </androidx.cardview.widget.CardView>
 

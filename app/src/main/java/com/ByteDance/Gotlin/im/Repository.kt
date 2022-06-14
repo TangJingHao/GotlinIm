@@ -53,6 +53,19 @@ object Repository {
     }
 
     /**
+     * 获取好友信息
+     */
+    fun getFriendInfo(account :String) = fire(Dispatchers.IO){
+        //测试的
+        val loginDataResponse = MyNetWork.login(account,account)
+        if (loginDataResponse.status == 0) {
+            Result.success(loginDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${loginDataResponse.status}"))
+        }
+    }
+
+    /**
      * 返回一个liveData(统一处理异常信息)
      */
     private fun <T> fire(context: CoroutineContext, block: suspend () -> Result<T>) =
