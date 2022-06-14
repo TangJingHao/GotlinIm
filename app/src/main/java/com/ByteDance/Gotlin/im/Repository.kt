@@ -1,11 +1,15 @@
 package com.ByteDance.Gotlin.im
 
 import androidx.lifecycle.liveData
+import androidx.room.Room
+import com.ByteDance.Gotlin.im.application.BaseApp
+import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
-import java.lang.RuntimeException
+import kotlin.RuntimeException
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -17,33 +21,61 @@ import kotlin.coroutines.CoroutineContext
 
 object Repository {
 
+    private const val TAG = "Repository"
+
+    /*
+    * MMKV==========================================================================================
+    * */
+
     // MMKV实例
     private var mmkv: MMKV = MMKV.defaultMMKV()
 
-    // 使用MMKV进行存储示例
-    private const val MMKV_CUR_THEME = "key"
+    private const val MMKV_USER_ID = "userId"
 
     /**
-     * MMKV添加/更新当前主题
+     * 添加/更新当前用户id
      */
-    fun saveCurTheme(curTheme: String) {
-        mmkv.encode(MMKV_CUR_THEME, curTheme)
-    }
+    fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
 
     /**
-     * MMKV获取当前主题
+     * 获取当前用户id
      */
-    fun getCurTheme(): String? = mmkv.decodeString(MMKV_CUR_THEME)
+    fun getUserId(): Int? = mmkv.decodeInt(MMKV_USER_ID)
 
     /**
-     * MMKV删除当前主题
-     * 无返回值
+     * 删除当前用户id
      */
-    fun deleteCurTheme() = mmkv.removeValueForKey(MMKV_CUR_THEME)
+    fun deleteUserId() = mmkv.removeValueForKey(MMKV_USER_ID)
+
+    /*
+    * 数据库=========================================================================================
+    */
+
+    // 数据库名
+    private const val DB_NAME = "im_chat_db"
+
+    // room数据库，其中im_chat_db为数据库名
+//    private val db = Room.databaseBuilder(
+//        BaseApp.getContext(),
+//        SQLDatabase::class.java, DB_NAME
+//    ).build()
+
+    /**
+     * 演示用，请勿运行
+     */
+//    fun getBooks() = {
+//        db.book().qeuryAll()
+//    }
 
 
+    /*
+    * 网络请求=======================================================================================
+    * */
+
+    /**
+     * 登录
+     */
     fun login(userName: String, userPass: String) = fire(Dispatchers.IO) {
-
         val loginDataResponse = MyNetWork.login(userName, userPass)
         if (loginDataResponse.status == 0) {
             Result.success(loginDataResponse)
@@ -51,6 +83,56 @@ object Repository {
             Result.failure(RuntimeException("返回值的status的${loginDataResponse.status}"))
         }
     }
+
+    /**
+     * 获取群聊列表
+     */
+    fun getGroupList(userId: Int) = fire(Dispatchers.IO) {
+        val groupListDataResponse = MyNetWork.getGroupList(userId)
+        if (groupListDataResponse.status == 0) {
+            Result.success(groupListDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${groupListDataResponse.status}"))
+        }
+    }
+
+    /**
+     * 获取好友列表
+     */
+    fun getFriendList(userId: Int) = fire(Dispatchers.IO) {
+        val friendListDataResponse = MyNetWork.getFriendList(userId)
+        if (friendListDataResponse.status == 0) {
+            Result.success(friendListDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${friendListDataResponse.status}"))
+        }
+    }
+
+    /**
+     * 获取用户在每个接收域中的最后一条聊天记录
+     */
+    fun getSessionList(userId: Int) = fire(Dispatchers.IO) {
+        val sessionListDataResponse = MyNetWork.getSessionList(userId)
+        DLogUtils.i(TAG,MyNetWork.getSessionList(userId).toString())
+        if (sessionListDataResponse.status == 0) {
+            Result.success(sessionListDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${sessionListDataResponse.status}"))
+        }
+    }
+
+    /**
+     * 分页获取目标用户在指定接收域中的历史聊天记录
+     */
+    fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) = fire(Dispatchers.IO) {
+        val sessionHistoryDataResponse = MyNetWork.getSessionHistoryList(userId, sessionId, page)
+        if (sessionHistoryDataResponse.status == 0) {
+            Result.success(sessionHistoryDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
+        }
+    }
+
 
     /**
      * 返回一个liveData(统一处理异常信息)

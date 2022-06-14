@@ -13,12 +13,9 @@ import com.ByteDance.Gotlin.im.databinding.DItemLittleTitleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoSimpleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoStatueBinding;
-import com.ByteDance.Gotlin.im.info.TestUser;
+import com.ByteDance.Gotlin.im.info.VO.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;

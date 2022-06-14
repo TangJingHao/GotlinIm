@@ -9,7 +9,7 @@ import android.view.View;
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter;
 import com.ByteDance.Gotlin.im.databinding.DActivityFriendApplicationBinding;
-import com.ByteDance.Gotlin.im.info.TestUser;
+import com.ByteDance.Gotlin.im.info.VO.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 
 import java.util.ArrayList;

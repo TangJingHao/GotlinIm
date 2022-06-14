@@ -14,5 +14,8 @@ import retrofit2.http.Query
 
 interface LoginService {
     @POST("user/login")
-    fun login(@Query("userName")userName:String, @Query("userPass")userPass:String):Call<LoginDataResponse>
+    fun login(
+        @Query("userName")userName:String,
+        @Query("userPass")userPass:String)
+    :Call<LoginDataResponse>
 }

@@ -3,7 +3,7 @@ package com.ByteDance.Gotlin.im.viewmodel;
 import androidx.lifecycle.ViewModel;
 
 import com.ByteDance.Gotlin.im.Repository;
-import com.ByteDance.Gotlin.im.info.TestUser;
+import com.ByteDance.Gotlin.im.info.VO.TestUser;
 
 import java.util.ArrayList;
 import java.util.List;
