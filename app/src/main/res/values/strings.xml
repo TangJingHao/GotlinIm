@@ -54,7 +54,8 @@
     <string name="tab_text_search_info">消息搜索</string>
     <string name="tab_text_group_name">群聊名称</string>
     <string name="tab_text_group_members">群聊成员</string>
-    <string name="tab_text_group_my_nickname">群聊成员</string>
+    <string name="tab_text_group_my_nickname">我的群昵称</string>
+    <string name="tab_text_group_search">群聊消息搜索</string>
     <string name="tab_blue_add">添加好友</string>
     <string name="tab_blue_start">开始聊天</string>
     <string name="tab_red_delete_friend">删除好友</string>

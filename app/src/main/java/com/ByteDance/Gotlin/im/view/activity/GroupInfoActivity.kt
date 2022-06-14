@@ -2,7 +2,22 @@ package com.ByteDance.Gotlin.im.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Switch
+import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
+import com.ByteDance.Gotlin.im.databinding.MActivityGroupInfoBinding
+import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.Constants.OWNER_IS
+import com.ByteDance.Gotlin.im.util.Constants.OWNER_NO
+import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
+import com.ByteDance.Gotlin.im.util.Mutils.MToastUtil.showToast
+import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
+import com.ByteDance.Gotlin.im.viewmodel.GroupInfoViewModel
+import com.qmuiteam.qmui.kotlin.onClick
 
 /**
  * @Description：群聊信息页面
@@ -11,8 +26,80 @@ import com.ByteDance.Gotlin.im.R
  */
 
 class GroupInfoActivity : AppCompatActivity() {
+
+    private lateinit var mBinding: MActivityGroupInfoBinding
+    private val mViewModel by lazy { ViewModelProvider(this).get(GroupInfoViewModel::class.java) }
+    private var mOwnerType = 0
+    private lateinit var tvName : TextView
+    private lateinit var tvGroupName : TextView
+    private lateinit var tvGroupOwner : TextView
+    private lateinit var tvGroupId : TextView
+    private lateinit var tvGroupMembers : TextView
+    private lateinit var tvGroupMyName : TextView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.m_activity_group_info)
+        mBinding = MActivityGroupInfoBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+
+        initView()
+        setListener()
+        setGroupData()
     }
+
+    private fun initView() {
+        mOwnerType = intent.getIntExtra(Constants.OWNER_TYPE,0)
+        mViewModel.getGroupInfo(intent.getStringExtra(Constants.GROUP_ID).toString())
+        mBinding.toolbarGroupInfo.title.text = this.resources.getString(R.string.title_info_group)
+        mBinding.tabGroupName.tvItemMainText.text = this.resources.getString(R.string.tab_text_group_name)
+        mBinding.tabGroupNumbers.tvItemMainText.text = this.resources.getString(R.string.tab_text_group_members)
+        mBinding.tabGroupNickname.tvItemMainText.text = this.resources.getString(R.string.tab_text_group_my_nickname)
+        mBinding.tabItemInfoSearch.tvItemMainText.text = this.resources.getString(R.string.tab_text_group_search)
+        mBinding.tabItemInfoSearch.tvItemAuxiliaryText.visibility = View.INVISIBLE
+        if (mOwnerType == OWNER_IS){
+            mBinding.tabDeleteGroup.tvRed.text = this.resources.getString(R.string.tab_red_group_delete)
+        }else if(mOwnerType == OWNER_NO){
+            mBinding.tabDeleteGroup.tvRed.text = this.resources.getString(R.string.tab_red_group_out)
+        }
+    }
+
+    private fun setListener() {
+        mBinding.toolbarGroupInfo.imgChevronLeft.onClick {
+            //this.finish()
+            MLogUtil.v(Constants.TAG_FRIEND_INFO,"--返回--")
+            //mViewModel.getGroupInfo("002321001")
+        }
+        mBinding.tabGroupName.root.onClick {
+            MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊名称--")
+            if (mOwnerType == OWNER_IS){
+                "群主可修改".showToast(this)
+            }else if(mOwnerType == OWNER_NO){
+                "不是群主不可修改".showToast(this)
+            }
+        }
+        mBinding.tabGroupNumbers.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊人数：跳转到成员列表--") }
+        mBinding.tabGroupNickname.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--我的群昵称（弹窗修改）--") }
+        mBinding.tabItemInfoSearch.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")  }
+        mBinding.tabDeleteGroup.root.onClick {
+            MLogUtil.v(Constants.TAG_GROUP_INFO,"--删除群聊--")
+            if (mOwnerType == OWNER_IS){
+                "确定解散群聊".showToast(this)
+            }else if(mOwnerType == OWNER_NO){
+                "确定退出群聊".showToast(this)
+            }
+        }
+    }
+
+    private fun setGroupData() {
+        mViewModel.groupInfoLiveData.observe(this, Observer {
+            mBinding.tvGroupId.text = it
+            mBinding.tvName.text = "编译原理群"
+            mBinding.tabGroupName.tvItemAuxiliaryText.text = "编译原理群"
+            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text = "50人"
+            mBinding.tvBuilder.text ="李老师"
+            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = "20软卓副班长"
+        })
+    }
+
 }

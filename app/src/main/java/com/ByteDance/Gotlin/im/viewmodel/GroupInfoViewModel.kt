@@ -26,10 +26,4 @@ class GroupInfoViewModel:ViewModel() {
         groupIdLivaData.postValue(friendAccount)
     }
 
-    fun setNickName(name:String){
-
-    }
-    fun setGrouping(){
-
-    }
 }

@@ -65,6 +65,15 @@ object Repository {
         emit(account)
     }
 
+    /**
+     * 获取群聊信息
+     */
+    fun getGroupInfo(groupId:String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---$groupId---")
+        emit(groupId)
+    }
+
+
 
     /**
      * 返回一个liveData(统一处理异常信息)
