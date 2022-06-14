@@ -53,6 +53,7 @@ class FriendInfoActivity : AppCompatActivity(){
     private fun setFriendData() {
         mViewModel.friendInfoLiveData.observe(this, Observer { result->
             if(result!=null){
+                tvNickname.text = result
                 //设置好友信息
                 //mBinding.tvFriendName.text =
                 //mBinding.tvSex.text =

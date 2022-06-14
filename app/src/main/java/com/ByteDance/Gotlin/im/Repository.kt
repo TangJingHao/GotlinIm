@@ -1,7 +1,12 @@
 package com.ByteDance.Gotlin.im
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataScope
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork
+import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
+import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.i
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
@@ -55,15 +60,11 @@ object Repository {
     /**
      * 获取好友信息
      */
-    fun getFriendInfo(account :String) = fire(Dispatchers.IO){
-        //测试的
-        val loginDataResponse = MyNetWork.login(account,account)
-        if (loginDataResponse.status == 0) {
-            Result.success(loginDataResponse)
-        } else {
-            Result.failure(RuntimeException("返回值的status的${loginDataResponse.status}"))
-        }
+    fun getFriendInfo(account :String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---$account---")
+        emit(account)
     }
+
 
     /**
      * 返回一个liveData(统一处理异常信息)

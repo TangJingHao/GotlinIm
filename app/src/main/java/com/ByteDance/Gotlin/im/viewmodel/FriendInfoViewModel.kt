@@ -9,7 +9,7 @@ import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.e
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.i
 
 /**
- * @Description：
+ * @Description：好友信息相关的两个页面共用的ViewModel
  * @Author：Suzy.Mo
  * @Date：2022/6/14 13:20
  */
