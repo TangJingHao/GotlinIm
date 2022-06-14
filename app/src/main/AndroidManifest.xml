@@ -37,20 +37,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GotlinIm">
         <activity
-            android:name=".GroupMyListActivity"
+            android:name=".view.activity.MyGroupActivity"
             android:exported="false" />
         <activity
-            android:name=".GroupInviteActivity"
+            android:name=".view.activity.FriendApplicationActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.SetFriendInfoActivity"
             android:exported="false" />
         <activity
+            android:name=".view.activity.GroupInviteActivity"
+            android:exported="false" />
+        <activity
             android:name=".application.BaseActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
