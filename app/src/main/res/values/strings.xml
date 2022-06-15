@@ -22,6 +22,10 @@
         <item>搜索结果</item>
     </string-array>
 
+    <string-array name="rvLayout_friend_application_little_title">
+        <item>好友申请列表</item>
+    </string-array>
+
     <string-array name="rvLayout_my_application_little_title">
         <item>等待中</item>
         <item>已处理</item>
@@ -43,8 +47,23 @@
     <!--Toolbar标题-->
     <string name="title_info_friend">好友信息</string>
     <string name="title_info_group">群聊信息</string>
+    <string name="title_info_friend_setting">设置备注和分组</string>
     <!--选项卡文本-->
     <string name="tab_text_care">特别关注</string>
+    <string name="tab_text_care_not">未加好友不能设置特别关注</string>
+    <string name="tab_text_set_friend_info">设置备注和分组</string>
+    <string name="tab_text_search_info">消息搜索</string>
+    <string name="tab_text_group_name">群聊名称</string>
+    <string name="tab_text_group_members">群聊成员</string>
+    <string name="tab_text_group_my_nickname">我的群昵称</string>
+    <string name="tab_text_group_search">群聊消息搜索</string>
+    <string name="tab_blue_add">添加好友</string>
+    <string name="tab_blue_start">开始聊天</string>
+    <string name="tab_red_delete_friend">删除好友</string>
+    <string name="tab_red_group_delete">解散群聊</string>
+    <string name="tab_red_group_out">退出群聊</string>
+    <!--输入框文本-->
+    <string name="edit_hint_new_grouping">点击输入新的分组名</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

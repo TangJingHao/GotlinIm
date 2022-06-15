@@ -16,8 +16,21 @@ object Constants {
     const val LIGHT_MODE=2
     const val BASE_URL="http://chatspace.iceclean.top/space/"
 
-    //好友类型选择
+    //suzy：好友类型选择
+    const val FRIEND_ACCOUNT = "FriendAccount"
     const val FRIEND_TYPE = "FriendType"
     const val FRIEND_IS = 1
     const val FRIEND_NO = 0
+
+    //suzy：是否为群主
+    const val GROUP_ID = "GroupId"
+    const val OWNER_TYPE = "OwnerType"
+    const val OWNER_IS = 1
+    const val OWNER_NO = 0
+
+    //suzy：全局TAG
+    const val TAG_FRIEND_INFO="FriendInfoActivity"
+    const val TAG_GROUP_INFO="GroupInfoActivity"
+    const val TAG_SET_FRIEND_INFO="SetFriendInfoActivity"
+
 }

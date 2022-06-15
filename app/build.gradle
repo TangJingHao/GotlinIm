@@ -96,13 +96,12 @@ dependencies {
     // 邓志聪======================================================
     // 滑动指示器UI库
     implementation 'com.github.hackware1993:MagicIndicator:1.7.0'
+    // 轻量本地存储工具
+    implementation 'com.tencent:mmkv-static:1.0.23'
 
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.0"
 
-    // 邓志聪======================================================
-    // 滑动指示器UI库
-    implementation 'com.github.hackware1993:MagicIndicator:1.7.0'
-    // 轻量本地存储工具
-    implementation 'com.tencent:mmkv-static:1.0.23'
+
+
 }
