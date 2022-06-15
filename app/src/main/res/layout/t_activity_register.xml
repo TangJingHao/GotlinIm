@@ -130,7 +130,11 @@
             android:layout_height="@dimen/im_input_box_height"
             android:layout_below="@id/nickname_tv"
             android:layout_marginTop="@dimen/im_spacing_medium"
-            android:background="@drawable/t_input_bg" />
+            android:background="@drawable/t_input_bg"
+            android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
+            android:paddingVertical="@dimen/im_input_box_paddingVertical"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium" />
 
         <TextView
             android:id="@+id/email_tv"
@@ -148,7 +152,11 @@
             android:layout_height="@dimen/im_input_box_height"
             android:layout_below="@id/email_tv"
             android:layout_marginTop="@dimen/im_spacing_medium"
-            android:background="@drawable/t_input_bg" />
+            android:background="@drawable/t_input_bg"
+            android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
+            android:paddingVertical="@dimen/im_input_box_paddingVertical"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium" />
 
         <TextView
             android:id="@+id/password_tv"
@@ -166,7 +174,11 @@
             android:layout_height="@dimen/im_input_box_height"
             android:layout_below="@id/password_tv"
             android:layout_marginTop="@dimen/im_spacing_medium"
-            android:background="@drawable/t_input_bg" />
+            android:background="@drawable/t_input_bg"
+            android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
+            android:paddingVertical="@dimen/im_input_box_paddingVertical"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium" />
 
         <TextView
             android:id="@+id/confirm_password_tv"
@@ -176,7 +188,8 @@
             android:layout_marginTop="@dimen/im_spacing_medium"
             android:text="确定密码"
             android:textColor="?attr/text_strong"
-            android:textSize="@dimen/im_text_medium" />
+            android:textSize="@dimen/im_text_medium"
+            />
 
         <EditText
             android:id="@+id/confirm_password_et"
@@ -184,7 +197,11 @@
             android:layout_height="@dimen/im_input_box_height"
             android:layout_below="@id/confirm_password_tv"
             android:layout_marginTop="@dimen/im_spacing_medium"
-            android:background="@drawable/t_input_bg" />
+            android:background="@drawable/t_input_bg"
+            android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
+            android:paddingVertical="@dimen/im_input_box_paddingVertical"
+            android:textColor="?attr/text_strong"
+            android:textSize="@dimen/im_text_medium"/>
     </RelativeLayout>
 
     <RelativeLayout

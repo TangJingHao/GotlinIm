@@ -1,7 +1,9 @@
 package com.ByteDance.Gotlin.im.network.netImpl
 
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
+import com.ByteDance.Gotlin.im.network.netInterfaces.AddressBookService
 import com.ByteDance.Gotlin.im.network.netInterfaces.LoginService
+import com.ByteDance.Gotlin.im.network.netInterfaces.MsgService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,8 +20,24 @@ import kotlin.coroutines.suspendCoroutine
  */
 
 object MyNetWork {
-    private val loginService=ServiceCreator.create<LoginService>()
-    suspend fun login(userName:String,userPass:String)= loginService.login(userName, userPass).await()
+    private val loginService =          ServiceCreator.create<LoginService>()
+    private val addressBookService =    ServiceCreator.create<AddressBookService>()
+    private val msgService =            ServiceCreator.create<MsgService>()
+
+    suspend fun login(userName: String, userPass: String) =
+        loginService.login(userName, userPass).await()
+
+    suspend fun getGroupList(userId: Int) =
+        addressBookService.getGroupList(userId).await()
+
+    suspend fun getFriendList(userId: Int) =
+        addressBookService.getFriendList(userId).await()
+
+    suspend fun getSessionList(userId: Int) =
+        msgService.getSessionList(userId).await()
+
+    suspend fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) =
+        msgService.getSessionHistoryList(userId, sessionId, page).await()
 
     /**
      *  定义一个Call的扩展函数，Call的上下文是retrofit2,泛型T为interface内部定义好的方法
@@ -34,7 +52,6 @@ object MyNetWork {
                         continuation.resume(body)
                     } else continuation.resumeWithException(RuntimeException("返回值为NULL，请重试"))
                 }
-
                 override fun onFailure(call: Call<T>, t: Throwable) {
                     continuation.resumeWithException(t)
                 }
