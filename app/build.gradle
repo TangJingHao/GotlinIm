@@ -17,6 +17,15 @@ android {
         versionCode 1
         versionName "1.0"
 
+        javaCompileOptions { // room
+            annotationProcessorOptions {
+                arguments = [
+                        "room.schemaLocation":"$projectDir/schemas".toString(),
+                        "room.incremental":"true",
+                        "room.expandProjection":"true"]
+            }
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -102,6 +111,22 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.0"
 
+    // room
+    def room_version = "2.2.0-rc01"
 
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+//    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // Kotlin 使用 kapt 替代 annotationProcessor
+    // 可选 - Kotlin扩展和协程支持
+    implementation "androidx.room:room-ktx:$room_version"
+
+
+//    // 可选 - RxJava 支持
+//    implementation "androidx.room:room-rxjava2:$room_version"
+//    // 可选 - Guava 支持, including Optional and ListenableFuture
+//    implementation "androidx.room:room-guava:$room_version"
+//    // 测试帮助
+//    testImplementation "androidx.room:room-testing:$room_version"
 
 }
