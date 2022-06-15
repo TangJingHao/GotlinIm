@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
-import com.ByteDance.Gotlin.im.info.VO.TestUser;
+import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.RedPointHelper;
 import com.google.android.material.badge.BadgeDrawable;
 

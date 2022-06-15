@@ -1,7 +1,7 @@
 package com.ByteDance.Gotlin.im.info
 
-import com.ByteDance.Gotlin.im.info.VO.SessionVO
-import com.ByteDance.Gotlin.im.info.VO.UserVO
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.google.gson.annotations.SerializedName
 
 /**

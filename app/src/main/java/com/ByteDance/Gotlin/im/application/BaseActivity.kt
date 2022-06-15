@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
-import com.ByteDance.Gotlin.im.view.activity.LoginActivity
-import com.ByteDance.Gotlin.im.view.activity.MainActivity
-import com.ByteDance.Gotlin.im.view.activity.RegisterActivity
-import com.ByteDance.Gotlin.im.view.activity.TestActivity
+import com.ByteDance.Gotlin.im.view.activity.*
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
 
