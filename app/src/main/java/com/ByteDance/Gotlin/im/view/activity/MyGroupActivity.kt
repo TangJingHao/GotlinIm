@@ -79,7 +79,10 @@ class MyGroupActivity : AppCompatActivity() {
                 adapter.setItemOnClickListener(TabWithTitleAdapter.OnItemClickListener
                 { v, groupPosition, relativePosition ->
                     val groupVO = dataList.get(groupPosition).get(relativePosition)
-                    TPhoneUtil.showToast(mContext, groupVO.groupName + " gid:" + groupVO.groupId)
+                    TPhoneUtil.showToast(
+                        mContext,
+                        groupVO.groupName + " gid:" + groupVO.groupId
+                    )
                     // TODO 跳转到群聊详情页
 //                    startActivity()
                 })
