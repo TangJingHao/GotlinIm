@@ -72,11 +72,13 @@ class LoginActivity : AppCompatActivity() {
         mViewModel.loginObserverData.observe(this) { result ->
             var responseData = result.getOrNull()
             if (responseData == null) {
-                TLogUtil.d("返回值为NULL")
-                TPhoneUtil.showToast(mContext, "返回值为NULL")
+                TLogUtil.d("用户名或者密码错误")
+                TPhoneUtil.showToast(mContext, "用户名或者密码错误")
             } else {
                 TPhoneUtil.showToast(mContext, responseData.msg)
-                startActivity(Intent(this@LoginActivity,MainActivity::class.java))
+                if (responseData.msg == "登录成功") {
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                }
             }
         }
     }
@@ -101,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         mBinding.registerTv.setOnClickListener {
-            startActivity(Intent(this,RegisterActivity::class.java))
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         //测试用：

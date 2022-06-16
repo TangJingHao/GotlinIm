@@ -20,4 +20,7 @@ object Constants {
     const val FRIEND_TYPE = "FriendType"
     const val FRIEND_IS = 1
     const val FRIEND_NO = 0
+
+    //网络类型状态码
+    const val SUCCESS_STATUS=0
 }
