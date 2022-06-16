@@ -202,13 +202,13 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     if (data instanceof GroupVO) {
                         GroupVO item = (GroupVO) data;
                         Glide.with(mContext)
-                                .load(BASE_URL + item.getAvatar())
+                                .load(DEFAULT_IMG)
                                 .into(simpleHolder.b.imgUserPic);
                         simpleHolder.b.tvUserName.setText(item.getGroupName());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
-                                .load(item.getAvatar())
+                                .load(DEFAULT_IMG)
                                 .into(simpleHolder.b.imgUserPic);
                         simpleHolder.b.tvUserName.setText(item.getUserName());
                     }

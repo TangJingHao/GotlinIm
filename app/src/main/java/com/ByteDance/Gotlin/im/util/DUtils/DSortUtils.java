@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @Author Zhicong Deng
@@ -27,14 +28,17 @@ public class DSortUtils {
             @Override
             public int compare(UserVO o1, UserVO o2) {
                 try {
-                    int index = o1.getNickName().toString().charAt(0) - 'a';
+                    int index = o1.getNickName().toLowerCase(Locale.ROOT).toString().charAt(0) - 'a';
                     if (index >= 0 && index < 26) {
                         if (!map[index]) map[index] = true;
                     } else {
                         if (!map[26]) map[26] = true;
                     }
-                    String str1 = new String(o1.getNickName().getBytes("GB2312"), "ISO-8859-1");
-                    String str2 = new String(o2.getNickName().getBytes("GB2312"), "ISO-8859-1");
+
+                    String s1 = TComparatorUtil.getPingYin(o1.getNickName());
+                    String s2 = TComparatorUtil.getPingYin(o2.getNickName());
+                    String str1 = new String(s1.getBytes("GB2312"), "ISO-8859-1");
+                    String str2 = new String(s2.getBytes("GB2312"), "ISO-8859-1");
                     return str1.compareTo(str2);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -63,7 +67,7 @@ public class DSortUtils {
         ArrayList<UserVO> elseList = new ArrayList<>(); // 用于存储其他字符的
         int curIndex = -1;
         for (UserVO user : dataList) {
-            int index = user.getNickName().charAt(0) - 'a';
+            int index = user.getNickName().toLowerCase(Locale.ROOT).charAt(0) - 'a';
             if (index >= 0 && index < 26) {
                 if (!map[index]) {
                     map[index] = true;
@@ -79,7 +83,7 @@ public class DSortUtils {
                     map[26] = true;
                     elseList.add(user);
                 } else {
-                    res.get(26).add(user);
+                    elseList.add(user);
                 }
             }
         }
@@ -91,7 +95,7 @@ public class DSortUtils {
 
     public static String numToLetter(int num) {
         if (num >= 0 && num < 26) {
-            return String.valueOf((char) (num + 'a'));
+            return String.valueOf((char) (num + 'A'));
         } else {
             return "#";
         }

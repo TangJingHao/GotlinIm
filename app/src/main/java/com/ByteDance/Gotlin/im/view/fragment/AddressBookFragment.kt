@@ -1,11 +1,23 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
+import com.ByteDance.Gotlin.im.adapter.UserMsgAdapter
+import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
+import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
+import com.ByteDance.Gotlin.im.info.vo.UserVO
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
+import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 
 /**
  * @Author 唐靖豪
@@ -15,19 +27,67 @@ import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
  * 通讯录
  */
 
-class AddressBookFragment:Fragment(){
-    private lateinit var mBinding:TFragmentAddressBookBinding
+class AddressBookFragment : Fragment() {
+    companion object {
+        private const val TAG = "AddressBookFragment"
+    }
+
+    private val vm: MainViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+    }
+
+    private val b: TFragmentAddressBookBinding by lazy {
+        TFragmentAddressBookBinding.inflate(LayoutInflater.from(activity))
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding=TFragmentAddressBookBinding.inflate(inflater,container,false)
-        return mBinding.root
+
+        initListener()
+        initData()
+        initView()
+
+        return b.root
     }
 
-    override fun onStart() {
-        super.onStart()
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initListener() {
+        vm.friendListObserverData.observe(requireActivity()) { result ->
+            val responseData = result.getOrNull()
+            if (responseData == null) {
+                DLogUtils.i(TAG, "我的好友列表返回值为NULL")
+                TPhoneUtil.showToast(BaseApp.getContext(), "我的好友列表返回值为NULL")
+            } else {
+                val friendList = responseData.data.friendList
+                val titleList = ArrayList<String>();
+                val sortFriendList = DSortUtils.sort(friendList, titleList)
+
+                val adapter = TabWithTitleAdapter(
+                    requireActivity(),
+                    sortFriendList,
+                    titleList,
+                    TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE)
+
+                b.memberRv.layoutManager = LinearLayoutManager(requireActivity())
+                b.memberRv.adapter = adapter
+                if(sortFriendList.size != 0 && titleList.size != 0)
+                    adapter.notifyDataSetChanged()
+
+
+            }
+        }
+    }
+
+    private fun initData() {
+        vm.getFriendList()
+    }
+
+    private fun initView() {
 
     }
+
+
 }

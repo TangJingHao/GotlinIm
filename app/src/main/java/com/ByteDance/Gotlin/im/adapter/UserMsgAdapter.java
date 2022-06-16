@@ -9,8 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
+import com.ByteDance.Gotlin.im.info.MessageList;
 import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.RedPointHelper;
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.google.android.material.badge.BadgeDrawable;
 
 import java.util.List;
@@ -24,9 +26,9 @@ import java.util.List;
 public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgHolder> {
 
     private final Context mContext;
-    private final List<TestUser> mDataList;
+    private final List<MessageList> mDataList;
 
-    public UserMsgAdapter(Context mContext, List<TestUser> mDataList) {
+    public UserMsgAdapter(Context mContext, List<MessageList> mDataList) {
         this.mContext = mContext;
         this.mDataList = mDataList;
     }
@@ -53,9 +55,20 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
 
     @Override
     public void onBindViewHolder(@NonNull UserMsgHolder holder, int position) {
-        holder.b.tvUserName.setText(mDataList.get(position).getUserName());
-        holder.b.tvUserMsg.setText(mDataList.get(position).getMsg());
-        holder.b.tvTime.setText("05:20");
+        Integer sessionId = mDataList.get(position).getSession().getSessionId();
+        String SessionName = mDataList.get(position).getSession().getName();
+        String senderNickName = mDataList.get(position).getSender().getNickName();
+        holder.b.tvUserName.setText(SessionName + sessionId);
+        holder.b.tvUserMsg.setText(senderNickName + ": " + mDataList.get(position).getContent());
+        holder.b.tvTime.setText(mDataList.get(position).getSendTime());
+        int i = position;
+        if (mItemOnClickListener != null)
+            holder.b.rLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mItemOnClickListener.onItemClick(view, i);
+                }
+            });
     }
 
     @Override
@@ -73,8 +86,6 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
             this.redPoint = redPoint;
         }
     }
-
-
 
 
 }
