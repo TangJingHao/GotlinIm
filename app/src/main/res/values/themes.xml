@@ -93,4 +93,10 @@
         <item name="colorPrimary">?attr/text_strong</item>
         <item name="android:textColorSecondary">?attr/text_ultraweak</item>
     </style>
+
+    <style name="popupAnimation">
+        <item name="android:windowEnterAnimation">@anim/d_anim_pop_enter</item>
+        <item name="android:windowExitAnimation">@anim/d_anim_pop_exit</item>
+    </style>
+
 </resources>

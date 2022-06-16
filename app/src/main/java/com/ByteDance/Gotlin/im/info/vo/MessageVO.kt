@@ -1,4 +1,4 @@
-package com.ByteDance.Gotlin.im.info.VO
+package com.ByteDance.Gotlin.im.info.vo
 
 
 /**

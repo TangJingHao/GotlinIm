@@ -17,6 +17,11 @@ object ServiceCreator {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    private val webSocketRetrofit = Retrofit.Builder()
+        .baseUrl(Constants.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
     fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)
 
     //指定对象类型关键字reified让泛型实例化可以获得相应的class文件
