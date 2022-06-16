@@ -1,4 +1,4 @@
-package com.ByteDance.Gotlin.im.info;
+package com.ByteDance.Gotlin.im.info.response;
 
 /**
  * @author: Hx
