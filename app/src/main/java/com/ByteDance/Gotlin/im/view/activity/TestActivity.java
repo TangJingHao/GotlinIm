@@ -78,45 +78,41 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         b.testBar.imgChevronLeft.setVisibility(View.GONE);
         b.testBar.title.setText("测试页面");
 
-        // 1.获得好友列表数据（此处为模拟，不是new一个）
-        List<UserVO> datalist = new ArrayList<>();
-        // 2.新建标题
-        List<String> dataTitle = new ArrayList<>();
-        // 3.对好友列表排序
-        List<List<UserVO>> sortDataList = DSortUtils.sort(datalist, dataTitle);
-        // 4.创建适配器
-        TabWithTitleAdapter<UserVO> adapter = new TabWithTitleAdapter<>(
-                mContext,
-                sortDataList, // 排序后的数据
-                dataTitle,    // 标题
-                TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE // 展示类型
-        );
-
         /*
         * websocket测试代码==========================================================================
         * */
-//        // 启动链接
-//        connect();
-//        // 测试发送消息
-//        b.btnSend.setOnClickListener(new View.OnClickListener() {
-//            int count = 0;
-//
-//            @Override
-//            public void onClick(View view) {
-//                // 注意线程
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        b.tvMe.setText("发送测试信息" + count);
-//                        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-//                                SEND_MESSAGE, new WSsendContent(6, 1, 0,
-//                                "发送测试信息" + count++));
-//                        webSocket.send(gson.toJson(sendChatMsg));
-//                    }
-//                }).start();
-//            }
-//        });
+        // 测试发送消息
+        b.btnSend.setOnClickListener(new View.OnClickListener() {
+            int count = 0;
+            @Override
+            public void onClick(View view) {
+                // 注意线程
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        b.tvMe.setText("发送测试信息" + count);
+                        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
+                                SEND_MESSAGE, new WSsendContent(6, 1, 0,
+                                "发送测试信息" + count++));
+                        webSocket.send(gson.toJson(sendChatMsg));
+                    }
+                }).start();
+            }
+        });
 
+        b.btnConnext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connect();
+            }
+        });
+
+        b.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                webSocket.cancel();
+            }
+        });
 
         initPopupWindow();
 

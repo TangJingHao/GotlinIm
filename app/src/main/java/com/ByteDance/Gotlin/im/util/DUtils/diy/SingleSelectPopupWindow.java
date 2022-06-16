@@ -40,9 +40,6 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
     public SingleSelectPopupWindow(Context context, String title, String options1, String options2) {
         mContext = context;
         b = DPopupWindowSingleSelectBinding.inflate(LayoutInflater.from(context));
-        b.tvPopTitle.setText(title);
-        b.options1.setText(options1);
-        b.options2.setText(options2);
 
         popupWindow = new PopupWindow(b.getRoot(),
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -56,6 +53,9 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
                 backgroundAlpha(1f);
             }
         });
+        b.tvPopTitle.setText(title);
+        b.options1.setText(options1);
+        b.options2.setText(options2);
         b.rgSelectGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -64,6 +64,12 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
                 } else if (i == b.options2.getId()) {
                     selectIndex = 1;
                 }
+            }
+        });
+        b.tvSelectCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
             }
         });
     }
@@ -85,6 +91,7 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
                 @Override
                 public void onClick(View view) {
                     mOnConfirmListener.onConfirm(selectIndex);
+                    popupWindow.dismiss();
                 }
             });
     }

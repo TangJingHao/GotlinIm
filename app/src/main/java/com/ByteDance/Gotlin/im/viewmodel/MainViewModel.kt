@@ -33,4 +33,8 @@ class MainViewModel : ViewModel() {
     fun getSessionList() {
         mUserIdLiveData.value = Repository.getUserId()
     }
+
+    fun getUserId(){
+        Repository.getUserId()
+    }
 }

@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_rl"
-        android:layout_marginTop="@dimen/im_spacing_huge"
+
         android:background="?attr/bg_weak"
         android:paddingHorizontal="@dimen/im_common_horizontal">
 

@@ -29,7 +29,7 @@ public class InputPopupWindow extends BasePopupWindow {
     public InputPopupWindow(Context context, String title) {
         mContext = context;
         b = DPopupWindowInputBinding.inflate(LayoutInflater.from(context));
-        b.tvPopTitle.setText(title);
+
 
         popupWindow = new PopupWindow(b.getRoot(),
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -41,6 +41,15 @@ public class InputPopupWindow extends BasePopupWindow {
             @Override
             public void onDismiss() {
                 backgroundAlpha(1f);
+            }
+        });
+
+        b.tvPopTitle.setText(title);
+        b.tvSelectCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                b.etPopInput.clearComposingText();
+                popupWindow.dismiss();
             }
         });
     }
@@ -55,6 +64,7 @@ public class InputPopupWindow extends BasePopupWindow {
                         TPhoneUtil.INSTANCE.showToast(mContext,"请输入内容");
                     }else{
                         mOnConfirmListener.onConfirm(b.etPopInput.getText().toString());
+                        popupWindow.dismiss();
                     }
                 }
             });

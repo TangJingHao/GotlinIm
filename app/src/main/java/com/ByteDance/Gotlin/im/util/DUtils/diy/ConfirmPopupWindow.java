@@ -33,7 +33,6 @@ public class ConfirmPopupWindow extends BasePopupWindow {
     public ConfirmPopupWindow(Context context, String title) {
         mContext = context;
         b = DPopupWindowConfirmBinding.inflate(LayoutInflater.from(context));
-        b.tvConfirmMsg.setText(title);
 
         popupWindow = new PopupWindow(b.getRoot(),
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -47,13 +46,23 @@ public class ConfirmPopupWindow extends BasePopupWindow {
                 backgroundAlpha(1f);
             }
         });
+
+        b.tvConfirmMsg.setText(title);
+        b.tvSelectCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
     }
 
     public void setOnConfirmListener(OnConfirmListener listener) {
         this.mOnConfirmListener = listener;
         if (mOnConfirmListener != null)
-            b.tvSelectConfirm.setOnClickListener(view ->
-                    mOnConfirmListener.onConfirm());
+            b.tvSelectConfirm.setOnClickListener(view -> {
+                mOnConfirmListener.onConfirm();
+                popupWindow.dismiss();
+            });
     }
 
     public void setWarnTextColorType() {
