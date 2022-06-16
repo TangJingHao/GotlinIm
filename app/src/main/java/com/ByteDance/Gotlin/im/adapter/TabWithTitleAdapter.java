@@ -1,5 +1,7 @@
 package com.ByteDance.Gotlin.im.adapter;
 
+import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +15,11 @@ import com.ByteDance.Gotlin.im.databinding.DItemLittleTitleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoSimpleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoStatueBinding;
-import com.ByteDance.Gotlin.im.info.TestUser;
+import com.ByteDance.Gotlin.im.info.vo.GroupVO;
+import com.ByteDance.Gotlin.im.info.vo.TestUser;
+import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,9 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
 
     private final Context mContext;
     // 要展示的信息
-    private final List<List<E>> mUserInfoList;
+    private final List<List<E>> mDataInfoList;
     // 各组组名
-    private final List<String> mGroupNameList;
+    private final List<String> mTitleList;
     // 记录标题下标
     private final List<Integer> mTitleIndexList;
     // 当前所在组
@@ -93,17 +94,17 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                                List<String> groupTitleList,
                                int tabType) {
         mContext = context;
-        mUserInfoList = searchUserList;
-        mGroupNameList = groupTitleList;
+        mDataInfoList = searchUserList;
+        mTitleList = groupTitleList;
         mTabType = tabType;
 
-        totalLen = mUserInfoList.size();
+        totalLen = mDataInfoList.size();
         mTitleIndexList = new ArrayList<>(totalLen);
         int titlePositionIndex = 0;
         // 确定总item数量，titleItem出现的position
-        for (int i = 0; i < mUserInfoList.size(); i++) {
+        for (int i = 0; i < mDataInfoList.size(); i++) {
             mTitleIndexList.add(i, titlePositionIndex);
-            int curGroupsize = mUserInfoList.get(i).size();
+            int curGroupsize = mDataInfoList.get(i).size();
             titlePositionIndex += 1 + curGroupsize;
             totalLen += curGroupsize;
         }
@@ -126,7 +127,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
             case TYPE_USER_INFO_SIMPLE: {
                 DItemUserInfoSimpleBinding simpleBinding = DItemUserInfoSimpleBinding
                         .inflate(LayoutInflater.from(parent.getContext()), parent, false);
-                return new SimpleUserInfoViewHolder(simpleBinding);
+                return new SimpleInfoViewHolder(simpleBinding);
             }
             default: {  // TYPE_USER_MESSAGE
                 DItemUserInfoMessageBinding messageBinding = DItemUserInfoMessageBinding
@@ -140,8 +141,8 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_TITLE) {
             TitleViewHolder titleHolder = (TitleViewHolder) holder;
-            if (curGroupIndex < mGroupNameList.size()) {
-                titleHolder.b.tvListTitle.setText(mGroupNameList.get(curGroupIndex));
+            if (curGroupIndex < mTitleList.size()) {
+                titleHolder.b.tvListTitle.setText(mTitleList.get(curGroupIndex));
             } else {
                 titleHolder.b.tvListTitle.setText("未知分组");
             }
@@ -149,7 +150,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         } else {
             // 一些数学推导,重定位position相对位置
             int curGroupLen;
-            if (curGroupIndex == mUserInfoList.size()) { // 到了最后一组
+            if (curGroupIndex == mDataInfoList.size()) { // 到了最后一组
                 curGroupLen = totalLen - mTitleIndexList.get(curGroupIndex - 1) - 1;
             } else {
                 curGroupLen = mTitleIndexList.get(curGroupIndex) - mTitleIndexList.get(curGroupIndex - 1) - 1;
@@ -158,21 +159,28 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
             int relativePosition = curGroupLen - (curGroupLen - (position - curGroupTitleIndex)) - 1;
 
             // 适配不同的tab,当前组编号为curGroupIndex - 1，相对组内位置为relativePosition
+            E data = mDataInfoList.get(curGroupIndex - 1).get(relativePosition);
+
             // TODO 泛型适配不同的User类，需要修改的靓仔请找到自己的case修改
             switch (mTabType) {
                 case TYPE_USER_INFO_STATUE: {
-
-                    // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mUserInfoList.get(curGroupIndex - 1).get(relativePosition);
                     UserStatueInfoViewHolder userHolder = (UserStatueInfoViewHolder) holder;
-
-                    // TODO 网络头像加载，目前仅加载默认头像
-                    Glide.with(mContext)
-                            .load(DEFAULT_IMG)
-                            .into(userHolder.b.imgUserPic);//四周都是圆角的圆角矩形图片。
-                    userHolder.b.tvUserName.setText(user.getUserName());
-                    userHolder.b.tvUserMail.setText(user.getUserMail());
-
+                    if (data instanceof GroupVO) {
+                        GroupVO item = (GroupVO) data;
+                        Glide.with(mContext)
+                                .load(BASE_URL + item.getAvatar())
+                                .into(userHolder.b.imgUserPic);
+                        userHolder.b.tvUserName.setText(item.getGroupName());
+                        userHolder.b.tvUserMail.setText("gid：" + item.getGroupId());
+                    } else if (data instanceof UserVO) {
+                        UserVO item = (UserVO) data;
+                        Glide.with(mContext)
+                                .load(BASE_URL + item.getAvatar())
+                                .into(userHolder.b.imgUserPic);
+                        userHolder.b.tvUserName.setText(item.getUserName());
+                        userHolder.b.tvUserMail.setText("uid：" + item.getUserId());
+                        userHolder.b.tvStatue.setText(item.getOnline() ? "在线" : "离线");
+                    }
                     if (mItemOnClickListener != null)
                         userHolder.b.rLayout.setOnClickListener(view ->
                                 mItemOnClickListener.onItemClick(view,
@@ -186,30 +194,33 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         userHolder.b.tvStatue.setText("操作");
                         userHolder.b.tvStatue.setTextColor(AttrColorUtils
                                 .getValueOfColorAttr(mContext, R.attr.fill_white));
-                    } else {
-                        userHolder.b.tvStatue.setText(user.getStatue());
                     }
                     break;
                 }
                 case TYPE_USER_INFO_SIMPLE: {
-                    // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mUserInfoList.get(curGroupIndex - 1).get(relativePosition);
-                    SimpleUserInfoViewHolder simpleUserHolder = (SimpleUserInfoViewHolder) holder;
-
-                    // TODO 网络头像加载，目前仅加载默认头像
-                    Glide.with(mContext)
-                            .load(DEFAULT_IMG)
-                            .into(simpleUserHolder.b.imgUserPic);
-                    simpleUserHolder.b.tvUserName.setText(user.getUserName());
+                    SimpleInfoViewHolder simpleHolder = (SimpleInfoViewHolder) holder;
+                    if (data instanceof GroupVO) {
+                        GroupVO item = (GroupVO) data;
+                        Glide.with(mContext)
+                                .load(BASE_URL + item.getAvatar())
+                                .into(simpleHolder.b.imgUserPic);
+                        simpleHolder.b.tvUserName.setText(item.getGroupName());
+                    } else if (data instanceof UserVO) {
+                        UserVO item = (UserVO) data;
+                        Glide.with(mContext)
+                                .load(item.getAvatar())
+                                .into(simpleHolder.b.imgUserPic);
+                        simpleHolder.b.tvUserName.setText(item.getUserName());
+                    }
                     if (mItemOnClickListener != null)
-                        simpleUserHolder.b.rLayout.setOnClickListener(view ->
+                        simpleHolder.b.rLayout.setOnClickListener(view ->
                                 mItemOnClickListener.onItemClick(view,
                                         curGroupIndex - 1, relativePosition));
                     break;
                 }
                 case TYPE_USER_MESSAGE: {
                     // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mUserInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    TestUser user = (TestUser) mDataInfoList.get(curGroupIndex - 1).get(relativePosition);
                     UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
@@ -228,7 +239,6 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                 default:
                     break;
             }
-
         }
     }
 
@@ -263,10 +273,10 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         }
     }
 
-    static class SimpleUserInfoViewHolder extends RecyclerView.ViewHolder {
+    static class SimpleInfoViewHolder extends RecyclerView.ViewHolder {
         DItemUserInfoSimpleBinding b;
 
-        public SimpleUserInfoViewHolder(@NonNull DItemUserInfoSimpleBinding b) {
+        public SimpleInfoViewHolder(@NonNull DItemUserInfoSimpleBinding b) {
             super(b.getRoot());
             this.b = b;
         }

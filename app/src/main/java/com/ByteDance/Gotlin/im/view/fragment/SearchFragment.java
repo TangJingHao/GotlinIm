@@ -13,7 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter;
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding;
-import com.ByteDance.Gotlin.im.info.TestUser;
+import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel;

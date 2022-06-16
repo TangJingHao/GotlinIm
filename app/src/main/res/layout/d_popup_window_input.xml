@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/tsp_fill_ultrastrong">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="176dp"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="@dimen/pop_window_margin_horizontal"
+        android:background="@drawable/d_bg_pop_win">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/l_layout"
+            android:paddingHorizontal="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_pop_title"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:lines="3"
+                android:text="@string/preview_text"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_medium" />
+
+            <EditText
+                android:id="@+id/email_et"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/im_input_box_height"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/t_input_bg"
+                android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
+                android:paddingVertical="@dimen/im_input_box_paddingVertical"
+                android:textColor="?attr/text_strong"
+                android:textSize="@dimen/im_text_medium" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@id/l_layout"
+            android:background="?attr/border_ultrastrong" />
+
+        <LinearLayout
+            android:id="@+id/l_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_select_confirm"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="确认键文字"
+                android:textColor="?attr/text_link"
+                android:textSize="@dimen/im_text_medium" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="?attr/border_medium" />
+
+            <TextView
+                android:id="@+id/tv_select_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消键文字"
+                android:textColor="?attr/text_error"
+                android:textSize="@dimen/im_text_medium" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
