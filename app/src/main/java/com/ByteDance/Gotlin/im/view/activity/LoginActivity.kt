@@ -96,6 +96,10 @@ class LoginActivity : AppCompatActivity() {
             mPasswordFlag = mPassword.isNotEmpty()
         }
         mBinding.loginBtn.setOnClickListener {
+            if(!mBinding.loginCb.isChecked){
+                TPhoneUtil.showToast(mContext, "请勾选用户协议!")
+                return@setOnClickListener
+            }
             if (mPasswordFlag && mUserNameFlag) {
                 mViewModel.login(LoginLiveData(mUserName, mPassword))
             } else {

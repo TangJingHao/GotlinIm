@@ -151,6 +151,7 @@
             android:textSize="@dimen/im_text_large" />
 
         <CheckBox
+            android:id="@+id/login_cb"
             android:layout_width="@dimen/im_icon_small"
             android:layout_height="@dimen/im_icon_small"
             android:layout_alignLeft="@id/user_login_read_tv"

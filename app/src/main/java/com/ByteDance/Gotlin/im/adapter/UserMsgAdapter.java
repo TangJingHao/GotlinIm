@@ -31,7 +31,7 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
         this.mDataList = mDataList;
     }
 
-    // 点击tab的事件
+    //点击tab的事件
     public interface OnItemClickListener {
         void onItemClick(View v, int Position);
     }

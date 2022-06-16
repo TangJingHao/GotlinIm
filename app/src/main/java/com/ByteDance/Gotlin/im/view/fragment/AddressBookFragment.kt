@@ -25,4 +25,9 @@ class AddressBookFragment:Fragment(){
         mBinding=TFragmentAddressBookBinding.inflate(inflater,container,false)
         return mBinding.root
     }
+
+    override fun onStart() {
+        super.onStart()
+
+    }
 }
