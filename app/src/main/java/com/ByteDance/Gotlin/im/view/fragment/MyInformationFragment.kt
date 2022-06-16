@@ -1,7 +1,6 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
@@ -34,8 +34,8 @@ import com.luck.picture.lib.style.PictureSelectorStyle
  * 我的
  */
 
-class MyInformationFragment :Fragment() {
-    private lateinit var mBinding:TFragmentMyInfomationBinding
+class MyInformationFragment : Fragment() {
+    private lateinit var mBinding: TFragmentMyInfomationBinding
     private lateinit var mMyEditMediaIListener: TMyEditMediaIListener
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
@@ -45,7 +45,7 @@ class MyInformationFragment :Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding=TFragmentMyInfomationBinding.inflate(inflater,container,false)
+        mBinding = TFragmentMyInfomationBinding.inflate(inflater, container, false)
         return mBinding.root
     }
 
@@ -70,7 +70,15 @@ class MyInformationFragment :Fragment() {
                 .setEditMediaInterceptListener(mMyEditMediaIListener)
                 .forResult(mLauncherResult)
         }
+        mBinding.statusChangeIv.setOnClickListener {
+            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_moon)
+            mBinding.statusChangeIv.setBackground(drawable)
 
+//                val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_sun)
+//                mBinding.statusChangeIv.background = drawable
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        }
     }
 
     /**
