@@ -8,28 +8,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
-import com.ByteDance.Gotlin.im.databinding.DPopupWindowInputBinding;
-import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
+import com.ByteDance.Gotlin.im.R;
+import com.ByteDance.Gotlin.im.databinding.DPopupWindowConfirmBinding;
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 
 /**
  * @Author Zhicong Deng
- * @Date 2022/6/15 14:59
+ * @Date 2022/6/15 14:58
  * @Email 1520483847@qq.com
- * @Description 输入框类型弹窗
+ * @Description 请求确认类型弹窗
  */
-public class InputPopupWindow extends BasePopupWindow {
-    private DPopupWindowInputBinding b;
+public class ConfirmPopupWindow extends BasePopupWindow {
+    private DPopupWindowConfirmBinding b;
 
     private OnConfirmListener mOnConfirmListener;
 
+    /**
+     * 确认回调接口
+     */
     public interface OnConfirmListener {
-        void onConfirm(String inputText);
+        void onConfirm();
     }
 
-    public InputPopupWindow(Context context, String title) {
+    public ConfirmPopupWindow(Context context, String title) {
         mContext = context;
-        b = DPopupWindowInputBinding.inflate(LayoutInflater.from(context));
-        b.tvPopTitle.setText(title);
+        b = DPopupWindowConfirmBinding.inflate(LayoutInflater.from(context));
+        b.tvConfirmMsg.setText(title);
 
         popupWindow = new PopupWindow(b.getRoot(),
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -48,16 +52,13 @@ public class InputPopupWindow extends BasePopupWindow {
     public void setOnConfirmListener(OnConfirmListener listener) {
         this.mOnConfirmListener = listener;
         if (mOnConfirmListener != null)
-            b.tvSelectConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(b.etPopInput.getText().length() == 0){
-                        TPhoneUtil.INSTANCE.showToast(mContext,"请输入内容");
-                    }else{
-                        mOnConfirmListener.onConfirm(b.etPopInput.getText().toString());
-                    }
-                }
-            });
+            b.tvSelectConfirm.setOnClickListener(view ->
+                    mOnConfirmListener.onConfirm());
+    }
+
+    public void setWarnTextColorType() {
+        b.tvSelectConfirm.setTextColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.text_error));
+        b.tvSelectCancel.setTextColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.text_strong));
     }
 
     @Override
@@ -70,6 +71,7 @@ public class InputPopupWindow extends BasePopupWindow {
         }
     }
 
+
     @Override
     public void setConfirmText(String confirmText) {
         b.tvSelectConfirm.setText(confirmText);
@@ -79,4 +81,8 @@ public class InputPopupWindow extends BasePopupWindow {
     public void setCancelText(String cancelText) {
         b.tvSelectCancel.setText(cancelText);
     }
+
+
 }
+
+
