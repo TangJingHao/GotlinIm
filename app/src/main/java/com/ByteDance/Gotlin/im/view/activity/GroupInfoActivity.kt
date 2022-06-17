@@ -45,7 +45,7 @@ class GroupInfoActivity : AppCompatActivity() {
 
         initView()
         setListener()
-        setGroupData()
+//        setGroupData()
     }
 
     private fun initView() {
@@ -91,15 +91,15 @@ class GroupInfoActivity : AppCompatActivity() {
         }
     }
 
-    private fun setGroupData() {
-        mViewModel.groupInfoLiveData.observe(this, Observer {
-            mBinding.tvGroupId.text = it
-            mBinding.tvName.text = "编译原理群"
-            mBinding.tabGroupName.tvItemAuxiliaryText.text = "编译原理群"
-            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text = "50人"
-            mBinding.tvBuilder.text ="李老师"
-            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = "20软卓副班长"
-        })
-    }
+//    private fun setGroupData() {
+//        mViewModel.groupInfoLiveData.observe(this, Observer {
+//            mBinding.tvGroupId.text = it
+//            mBinding.tvName.text = "编译原理群"
+//            mBinding.tabGroupName.tvItemAuxiliaryText.text = "编译原理群"
+//            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text = "50人"
+//            mBinding.tvBuilder.text ="李老师"
+//            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = "20软卓副班长"
+//        })
+//    }
 
 }

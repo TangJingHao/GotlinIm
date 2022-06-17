@@ -3,7 +3,7 @@ package com.ByteDance.Gotlin.im.util.Hutils;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.ByteDance.Gotlin.im.info.VO.MessageVO;
+import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 
 import java.util.ArrayList;
 

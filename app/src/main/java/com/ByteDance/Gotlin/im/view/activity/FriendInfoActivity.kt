@@ -43,25 +43,25 @@ class FriendInfoActivity : AppCompatActivity() {
 
         initView()
         setListener()
-        setFriendData()
+//        setFriendData()
     }
 
     /**
      * 设置界面的数据
      */
-    private fun setFriendData() {
-        mViewModel.friendInfoLiveData.observe(this, Observer { result ->
-            if (result != null) {
-                tvNickname.text = result
-                //设置好友信息
-                //mBinding.tvFriendName.text =
-                //mBinding.tvSex.text =
-                //mBinding.tvNickname.text=
-                //mBinding.tvAccount.text =
-                //mBinding.tvGrouping.text =
-            }
-        })
-    }
+//    private fun setFriendData() {
+//        mViewModel.friendInfoLiveData.observe(this, Observer { result ->
+//            if (result != null) {
+//                tvNickname.text = result
+//                //设置好友信息
+//                //mBinding.tvFriendName.text =
+//                //mBinding.tvSex.text =
+//                //mBinding.tvNickname.text=
+//                //mBinding.tvAccount.text =
+//                //mBinding.tvGrouping.text =
+//            }
+//        })
+//    }
 
 
     /**

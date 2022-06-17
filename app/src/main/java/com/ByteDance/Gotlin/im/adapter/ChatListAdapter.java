@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.databinding.HMessageItemBinding;
-import com.ByteDance.Gotlin.im.info.VO.MessageVO;
-import com.ByteDance.Gotlin.im.info.VO.UserVO;
+import com.ByteDance.Gotlin.im.info.vo.MessageVO;
+import com.ByteDance.Gotlin.im.info.vo.UserVO;
 
 import java.util.ArrayList;
 
