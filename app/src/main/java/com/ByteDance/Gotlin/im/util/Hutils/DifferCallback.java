@@ -3,7 +3,7 @@ package com.ByteDance.Gotlin.im.util.Hutils;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.ByteDance.Gotlin.im.info.Message;
+import com.ByteDance.Gotlin.im.info.VO.MessageVO;
 
 import java.util.ArrayList;
 
@@ -13,10 +13,10 @@ import java.util.ArrayList;
  */
 public class DifferCallback extends DiffUtil.Callback {
 
-    private ArrayList<Message> oldData;
-    private ArrayList<Message> newData;
+    private ArrayList<MessageVO> oldData;
+    private ArrayList<MessageVO> newData;
 
-    public DifferCallback(ArrayList<Message> oldData, ArrayList<Message> newData) {
+    public DifferCallback(ArrayList<MessageVO> oldData, ArrayList<MessageVO> newData) {
         this.oldData = oldData;
         this.newData = newData;
     }
@@ -39,19 +39,18 @@ public class DifferCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-//        Message o = oldData.get(oldItemPosition);
-//        Message n = newData.get(newItemPosition);
-//        return o.time == n.time;
         return true;
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        Message o = oldData.get(oldItemPosition);
-        Message n = newData.get(newItemPosition);
-        if (o.from != n.from) return false;
-        if (o.type != n.type) return false;
-        if (o.time != n.time) return false;
-        return o.content.equals(n.content);
+        MessageVO o = oldData.get(oldItemPosition);
+        MessageVO n = newData.get(newItemPosition);
+        if (!o.getSession().equals(n.getSession())) return false;
+        if (!o.getSender().equals(n.getSender())) return false;
+        if (o.getType() != n.getType()) return false;
+        if (!o.getContent().equals(n.getContent())) return false;
+        if (!o.getSendTime().equals(n.getSendTime())) ;
+        return o.getSelf() == n.getSelf();
     }
 }

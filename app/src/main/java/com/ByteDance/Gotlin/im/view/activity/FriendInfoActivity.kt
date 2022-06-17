@@ -1,6 +1,5 @@
 package com.ByteDance.Gotlin.im.view.activity
 
-import android.accounts.Account
 import android.os.Bundle
 import android.view.View
 import android.widget.Switch
@@ -26,16 +25,16 @@ import com.qmuiteam.qmui.kotlin.onClick
  * @Date：2022/6/11 21:03
  */
 
-class FriendInfoActivity : AppCompatActivity(){
+class FriendInfoActivity : AppCompatActivity() {
 
     private lateinit var mBinding: MActivityFriendInfoBinding
     private val mViewModel by lazy { ViewModelProvider(this).get(FriendInfoViewModel::class.java) }
     private var mFriendType = 0
-    private lateinit var tvNickname :TextView
-    private lateinit var tvSex :TextView
-    private lateinit var tvAccount :TextView
-    private lateinit var tvGrouping :TextView
-    private lateinit var switchIsCared :Switch
+    private lateinit var tvNickname: TextView
+    private lateinit var tvSex: TextView
+    private lateinit var tvAccount: TextView
+    private lateinit var tvGrouping: TextView
+    private lateinit var switchIsCared: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +50,8 @@ class FriendInfoActivity : AppCompatActivity(){
      * 设置界面的数据
      */
     private fun setFriendData() {
-        mViewModel.friendInfoLiveData.observe(this, Observer { result->
-            if(result!=null){
+        mViewModel.friendInfoLiveData.observe(this, Observer { result ->
+            if (result != null) {
                 tvNickname.text = result
                 //设置好友信息
                 //mBinding.tvFriendName.text =
@@ -71,17 +70,23 @@ class FriendInfoActivity : AppCompatActivity(){
     private fun setListener() {
         mBinding.toolbarFriendInfo.imgChevronLeft.onClick {
             //this.finish()
-            MLogUtil.v(TAG_FRIEND_INFO,"--返回--")
+            MLogUtil.v(TAG_FRIEND_INFO, "--返回--")
         }
-        mBinding.tabSetRemarks.root.onClick { MLogUtil.v(TAG_FRIEND_INFO,"--点击设置备注和分组->>SetFriendInfoActivity--") }
+        mBinding.tabSetRemarks.root.onClick {
+            MLogUtil.v(
+                TAG_FRIEND_INFO,
+                "--点击设置备注和分组->>SetFriendInfoActivity--"
+            )
+        }
         mBinding.tabAddOrStart.root.onClick {
-            if (mFriendType == FRIEND_IS){
-                MLogUtil.v(TAG_FRIEND_INFO,"--开始聊天--")
-            }else if (mFriendType == FRIEND_NO){
-                MLogUtil.v(TAG_FRIEND_INFO,"--添加好友--")
-            } }
-        mBinding.tabDeleteFriend.root.onClick { MLogUtil.v(TAG_FRIEND_INFO,"--删除好友--") }
-        mBinding.tabItemInfoSearch.root.onClick { MLogUtil.v(TAG_FRIEND_INFO,"--消息搜索--")  }
+            if (mFriendType == FRIEND_IS) {
+                MLogUtil.v(TAG_FRIEND_INFO, "--开始聊天--")
+            } else if (mFriendType == FRIEND_NO) {
+                MLogUtil.v(TAG_FRIEND_INFO, "--添加好友--")
+            }
+        }
+        mBinding.tabDeleteFriend.root.onClick { MLogUtil.v(TAG_FRIEND_INFO, "--删除好友--") }
+        mBinding.tabItemInfoSearch.root.onClick { MLogUtil.v(TAG_FRIEND_INFO, "--消息搜索--") }
 
     }
 
@@ -96,17 +101,20 @@ class FriendInfoActivity : AppCompatActivity(){
         tvGrouping = mBinding.tvGrouping
         switchIsCared = mBinding.switchIsCared
         //获取类型并设置账号获取信息
-        mFriendType = intent.getIntExtra(FRIEND_TYPE,0)
+        mFriendType = intent.getIntExtra(FRIEND_TYPE, 0)
         mViewModel.getFriendInfo(intent.getStringExtra(FRIEND_ACCOUNT).toString())
         //控件初始化
         mBinding.toolbarFriendInfo.title.text = this.resources.getString(R.string.title_info_friend)
-        mBinding.tabSetRemarks.tvItemMainText.text = this.resources.getString(R.string.tab_text_set_friend_info)
-        mBinding.tabItemInfoSearch.tvItemMainText.text = this.resources.getString(R.string.tab_text_search_info)
+        mBinding.tabSetRemarks.tvItemMainText.text =
+            this.resources.getString(R.string.tab_text_set_friend_info)
+        mBinding.tabItemInfoSearch.tvItemMainText.text =
+            this.resources.getString(R.string.tab_text_search_info)
         mBinding.tabItemInfoSearch.tvItemAuxiliaryText.visibility = View.INVISIBLE
         mBinding.tabSetRemarks.tvItemAuxiliaryText.visibility = View.INVISIBLE
         if (mFriendType == FRIEND_IS) {
             mBinding.tabAddOrStart.tvBlue.text = this.resources.getString(R.string.tab_blue_start)
-            mBinding.tabDeleteFriend.tvRed.text = this.resources.getString(R.string.tab_red_delete_friend)
+            mBinding.tabDeleteFriend.tvRed.text =
+                this.resources.getString(R.string.tab_red_delete_friend)
         } else if (mFriendType == FRIEND_NO) {
             mBinding.tabAddOrStart.tvBlue.text = this.resources.getString(R.string.tab_blue_add)
             mBinding.cvDelete.visibility = View.INVISIBLE

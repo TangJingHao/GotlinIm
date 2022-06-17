@@ -1,7 +1,5 @@
 package com.ByteDance.Gotlin.im.adapter;
 
-import static com.ByteDance.Gotlin.im.info.Message.FRIENDS;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.databinding.HMessageItemBinding;
-import com.ByteDance.Gotlin.im.info.Message;
+import com.ByteDance.Gotlin.im.info.VO.MessageVO;
+import com.ByteDance.Gotlin.im.info.VO.UserVO;
 
 import java.util.ArrayList;
 
@@ -21,9 +20,9 @@ import java.util.ArrayList;
  */
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
 
-    private ArrayList<Message> list;
+    private ArrayList<MessageVO> list;
 
-    public ChatListAdapter(ArrayList<Message> list) {
+    public ChatListAdapter(ArrayList<MessageVO> list) {
         this.list = list;
     }
 
@@ -32,7 +31,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
      *
      * @return list
      */
-    public ArrayList<Message> getData() {
+    public ArrayList<MessageVO> getData() {
         return list;
     }
 
@@ -41,7 +40,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
      *
      * @param list
      */
-    public void setList(ArrayList<Message> list) {
+    public void setList(ArrayList<MessageVO> list) {
         this.list = list;
     }
 
@@ -56,15 +55,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ChatListAdapter.ViewHolder holder, int position) {
         HMessageItemBinding binding = holder.binding;
-        Message message = list.get(position);
-        if (message.from == FRIENDS) {
-            binding.left.setVisibility(View.VISIBLE);
-            binding.right.setVisibility(View.GONE);
-            binding.msgLeft.setText(message.content);
-        } else {
+        MessageVO message = list.get(position);
+        UserVO userVO = message.getSender();
+        if (message.getSelf()) {
             binding.right.setVisibility(View.VISIBLE);
             binding.left.setVisibility(View.GONE);
-            binding.msgRight.setText(message.content);
+            binding.msgRight.setText(message.getContent());
+            binding.nameRight.setText(userVO.getNickName());
+        } else {
+            binding.left.setVisibility(View.VISIBLE);
+            binding.right.setVisibility(View.GONE);
+            binding.msgLeft.setText(message.getContent());
+            binding.nameLeft.setText(userVO.getNickName());
         }
     }
 
@@ -81,4 +83,5 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding = HMessageItemBinding.bind(v);
         }
     }
+
 }

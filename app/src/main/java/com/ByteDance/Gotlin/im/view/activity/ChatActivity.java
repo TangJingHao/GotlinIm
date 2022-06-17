@@ -1,7 +1,5 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import static com.ByteDance.Gotlin.im.info.Message.TYPE_TEXT;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -24,7 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
-import com.ByteDance.Gotlin.im.info.Message;
+import com.ByteDance.Gotlin.im.info.VO.MessageVO;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 
@@ -49,7 +47,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton back;
     private RecyclerView chatList;
     private SwipeRefreshLayout refresh;
-    private ArrayList<Message> list = new ArrayList<>();
+    private ArrayList<MessageVO> list;
     private ChatListAdapter adapter;
 
     @Override
@@ -57,24 +55,35 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         view = HActivityChatBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
-        init();
+        bind();
+        func();
     }
 
-    private void init() {
+    /**
+     * 绑定ui
+     */
+    private void bind() {
         toolbar = view.toolbar;
         toolbar.imgMore.setVisibility(View.VISIBLE);
         input = view.input;
         send = view.send;
         back = toolbar.imgChevronLeft;
-        model = new ViewModelProvider(this).get(ChatViewModel.class);
         chatList = view.chatList;
         refresh = view.refresh;
+        model = new ViewModelProvider(this).get(ChatViewModel.class);
+        list = new ArrayList<>();
+        adapter = new ChatListAdapter(list);
+    }
 
+    /**
+     * 初始化功能
+     */
+    private void func() {
         //刷新监听
-        model.refreshMsgList().observe(this, new Observer<ArrayList<Message>>() {
+        model.refreshMsgList().observe(this, new Observer<ArrayList<MessageVO>>() {
             @Override
-            public void onChanged(ArrayList<Message> messages) {
-                ArrayList<Message> list = adapter.getData();
+            public void onChanged(ArrayList<MessageVO> messages) {
+                ArrayList<MessageVO> list = adapter.getData();
                 adapter.setList(messages);
                 DiffUtil.DiffResult diffResult
                         = DiffUtil.calculateDiff(new DifferCallback(list, messages));
@@ -110,12 +119,6 @@ public class ChatActivity extends AppCompatActivity {
         send.setOnClickListener(view -> send());
         back.setOnClickListener(view -> back());
 
-        for (int i = 0; i < 10; i++) {
-            list.add(new Message(String.valueOf(10 - i),
-                    TYPE_TEXT, i % 2, System.currentTimeMillis()));
-        }
-
-        adapter = new ChatListAdapter(list);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(RecyclerView.VERTICAL);
         manager.setSmoothScrollbarEnabled(true);
@@ -163,7 +166,7 @@ public class ChatActivity extends AppCompatActivity {
      * 返回
      */
     private void back() {
-        //TODO:back
+        //TODO:返回时数据处理
+        finish();
     }
-
 }
