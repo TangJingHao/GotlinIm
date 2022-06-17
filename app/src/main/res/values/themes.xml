@@ -23,6 +23,9 @@
     <attr name="icon_medium"            format="color" />
     <attr name="icon_weak"              format="color" />
 
+    <attr name="icon_primary"           format="color" />
+    <attr name="icon_secondary"         format="color" />
+
     <attr name="border_weak"            format="color" />
     <attr name="border_medium"          format="color" />
     <attr name="border_strong"          format="color" />
@@ -68,6 +71,9 @@
         <item name="icon_medium"            >@color/icon_medium             </item>
         <item name="icon_weak"              >@color/icon_weak               </item>
 
+        <item name="icon_primary"           >@color/PrimaryBlue_03          </item>
+        <item name="icon_secondary"         >@color/Cyan_06                 </item>
+
         <item name="border_weak"            >@color/border_weak             </item>
         <item name="border_medium"          >@color/border_medium           </item>
         <item name="border_strong"          >@color/border_strong           </item>
@@ -104,13 +110,22 @@
         <item name="android:windowEnterAnimation">@anim/t_anim_pop_enter</item>
         <item name="android:windowExitAnimation">@anim/t_anim_pop_exit</item>
     </style>
-
+    <!--tjh的侧滑栏style-->
     <declare-styleable name="SideBar">
         <attr name="scaleSize" format="integer"/>
         <attr name="scaleItemCount" format="integer"/>
         <attr name="scaleWidth" format="dimension"/>
     </declare-styleable>
-
-
+    <!--tjh的按钮style-->
+    <style name="SwitchButtonStyle">
+        <item name="android:paddingStart">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingEnd">?attr/xui_config_content_spacing_horizontal</item>
+        <item name="android:paddingTop">?attr/xui_config_content_spacing_vertical</item>
+        <item name="android:paddingBottom">?attr/xui_config_content_spacing_vertical</item>
+    </style>
+    <!--tjh:解决白屏-->
+    <style name="SplashActivityTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
 
 </resources>

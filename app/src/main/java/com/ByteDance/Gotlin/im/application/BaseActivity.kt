@@ -4,9 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.Repository
-import com.ByteDance.Gotlin.im.view.activity.ChatActivity
-import com.ByteDance.Gotlin.im.view.activity.MainActivity
-import com.ByteDance.Gotlin.im.view.activity.TestActivity
+import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
+import com.ByteDance.Gotlin.im.view.activity.*
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper
+import com.xuexiang.xui.XUI
 
 /**
  * @Author 唐靖豪
@@ -20,8 +23,14 @@ import com.ByteDance.Gotlin.im.view.activity.TestActivity
 class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+        //判断用户是否登录过，后期可以写在闪屏页面
+        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
+            startActivity(Intent(this,MainActivity::class.java))
+            finish()
+        }else{
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

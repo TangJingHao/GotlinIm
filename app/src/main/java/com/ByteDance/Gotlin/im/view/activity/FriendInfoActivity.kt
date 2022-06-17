@@ -9,12 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
+import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_ACCOUNT
+import com.ByteDance.Gotlin.im.util.Constants.FRIEND_GROUPING
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_IS
+import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NICKNAME
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NO
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_TYPE
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
+import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
 import com.qmuiteam.qmui.kotlin.onClick
 
@@ -49,19 +53,23 @@ class FriendInfoActivity : AppCompatActivity() {
     /**
      * 设置界面的数据
      */
-//    private fun setFriendData() {
-//        mViewModel.friendInfoLiveData.observe(this, Observer { result ->
-//            if (result != null) {
-//                tvNickname.text = result
-//                //设置好友信息
-//                //mBinding.tvFriendName.text =
-//                //mBinding.tvSex.text =
-//                //mBinding.tvNickname.text=
-//                //mBinding.tvAccount.text =
-//                //mBinding.tvGrouping.text =
-//            }
-//        })
-//    }
+    private fun setFriendData() {
+        mViewModel.friendInfoLiveData.observe(this, Observer { result->
+            if(result!=null){
+                tvNickname.text = result
+                //设置好友信息
+                //mBinding.tvFriendName.text =
+                //mBinding.tvSex.text =
+                //mBinding.tvNickname.text=
+                //mBinding.tvAccount.text =
+                //mBinding.tvGrouping.text =
+                mBinding.tvFriendName.text = intent.getStringExtra(Constants.FRIEND_NAME)
+                mBinding.tvNickname.text= intent.getStringExtra(Constants.FRIEND_NICKNAME)
+                mBinding.tvAccount.text = intent.getStringExtra(FRIEND_ACCOUNT)
+                mBinding.tvGrouping.text = intent.getStringExtra(Constants.FRIEND_GROUPING)
+            }
+        })
+    }
 
 
     /**
@@ -69,24 +77,30 @@ class FriendInfoActivity : AppCompatActivity() {
      */
     private fun setListener() {
         mBinding.toolbarFriendInfo.imgChevronLeft.onClick {
-            //this.finish()
-            MLogUtil.v(TAG_FRIEND_INFO, "--返回--")
+            this.finish()
+            MLogUtil.v(TAG_FRIEND_INFO,"--返回--")
         }
         mBinding.tabSetRemarks.root.onClick {
-            MLogUtil.v(
-                TAG_FRIEND_INFO,
-                "--点击设置备注和分组->>SetFriendInfoActivity--"
-            )
-        }
-        mBinding.tabAddOrStart.root.onClick {
-            if (mFriendType == FRIEND_IS) {
-                MLogUtil.v(TAG_FRIEND_INFO, "--开始聊天--")
-            } else if (mFriendType == FRIEND_NO) {
-                MLogUtil.v(TAG_FRIEND_INFO, "--添加好友--")
+            MLogUtil.v(TAG_FRIEND_INFO,"--点击设置备注和分组->>SetFriendInfoActivity--")
+            startActivity<FriendSettingActivity>(this){
+                putExtra(FRIEND_NICKNAME,intent.getStringExtra(Constants.FRIEND_NICKNAME))
+                putExtra(FRIEND_GROUPING,intent.getStringExtra(Constants.FRIEND_GROUPING))
             }
         }
-        mBinding.tabDeleteFriend.root.onClick { MLogUtil.v(TAG_FRIEND_INFO, "--删除好友--") }
-        mBinding.tabItemInfoSearch.root.onClick { MLogUtil.v(TAG_FRIEND_INFO, "--消息搜索--") }
+        mBinding.tabAddOrStart.root.onClick {
+            if (mFriendType == FRIEND_IS){
+                MLogUtil.v(TAG_FRIEND_INFO,"--开始聊天--")
+            }else if (mFriendType == FRIEND_NO){
+                MLogUtil.v(TAG_FRIEND_INFO,"--添加好友--")
+            } }
+        mBinding.tabDeleteFriend.root.onClick { MLogUtil.v(TAG_FRIEND_INFO,"--删除好友--") }
+        mBinding.tabItemInfoSearch.root.onClick {
+            MLogUtil.v(TAG_FRIEND_INFO,"--消息搜索--")
+            //TODO:跳转到消息搜索界面
+            startActivity<SearchActivity>(this){
+                putExtra(Constants.SEARCH_FROM_INFO_TYPE,Constants.SEARCH_TYPE_FROM_FRIEND)
+            }
+        }
 
     }
 

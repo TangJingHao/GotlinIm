@@ -50,6 +50,8 @@
             android:exported="false" />
         <activity
             android:name=".application.BaseActivity"
+            android:theme="@style/SplashActivityTheme"
+            android:launchMode="standard"
             android:exported="true">
 
             <intent-filter>
@@ -65,7 +67,8 @@
             android:exported="false" />
         <activity
             android:name=".view.activity.MainActivity"
-            android:exported="false" />
+            android:launchMode="standard"
+            android:exported="true" />
         <activity
             android:name=".view.activity.ChatActivity"
             android:exported="false" />

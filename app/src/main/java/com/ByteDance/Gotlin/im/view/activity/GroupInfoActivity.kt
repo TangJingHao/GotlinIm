@@ -66,7 +66,7 @@ class GroupInfoActivity : AppCompatActivity() {
 
     private fun setListener() {
         mBinding.toolbarGroupInfo.imgChevronLeft.onClick {
-            //this.finish()
+            this.finish()
             MLogUtil.v(Constants.TAG_FRIEND_INFO,"--返回--")
             //mViewModel.getGroupInfo("002321001")
         }
@@ -80,7 +80,15 @@ class GroupInfoActivity : AppCompatActivity() {
         }
         mBinding.tabGroupNumbers.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊人数：跳转到成员列表--") }
         mBinding.tabGroupNickname.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--我的群昵称（弹窗修改）--") }
-        mBinding.tabItemInfoSearch.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")  }
+        mBinding.tabItemInfoSearch.root.onClick {
+            MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")
+            //TODO:跳转到搜索聊天消息
+            com.ByteDance.Gotlin.im.util.Mutils.startActivity<SearchActivity>(this) {
+                putExtra(Constants.SEARCH_FROM_INFO_TYPE, Constants.SEARCH_TYPE_FROM_GROUP)
+            }
+
+
+        }
         mBinding.tabDeleteGroup.root.onClick {
             MLogUtil.v(Constants.TAG_GROUP_INFO,"--删除群聊--")
             if (mOwnerType == OWNER_IS){
@@ -91,15 +99,21 @@ class GroupInfoActivity : AppCompatActivity() {
         }
     }
 
-//    private fun setGroupData() {
-//        mViewModel.groupInfoLiveData.observe(this, Observer {
+    private fun setGroupData() {
+        mViewModel.groupInfoLiveData.observe(this, Observer {
+            mBinding.tvGroupId.text = intent.getIntExtra(Constants.GROUP_ID,0).toString()
+            mBinding.tvName.text =intent.getStringExtra(Constants.GROUP_NAME).toString()
+            mBinding.tabGroupName.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_NAME).toString()
+            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text =intent.getStringExtra(Constants.GROUP_NUM).toString()
+            mBinding.tvBuilder.text =intent.getStringExtra(Constants.GROUP_OWNER).toString()
+            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_MY_NAME).toString()
 //            mBinding.tvGroupId.text = it
 //            mBinding.tvName.text = "编译原理群"
 //            mBinding.tabGroupName.tvItemAuxiliaryText.text = "编译原理群"
 //            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text = "50人"
 //            mBinding.tvBuilder.text ="李老师"
 //            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = "20软卓副班长"
-//        })
-//    }
+        })
+    }
 
 }
