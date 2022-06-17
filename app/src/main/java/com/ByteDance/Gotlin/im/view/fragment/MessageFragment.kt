@@ -11,17 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.adapter.UserMsgAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
-import com.ByteDance.Gotlin.im.info.WSsendContent
-import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg
-import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
+import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.gson.Gson
 import com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread
-import okhttp3.*
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import okio.ByteString
-import java.util.concurrent.TimeUnit
 
 /**
  * @Author 唐靖豪
@@ -76,7 +75,8 @@ class MessageFragment : Fragment() {
                 adapter.setItemOnClickListener { v, position ->
                     TPhoneUtil.showToast(requireActivity(), "item = " + position)
                     // TODO 跳转到聊天界面
-
+                    val SessionName: String = messageList.get(position).session.name
+                    startChat(context, position, SessionName);
                 }
                 b.rvLayout.layoutManager = LinearLayoutManager(activity)
                 b.rvLayout.adapter = adapter
@@ -106,7 +106,7 @@ class MessageFragment : Fragment() {
 
         // 回调,展示消息
         override fun onMessage(webSocket: WebSocket, text: String) {
-            TPhoneUtil.showToast(requireActivity(),"新消息提醒")
+            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
             DLogUtils.i(TAG, "回调$text")
         }
 

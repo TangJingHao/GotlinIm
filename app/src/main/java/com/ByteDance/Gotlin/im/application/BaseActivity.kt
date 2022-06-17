@@ -20,7 +20,7 @@ import com.xuexiang.xui.XUI
  * 直接改这里的文件，不用重复修改manifest
  */
 
-class BaseActivity:AppCompatActivity() {
+class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //<<<<<<< HEAD

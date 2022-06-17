@@ -45,7 +45,7 @@ class GroupInfoActivity : AppCompatActivity() {
 
         initView()
         setListener()
-        setGroupData()
+//        setGroupData()
     }
 
     private fun initView() {
