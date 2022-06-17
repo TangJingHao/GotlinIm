@@ -23,11 +23,11 @@ import com.xuexiang.xui.XUI
 class BaseActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-<<<<<<< HEAD
-        val intent = Intent(this, TestActivity::class.java)
-        startActivity(intent)
-        finish()
-=======
+//<<<<<<< HEAD
+//        val intent = Intent(this, TestActivity::class.java)
+//        startActivity(intent)
+//        finish()
+//=======
         //判断用户是否登录过，后期可以写在闪屏页面
         if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
             startActivity(Intent(this,MainActivity::class.java))
@@ -37,6 +37,6 @@ class BaseActivity:AppCompatActivity() {
             startActivity(intent)
             finish()
         }
->>>>>>> tjh
+//>>>>>>> tjh
     }
 }
