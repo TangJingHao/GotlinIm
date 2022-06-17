@@ -39,4 +39,7 @@ object Constants {
     const val TAG_GROUP_INFO="GroupInfoActivity"
     const val TAG_SET_FRIEND_INFO="SetFriendInfoActivity"
 
+
+    //网络类型状态码
+    const val SUCCESS_STATUS=0
 }

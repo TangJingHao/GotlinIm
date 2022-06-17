@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
@@ -12,7 +13,10 @@ import com.ByteDance.Gotlin.im.info.WSsendContent;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
 import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
-import com.google.common.reflect.TypeToken;
+import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow;
+import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow;
+import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow;
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
@@ -30,9 +34,15 @@ import okio.ByteString;
  * @Email 1520483847@qq.com
  * @Description 测试用Activity
  */
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DActivityTestBinding b;
+    private Context mContext;
+
+    ConfirmPopupWindow confirmPopupWindow;
+    InputPopupWindow inputPopupWindow;
+    SingleSelectPopupWindow singleSelectPopupWindow;
+
     private static final String TAG = "TestActivity";
 
     private static final Repository repository = Repository.INSTANCE;
@@ -57,16 +67,21 @@ public class TestActivity extends AppCompatActivity {
         b = DActivityTestBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
 
+        mContext = this;
+
         b.testBar.imgChevronLeft.setVisibility(View.GONE);
         b.testBar.title.setText("测试页面");
 
-        connect();
-
+        /*
+         * websocket测试代码==========================================================================
+         * */
+        // 测试发送消息
         b.btnSend.setOnClickListener(new View.OnClickListener() {
             int count = 0;
 
             @Override
             public void onClick(View view) {
+                // 注意线程
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -80,10 +95,85 @@ public class TestActivity extends AppCompatActivity {
             }
         });
 
+        b.btnConnext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+//                connect();
+                EchoWebSocketListener listener = new EchoWebSocketListener();
+                webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
+            }
+        });
+
+        b.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                webSocket.cancel();
+            }
+        });
+
+        initPopupWindow();
+
+        b.btnPopConfirm.setOnClickListener(this);
+        b.btnPopInput.setOnClickListener(this);
+        b.btnPopSelect.setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view.equals(b.btnPopConfirm)) {
+            confirmPopupWindow.show();
+        } else if (view.equals(b.btnPopInput)) {
+            inputPopupWindow.show();
+        } else if (view.equals(b.btnPopSelect)) {
+            singleSelectPopupWindow.show();
+        }
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+    }
+
+    private void initPopupWindow() {
+        // 新建弹窗
+        confirmPopupWindow = new ConfirmPopupWindow(this, "测试");
+        // 设置确认回调
+        confirmPopupWindow.setOnConfirmListener(() ->
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "点击确认"));
+        // （可选）设置按钮文本
+        confirmPopupWindow.setConfirmText("确认文本");
+        confirmPopupWindow.setCancelText("取消测试文本");
+        // （可选）设置警告类型颜色模式
+        confirmPopupWindow.setWarnTextColorType();
+
+        inputPopupWindow = new InputPopupWindow(mContext, "输入弹窗测试");
+        inputPopupWindow.setOnConfirmListener(new InputPopupWindow.OnConfirmListener() {
+            @Override
+            public void onConfirm(String inputText) {
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, inputText);
+            }
+        });
+
+        singleSelectPopupWindow = new SingleSelectPopupWindow(mContext,
+                "单选弹窗测试", "选项一", "选项二");
+
+        singleSelectPopupWindow.setOnConfirmListener(new SingleSelectPopupWindow.OnConfirmListener() {
+            @Override
+            public void onConfirm(int index) {
+                TPhoneUtil.INSTANCE.showToast(mContext, "选择" + index);
+            }
+        });
+    }
+
+    /**
+     * WebSocket链接测试
+     */
     private void connect() {
-        DLogUtils.i(TAG,"创建wedSocket");
+        DLogUtils.i(TAG, "创建wedSocket");
         EchoWebSocketListener listener = new EchoWebSocketListener();
         Request request = new Request.Builder()
                 .url(BASE_WS_URL + repository.getUserId())
@@ -93,52 +183,47 @@ public class TestActivity extends AppCompatActivity {
                 .build();
         webSocket = client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
-        DLogUtils.i(TAG,"创建wedSocket完成");
+        DLogUtils.i(TAG, "创建wedSocket完成");
     }
 
     class EchoWebSocketListener extends WebSocketListener {
 
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
-            DLogUtils.i(TAG,"链接开启");
+            DLogUtils.i(TAG, "链接开启");
             WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
                     SEND_MESSAGE, new WSsendContent(6, 1, 0, "开始聊天吧"));
             boolean b = webSocket.send(gson.toJson(sendChatMsg));
-            if(b){
-                DLogUtils.i(TAG,"发送成功");
-            }else{
-                DLogUtils.i(TAG,"发送失败");
-            }
         }
 
         // 回调,展示消息
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
-            DLogUtils.i(TAG,"回调" + text);
-            b.tvOther.setText(msg.getWsContent().getSendTime() +" " +  msg.getWsContent().getContent());
+            DLogUtils.i(TAG, "回调" + text);
+            b.tvOther.setText(msg.getWsContent().getSendTime() + " " + msg.getWsContent().getContent());
         }
 
         // 回调
         @Override
         public void onMessage(WebSocket webSocket, ByteString bytes) {
-            DLogUtils.i(TAG,"回调" + bytes);
+            DLogUtils.i(TAG, "回调" + bytes);
         }
 
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
-            DLogUtils.i(TAG,"链接关闭中");
+            DLogUtils.i(TAG, "链接关闭中");
         }
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-            DLogUtils.i(TAG,"链接已关闭");
+            DLogUtils.i(TAG, "链接已关闭");
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
             WebSocket webSocket1 = webSocket;
-            DLogUtils.i(TAG,"链接失败/发送失败");
+            DLogUtils.i(TAG, "链接失败/发送失败");
         }
     }
 }

@@ -59,8 +59,8 @@ object TMyPictureSelectorStyle {
         numberTitleBarStyle.isAlbumTitleRelativeLeft = true
         numberTitleBarStyle.titleBarHeight = 90
         numberTitleBarStyle.titleAlbumBackgroundResource = R.drawable.t_ps_album_bg
-        numberTitleBarStyle.titleDrawableRightResource = R.drawable.t_ps_ic_grey_arrow
-        numberTitleBarStyle.previewTitleLeftBackResource = R.drawable.t_ps_ic_normal_back
+        numberTitleBarStyle.titleDrawableRightResource = R.mipmap.t_ps_ic_grey_arrow
+        numberTitleBarStyle.previewTitleLeftBackResource = R.mipmap.t_ps_ic_normal_back
         // 底部NavBar 风格
         val numberBottomNavBarStyle = BottomNavBarStyle()
         numberBottomNavBarStyle.bottomPreviewNarBarBackgroundColor =

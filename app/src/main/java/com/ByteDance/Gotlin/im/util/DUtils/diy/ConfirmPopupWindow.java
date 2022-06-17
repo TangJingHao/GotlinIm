@@ -7,39 +7,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.ByteDance.Gotlin.im.R;
-import com.ByteDance.Gotlin.im.databinding.DPopupWindowSingleSelectBinding;
-import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
-
-import java.util.List;
+import com.ByteDance.Gotlin.im.databinding.DPopupWindowConfirmBinding;
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 
 /**
  * @Author Zhicong Deng
- * @Date 2022/6/15 15:00
+ * @Date 2022/6/15 14:58
  * @Email 1520483847@qq.com
- * @Description 单选类型弹窗, 目前仅支持双选
+ * @Description 请求确认类型弹窗
  */
-public class SingleSelectPopupWindow extends BasePopupWindow {
-
-    private DPopupWindowSingleSelectBinding b;
+public class ConfirmPopupWindow extends BasePopupWindow {
+    private DPopupWindowConfirmBinding b;
 
     private OnConfirmListener mOnConfirmListener;
-
-    private int selectIndex = 0;
 
     /**
      * 确认回调接口
      */
     public interface OnConfirmListener {
-        void onConfirm(int index);
+        void onConfirm();
     }
 
-    public SingleSelectPopupWindow(Context context, String title, String options1, String options2) {
+    public ConfirmPopupWindow(Context context, String title) {
         mContext = context;
-        b = DPopupWindowSingleSelectBinding.inflate(LayoutInflater.from(context));
+        b = DPopupWindowConfirmBinding.inflate(LayoutInflater.from(context));
 
         popupWindow = new PopupWindow(b.getRoot(),
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -53,25 +46,28 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
                 backgroundAlpha(1f);
             }
         });
-        b.tvPopTitle.setText(title);
-        b.options1.setText(options1);
-        b.options2.setText(options2);
-        b.rgSelectGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == b.options1.getId()) {
-                    selectIndex = 0;
-                } else if (i == b.options2.getId()) {
-                    selectIndex = 1;
-                }
-            }
-        });
+
+        b.tvConfirmMsg.setText(title);
         b.tvSelectCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 popupWindow.dismiss();
             }
         });
+    }
+
+    public void setOnConfirmListener(OnConfirmListener listener) {
+        this.mOnConfirmListener = listener;
+        if (mOnConfirmListener != null)
+            b.tvSelectConfirm.setOnClickListener(view -> {
+                mOnConfirmListener.onConfirm();
+                popupWindow.dismiss();
+            });
+    }
+
+    public void setWarnTextColorType() {
+        b.tvSelectConfirm.setTextColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.text_error));
+        b.tvSelectCancel.setTextColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.text_strong));
     }
 
     @Override
@@ -84,17 +80,6 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
         }
     }
 
-    public void setOnConfirmListener(OnConfirmListener listener) {
-        this.mOnConfirmListener = listener;
-        if (mOnConfirmListener != null)
-            b.tvSelectConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mOnConfirmListener.onConfirm(selectIndex);
-                    popupWindow.dismiss();
-                }
-            });
-    }
 
     @Override
     public void setConfirmText(String confirmText) {
@@ -105,4 +90,8 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
     public void setCancelText(String cancelText) {
         b.tvSelectCancel.setText(cancelText);
     }
+
+
 }
+
+

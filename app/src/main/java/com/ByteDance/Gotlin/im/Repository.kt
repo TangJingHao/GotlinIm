@@ -5,17 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
-import androidx.room.Room
-import com.ByteDance.Gotlin.im.application.BaseApp
-import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.i
+import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
-import java.lang.Exception
-import kotlin.RuntimeException
+import okhttp3.Request
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -83,7 +82,7 @@ object Repository {
      */
     fun login(userName: String, userPass: String) = fire(Dispatchers.IO) {
         val loginDataResponse = MyNetWork.login(userName, userPass)
-        if (loginDataResponse.status == 0) {
+        if (loginDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(loginDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${loginDataResponse.status}"))
@@ -95,7 +94,7 @@ object Repository {
      */
     fun getGroupList(userId: Int) = fire(Dispatchers.IO) {
         val groupListDataResponse = MyNetWork.getGroupList(userId)
-        if (groupListDataResponse.status == 0) {
+        if (groupListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(groupListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${groupListDataResponse.status}"))
@@ -107,7 +106,7 @@ object Repository {
      */
     fun getFriendList(userId: Int) = fire(Dispatchers.IO) {
         val friendListDataResponse = MyNetWork.getFriendList(userId)
-        if (friendListDataResponse.status == 0) {
+        if (friendListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(friendListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${friendListDataResponse.status}"))
@@ -119,8 +118,8 @@ object Repository {
      */
     fun getSessionList(userId: Int) = fire(Dispatchers.IO) {
         val sessionListDataResponse = MyNetWork.getSessionList(userId)
-        DLogUtils.i(TAG,MyNetWork.getSessionList(userId).toString())
-        if (sessionListDataResponse.status == 0) {
+        DLogUtils.i(TAG, MyNetWork.getSessionList(userId).toString())
+        if (sessionListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(sessionListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${sessionListDataResponse.status}"))
@@ -132,7 +131,7 @@ object Repository {
      */
     fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) = fire(Dispatchers.IO) {
         val sessionHistoryDataResponse = MyNetWork.getSessionHistoryList(userId, sessionId, page)
-        if (sessionHistoryDataResponse.status == 0) {
+        if (sessionHistoryDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(sessionHistoryDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
@@ -168,6 +167,16 @@ object Repository {
     fun saveGrouping(myId:String,grouping: List<Map<String,Boolean>>) = liveData<String> {
         i(TAG_FRIEND_INFO,"---保存分组---")
         emit(myId)
+    }
+
+    /**
+     * websocket使用
+     */
+    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
+        val request = Request.Builder()
+            .url(Constants.BASE_WS_URL + getUserId())
+            .build()
+        return MyNetWork.getWebSocketAndConnect(request, listener)
     }
 
     /**

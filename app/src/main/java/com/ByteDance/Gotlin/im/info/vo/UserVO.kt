@@ -8,7 +8,7 @@ package com.ByteDance.Gotlin.im.info.vo
  */
 data class UserVO(
     /** 用户 ID */
-    val userId: Integer,
+    val userId: Int,
 
     /** 用户名 */
     val userName: String,

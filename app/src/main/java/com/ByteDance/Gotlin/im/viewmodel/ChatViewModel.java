@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel;
  */
 public class ChatViewModel extends ViewModel {
 
-
     /**
      * 发送消息
      *

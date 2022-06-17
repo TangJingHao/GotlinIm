@@ -19,6 +19,8 @@ import com.ByteDance.Gotlin.im.info.vo.GroupVO;
 import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ import java.util.List;
  * 【注】目前还未做集合类型适配
  */
 public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
+
+    private final static String TAG = "TabWithTitleAdapter";
 
     private final Context mContext;
     // 要展示的信息
@@ -85,16 +89,16 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
      * adapter构造方法
      *
      * @param context        context
-     * @param searchUserList 需要展示的用户信息集合
+     * @param dataList 需要展示的用户信息集合
      * @param groupTitleList 对应用户信息的各组标题（使用必须注意两参数是否大小一致）
      * @param tabType        展示类型，如 TYPE_USER_INFO_STATUE
      */
     public TabWithTitleAdapter(Context context,
-                               List<List<E>> searchUserList,
+                               List<List<E>> dataList,
                                List<String> groupTitleList,
                                int tabType) {
         mContext = context;
-        mDataInfoList = searchUserList;
+        mDataInfoList = dataList;
         mTitleList = groupTitleList;
         mTabType = tabType;
 
@@ -139,6 +143,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int p = position;
         if (getItemViewType(position) == TYPE_TITLE) {
             TitleViewHolder titleHolder = (TitleViewHolder) holder;
             if (curGroupIndex < mTitleList.size()) {
@@ -156,10 +161,11 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                 curGroupLen = mTitleIndexList.get(curGroupIndex) - mTitleIndexList.get(curGroupIndex - 1) - 1;
             }
             int curGroupTitleIndex = mTitleIndexList.get(curGroupIndex - 1);
-            int relativePosition = curGroupLen - (curGroupLen - (position - curGroupTitleIndex)) - 1;
+            int relativePosition = curGroupLen - (curGroupLen - (p - curGroupTitleIndex)) - 1;
 
             // 适配不同的tab,当前组编号为curGroupIndex - 1，相对组内位置为relativePosition
-            E data = mDataInfoList.get(curGroupIndex - 1).get(relativePosition);
+            int realCurGroupIndex = curGroupIndex - 1;
+            E data = mDataInfoList.get(realCurGroupIndex).get(relativePosition);
 
             // TODO 泛型适配不同的User类，需要修改的靓仔请找到自己的case修改
             switch (mTabType) {
@@ -183,8 +189,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     }
                     if (mItemOnClickListener != null)
                         userHolder.b.rLayout.setOnClickListener(view ->
-                                mItemOnClickListener.onItemClick(view,
-                                        curGroupIndex - 1, relativePosition));
+                                mItemOnClickListener.onItemClick(view, realCurGroupIndex, relativePosition));
                     if (mOnMoreClickListener != null) {
                         userHolder.b.tvStatue.setOnClickListener(view ->
                                 mOnMoreClickListener.onMoreClick(view,
@@ -202,20 +207,24 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     if (data instanceof GroupVO) {
                         GroupVO item = (GroupVO) data;
                         Glide.with(mContext)
-                                .load(BASE_URL + item.getAvatar())
+                                .load(DEFAULT_IMG)
                                 .into(simpleHolder.b.imgUserPic);
                         simpleHolder.b.tvUserName.setText(item.getGroupName());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
-                                .load(item.getAvatar())
+                                .load(DEFAULT_IMG)
                                 .into(simpleHolder.b.imgUserPic);
                         simpleHolder.b.tvUserName.setText(item.getUserName());
                     }
-                    if (mItemOnClickListener != null)
-                        simpleHolder.b.rLayout.setOnClickListener(view ->
-                                mItemOnClickListener.onItemClick(view,
-                                        curGroupIndex - 1, relativePosition));
+                    if (mItemOnClickListener != null) {
+                        simpleHolder.b.rLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mItemOnClickListener.onItemClick(view, realCurGroupIndex, relativePosition);
+                            }
+                        });
+                    }
                     break;
                 }
                 case TYPE_USER_MESSAGE: {
@@ -232,8 +241,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     MessageHolder.b.tvTime.setText("当前时间");
                     if (mItemOnClickListener != null)
                         MessageHolder.b.rLayout.setOnClickListener(view ->
-                                mItemOnClickListener.onItemClick(view,
-                                        curGroupIndex - 1, relativePosition));
+                                mItemOnClickListener.onItemClick(view, realCurGroupIndex, relativePosition));
                     break;
                 }
                 default:

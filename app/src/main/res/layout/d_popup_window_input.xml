@@ -2,13 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/tsp_fill_ultrastrong">
+    android:layout_gravity="center">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="176dp"
         android:layout_centerInParent="true"
-        android:layout_marginHorizontal="@dimen/pop_window_margin_horizontal"
         android:background="@drawable/d_bg_pop_win">
 
         <LinearLayout
@@ -30,7 +29,7 @@
                 android:textSize="@dimen/im_text_medium" />
 
             <EditText
-                android:id="@+id/email_et"
+                android:id="@+id/et_pop_input"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/im_input_box_height"
                 android:layout_marginTop="12dp"
@@ -63,7 +62,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="确认键文字"
+                android:text="确认"
                 android:textColor="?attr/text_link"
                 android:textSize="@dimen/im_text_medium" />
 
@@ -78,7 +77,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="取消键文字"
+                android:text="取消"
                 android:textColor="?attr/text_error"
                 android:textSize="@dimen/im_text_medium" />
 
