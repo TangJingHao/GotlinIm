@@ -29,10 +29,35 @@ object Constants {
     const val SEND_MESSAGE = "SEND_MESSAGE"
     const val USER_ONLINE = "USER_ONLINE"
 
-    //好友类型选择
+    //suzy：好友类型选择
+    const val FRIEND_ACCOUNT = "FriendAccount"
     const val FRIEND_TYPE = "FriendType"
+    const val FRIEND_NAME = "FriendName"
+    const val FRIEND_NICKNAME = "FriendNickname"
+    const val FRIEND_GROUPING = "FriendGrouping"
     const val FRIEND_IS = 1
     const val FRIEND_NO = 0
+
+    //suzy：是否为群主
+    const val GROUP_ID = "GroupId"
+    const val OWNER_TYPE = "OwnerType"
+    const val OWNER_IS = 1
+    const val OWNER_NO = 0
+    const val GROUP_NAME = "GroupName"
+    const val GROUP_NUM = "GroupNum"
+    const val GROUP_MY_NAME = "GroupMyName"
+    const val GROUP_OWNER = "GroupOwner"
+
+    //suzy：全局TAG
+    const val TAG_FRIEND_INFO="FriendInfoActivity"
+    const val TAG_GROUP_INFO="GroupInfoActivity"
+    const val TAG_SET_FRIEND_INFO="SetFriendInfoActivity"
+
+     //suzy：跳转
+    const val SEARCH_FROM_INFO_TYPE = "search_type"
+    const val SEARCH_TYPE_FROM_FRIEND = 2
+    const val SEARCH_TYPE_FROM_GROUP = 2
+    const val SEARCH_HISTORY = 6
 
     //网络类型状态码
     const val SUCCESS_STATUS=0

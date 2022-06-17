@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/im_toolbar_height"
     android:background="?attr/bg_default"
-    android:paddingHorizontal="@dimen/im_common_horizontal">
+    android:paddingHorizontal="@dimen/im_common_horizontal"
+    android:clickable="true"
+    android:focusable="true">
 
     <ImageButton
         android:id="@+id/img_chevron_left"

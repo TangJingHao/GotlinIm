@@ -30,11 +30,6 @@ object Repository {
     private var mmkv: MMKV = MMKV.defaultMMKV()
 
     private const val MMKV_USER_ID = "userId"
-    private const val MMKV_USER_STATUS="user_status"
-
-    fun saveUserStatus(userStatus:Int)= mmkv.encode(MMKV_USER_STATUS,userStatus)
-    fun getUserStatus():Int= mmkv.decodeInt(MMKV_USER_STATUS,Constants.USER_DEFAULT_MODE)
-    fun deleteUserStatus()= mmkv.removeValueForKey(MMKV_USER_STATUS)
 
     /**
      * 添加/更新当前用户id
@@ -43,9 +38,8 @@ object Repository {
 
     /**
      * 获取当前用户id
-     * -1表示还没登录过
      */
-    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID,Constants.USER_DEFAULT_ID)
+    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID)
 
     /**
      * 删除当前用户id
@@ -137,6 +131,37 @@ object Repository {
             Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
         }
     }
+    /**
+     * 保存备注
+     */
+    fun saveNickName(friendId:String,nickname: String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---保存${friendId}的新备注${nickname}---")
+        //emit(groupId)
+    }
+
+    /**
+     * 获取分组
+     */
+    fun getAllGrouping(myId:String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---获取分组---")
+        emit(myId)
+    }
+
+    /**
+     * 获取分组
+     */
+    fun getSelectedGrouping(myId:String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---获取分组---")
+        emit(myId)
+    }
+
+    /**
+     * 保存分组
+     */
+    fun saveGrouping(myId:String,grouping: List<Map<String,Boolean>>) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---保存分组---")
+        emit(myId)
+    }
 
     /**
      * websocket使用
@@ -148,6 +173,21 @@ object Repository {
         return MyNetWork.getWebSocketAndConnect(request, listener)
     }
 
+    /**
+     * 获取群聊信息
+     */
+    fun getGroupInfo(groupId:String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---$groupId---")
+        emit(groupId)
+    }
+
+    /**
+     * 获取好友信息
+     */
+    fun getFriendInfo(account :String) = liveData<String> {
+        i(TAG_FRIEND_INFO,"---$account---")
+        emit(account)
+    }
 
     /**
      * 返回一个liveData(统一处理异常信息)
