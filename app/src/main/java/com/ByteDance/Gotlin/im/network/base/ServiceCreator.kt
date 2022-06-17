@@ -1,8 +1,12 @@
 package com.ByteDance.Gotlin.im.network.base
 
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.view.activity.TestActivity
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 /**
  * @Author 唐靖豪
@@ -17,9 +21,9 @@ object ServiceCreator {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private val webSocketRetrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
+    // 用于webSocket
+    var WebSocketClient = OkHttpClient.Builder()
+        .readTimeout(3, TimeUnit.SECONDS)
         .build()
 
     fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)

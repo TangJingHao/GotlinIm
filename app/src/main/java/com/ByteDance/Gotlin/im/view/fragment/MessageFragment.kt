@@ -18,6 +18,7 @@ import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.gson.Gson
+import com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread
 import okhttp3.*
 import okio.ByteString
 import java.util.concurrent.TimeUnit
@@ -73,7 +74,7 @@ class MessageFragment : Fragment() {
                 val messageList = responseData.data.messageList
                 val adapter = UserMsgAdapter(requireActivity(), messageList)
                 adapter.setItemOnClickListener { v, position ->
-                    TPhoneUtil.showToast(requireActivity(),"item = " + position )
+                    TPhoneUtil.showToast(requireActivity(), "item = " + position)
                     // TODO 跳转到聊天界面
                 }
                 b.rvLayout.layoutManager = LinearLayoutManager(activity)
@@ -90,17 +91,17 @@ class MessageFragment : Fragment() {
     }
 
     private fun initData() {
-        vm.getSessionList() // 第一次刷新，为了初始化页面
-        connect()
-
-        
+//        vm.getSessionList() // 第一次刷新，为了初始化页面
+        val listener = EchoWebSocketListener()
+        webSocket = vm.getWebSocketAndConnect(listener)
+//        connect()
     }
 
 
     /**
      * WebSocket链接测试
      */
-    private  fun connect() {
+    private fun connect() {
         DLogUtils.i(TAG, "创建wedSocket")
         val request = Request.Builder()
             .url("ws://chatspace.iceclean.top/space/ws/chat/1")
@@ -113,7 +114,7 @@ class MessageFragment : Fragment() {
                 super.onOpen(webSocket, response)
                 DLogUtils.i(TAG, "链接开启" + response.message().toString())
                 vm.getSessionList() // 第二次刷新，因为网络连接打开
-                TPhoneUtil.showToast(requireActivity(),"新消息")
+                TPhoneUtil.showToast(requireActivity(), "新消息")
                 val sendChatMsg = WebSocketSendChatMsg(
                     SEND_MESSAGE, WSsendContent(6, 1, 0, "开始聊天吧")
                 )
@@ -151,5 +152,41 @@ class MessageFragment : Fragment() {
         })
         client.dispatcher().executorService().shutdown()
         DLogUtils.i(TAG, "创建wedSocket完成")
+    }
+
+    inner class EchoWebSocketListener : WebSocketListener() {
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            DLogUtils.i(TAG, "链接开启")
+            runOnUiThread(Runnable { vm.getSessionList() })
+//            vm.getSessionList()
+//            val sendChatMsg = WebSocketSendChatMsg(
+//                SEND_MESSAGE, WSsendContent(6, 1, 0, "开始聊天吧")
+//            )
+//            val b: Boolean = webSocket.send(gson.toJson(sendChatMsg))
+        }
+
+        // 回调,展示消息
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            TPhoneUtil.showToast(requireActivity(),"新消息提醒")
+            DLogUtils.i(TAG, "回调$text")
+        }
+
+        // 回调
+        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+            DLogUtils.i(TAG, "回调$bytes")
+        }
+
+        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+            DLogUtils.i(TAG, "链接关闭中")
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            DLogUtils.i(TAG, "链接已关闭")
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            TPhoneUtil.showToast(requireActivity(),"链接异常")
+            DLogUtils.i(TAG, "链接失败/发送失败")
+        }
     }
 }

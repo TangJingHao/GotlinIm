@@ -1,16 +1,14 @@
 package com.ByteDance.Gotlin.im
 
 import androidx.lifecycle.liveData
-import androidx.room.Room
-import com.ByteDance.Gotlin.im.application.BaseApp
-import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
-import java.lang.Exception
-import kotlin.RuntimeException
+import okhttp3.Request
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -114,7 +112,7 @@ object Repository {
      */
     fun getSessionList(userId: Int) = fire(Dispatchers.IO) {
         val sessionListDataResponse = MyNetWork.getSessionList(userId)
-        DLogUtils.i(TAG,MyNetWork.getSessionList(userId).toString())
+        DLogUtils.i(TAG, MyNetWork.getSessionList(userId).toString())
         if (sessionListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(sessionListDataResponse)
         } else {
@@ -132,6 +130,13 @@ object Repository {
         } else {
             Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
         }
+    }
+
+    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
+        val request = Request.Builder()
+            .url(Constants.BASE_WS_URL + getUserId())
+            .build()
+        return MyNetWork.getWebSocketAndConnect(request, listener)
     }
 
 

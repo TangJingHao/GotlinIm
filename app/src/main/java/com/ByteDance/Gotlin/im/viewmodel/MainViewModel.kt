@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
+import okhttp3.WebSocketListener
 
 /**
  * @Author Zhicong Deng
@@ -34,7 +35,7 @@ class MainViewModel : ViewModel() {
         mUserIdLiveData.value = Repository.getUserId()
     }
 
-    fun getUserId(){
-        Repository.getUserId()
-    }
+    fun getUserId() = Repository.getUserId()
+
+    fun getWebSocketAndConnect(listener: WebSocketListener) = Repository.getWebSocketAndConnect(listener)
 }
