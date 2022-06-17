@@ -5,13 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/bg_default"
-    tools:context=".view.activity.GroupMembersActivity">
+    tools:context=".view.activity.GroupInviteActivity">
 
     <include
-        android:id="@+id/toolbar_group_members"
+        android:id="@+id/toolbar_group_invite"
         layout="@layout/m_my_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_group_invite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_group_invite" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

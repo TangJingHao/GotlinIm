@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_message_item"
-        android:icon="@drawable/t_test_default_bg"
+        android:icon="@drawable/ic_36_xiaoxi"
         android:title="消息" />
     <item
         android:id="@+id/navigation_address_book_item"
-        android:icon="@drawable/t_test_default_bg"
+        android:icon="@drawable/ic_36_tongxunlu"
         android:title="通讯录"/>
     <item
         android:id="@+id/navigation_my_information_item"
-        android:icon="@drawable/t_test_default_bg"
+        android:icon="@drawable/ic_36_wode"
         android:title="我的"/>
 </menu>

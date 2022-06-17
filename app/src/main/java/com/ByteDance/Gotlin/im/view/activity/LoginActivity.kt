@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.TActivityLoginBinding
 import com.ByteDance.Gotlin.im.model.LoginLiveData
 import com.ByteDance.Gotlin.im.util.Constants
@@ -77,6 +78,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 TPhoneUtil.showToast(mContext, responseData.msg)
                 if (responseData.msg == "登录成功") {
+                    Repository.saveUserId(responseData.data.user.userId)
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                 }
             }
@@ -96,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
             mPasswordFlag = mPassword.isNotEmpty()
         }
         mBinding.loginBtn.setOnClickListener {
-            if(!mBinding.loginCb.isChecked){
+            if (!mBinding.loginCb.isChecked) {
                 TPhoneUtil.showToast(mContext, "请勾选用户协议!")
                 return@setOnClickListener
             }
@@ -129,14 +131,7 @@ class LoginActivity : AppCompatActivity() {
         XUI.initTheme(this)
         QMUIStatusBarHelper.translucent(this)
         val phoneMode = TPhoneUtil.getPhoneMode(this)
-        if (phoneMode == Constants.DARK_MODE) {
-            TLogUtil.d("暗色模式")
-            QMUIStatusBarHelper.setStatusBarDarkMode(this)
-        } else if (phoneMode == Constants.LIGHT_MODE) {
-            TLogUtil.d("亮色模式")
-            QMUIStatusBarHelper.setStatusBarLightMode(this)
-        }
-
+        initTheme(phoneMode)
         mSelectorStyle = TMyPictureSelectorStyle.getSelectorStyle(this)
         mMyEditMediaIListener = TMyEditMediaIListener(
             TPhoneUtil.getSandboxPath(mContext),
@@ -144,6 +139,30 @@ class LoginActivity : AppCompatActivity() {
             Constants.DEFAULT_TYPE
         )
         mLauncherResult = createActivityResultLauncher()
+    }
+
+    /**
+     * 设置相应的主题
+     */
+    private fun initTheme(phoneMode: Int) {
+        if (Repository.getUserStatus() == Constants.USER_DEFAULT_MODE) {
+            //用户没有设置状态
+            if (phoneMode == Constants.DARK_MODE) {
+                TLogUtil.d("暗色模式")
+                QMUIStatusBarHelper.setStatusBarDarkMode(this)
+            } else if (phoneMode == Constants.LIGHT_MODE) {
+                TLogUtil.d("亮色模式")
+                QMUIStatusBarHelper.setStatusBarLightMode(this)
+            }
+        } else {
+            //用户有设置状态
+            val userStatus = Repository.getUserStatus()
+            if (userStatus == Constants.USER_LIGHT_MODE) {
+                QMUIStatusBarHelper.setStatusBarLightMode(this)
+            } else if (userStatus == Constants.USER_DARK_MODE) {
+                QMUIStatusBarHelper.setStatusBarDarkMode(this)
+            }
+        }
     }
 
     /**

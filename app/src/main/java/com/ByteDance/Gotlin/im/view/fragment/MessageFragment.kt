@@ -124,7 +124,6 @@ class MessageFragment : Fragment() {
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            TPhoneUtil.showToast(requireActivity(),"链接异常")
             DLogUtils.i(TAG, "链接失败/发送失败")
         }
     }
