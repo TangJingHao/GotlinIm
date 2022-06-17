@@ -3,7 +3,9 @@ package com.ByteDance.Gotlin.im
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Request
@@ -30,6 +32,10 @@ object Repository {
     private var mmkv: MMKV = MMKV.defaultMMKV()
 
     private const val MMKV_USER_ID = "userId"
+    private const val MMKV_USER_MODE = "user_mode"
+
+    fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
+    fun saveUserStatus(userId: Int) = mmkv.encode(MMKV_USER_MODE, userId)
 
     /**
      * 添加/更新当前用户id
@@ -39,7 +45,7 @@ object Repository {
     /**
      * 获取当前用户id
      */
-    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID)
+    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
 
     /**
      * 删除当前用户id
@@ -131,35 +137,36 @@ object Repository {
             Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
         }
     }
+
     /**
      * 保存备注
      */
-    fun saveNickName(friendId:String,nickname: String) = liveData<String> {
-        i(TAG_FRIEND_INFO,"---保存${friendId}的新备注${nickname}---")
+    fun saveNickName(friendId: String, nickname: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---保存${friendId}的新备注${nickname}---")
         //emit(groupId)
     }
 
     /**
      * 获取分组
      */
-    fun getAllGrouping(myId:String) = liveData<String> {
-        i(TAG_FRIEND_INFO,"---获取分组---")
+    fun getAllGrouping(myId: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---获取分组---")
         emit(myId)
     }
 
     /**
      * 获取分组
      */
-    fun getSelectedGrouping(myId:String) = liveData<String> {
-        i(TAG_FRIEND_INFO,"---获取分组---")
+    fun getSelectedGrouping(myId: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---获取分组---")
         emit(myId)
     }
 
     /**
      * 保存分组
      */
-    fun saveGrouping(myId:String,grouping: List<Map<String,Boolean>>) = liveData<String> {
-        i(TAG_FRIEND_INFO,"---保存分组---")
+    fun saveGrouping(myId: String, grouping: List<Map<String, Boolean>>) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---保存分组---")
         emit(myId)
     }
 
@@ -176,16 +183,16 @@ object Repository {
     /**
      * 获取群聊信息
      */
-    fun getGroupInfo(groupId:String) = liveData<String> {
-        i(TAG_FRIEND_INFO,"---$groupId---")
+    fun getGroupInfo(groupId: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---$groupId---")
         emit(groupId)
     }
 
     /**
      * 获取好友信息
      */
-    fun getFriendInfo(account :String) = liveData<String> {
-        i(TAG_FRIEND_INFO,"---$account---")
+    fun getFriendInfo(account: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---$account---")
         emit(account)
     }
 
