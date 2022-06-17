@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
@@ -62,20 +63,25 @@ class AddressBookFragment : Fragment() {
                 val friendList = responseData.data.friendList
                 val titleList = ArrayList<String>();
                 val sortFriendList = DSortUtils.sort(friendList, titleList)
+                // 适配器
                 val adapter = TabWithTitleAdapter(
                     requireActivity(),
                     sortFriendList,
                     titleList,
                     TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
                 )
+
+
                 adapter.setItemOnClickListener { v, groupPosition, relativePosition ->
-                    DLogUtils.i(
-                        TAG, "group:" + groupPosition + " " + titleList.get(groupPosition) +
+                    // TODO 跳转事件
+                    TPhoneUtil.showToast(
+                        requireActivity(),
+                        "group:" + groupPosition + " " + titleList.get(groupPosition) +
                                 "   postion:" + relativePosition +
-                                "   name: " + sortFriendList.get(groupPosition).get(relativePosition).nickName
+                                "   name: " + sortFriendList.get(groupPosition)
+                            .get(relativePosition).nickName
                     )
                 }
-
                 b.memberRv.layoutManager = LinearLayoutManager(requireActivity())
                 b.memberRv.adapter = adapter
                 if (sortFriendList.size != 0 && titleList.size != 0)
