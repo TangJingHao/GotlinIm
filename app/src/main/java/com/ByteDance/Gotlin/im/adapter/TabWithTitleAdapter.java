@@ -89,16 +89,16 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
      * adapter构造方法
      *
      * @param context        context
-     * @param searchUserList 需要展示的用户信息集合
+     * @param dataList 需要展示的用户信息集合
      * @param groupTitleList 对应用户信息的各组标题（使用必须注意两参数是否大小一致）
      * @param tabType        展示类型，如 TYPE_USER_INFO_STATUE
      */
     public TabWithTitleAdapter(Context context,
-                               List<List<E>> searchUserList,
+                               List<List<E>> dataList,
                                List<String> groupTitleList,
                                int tabType) {
         mContext = context;
-        mDataInfoList = searchUserList;
+        mDataInfoList = dataList;
         mTitleList = groupTitleList;
         mTabType = tabType;
 
