@@ -7,24 +7,18 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.Repository;
-import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter;
 import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
 import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
-import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
-import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow;
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow;
 import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -78,45 +72,45 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         b.testBar.imgChevronLeft.setVisibility(View.GONE);
         b.testBar.title.setText("测试页面");
 
-        // 1.获得好友列表数据（此处为模拟，不是new一个）
-        List<UserVO> datalist = new ArrayList<>();
-        // 2.新建标题
-        List<String> dataTitle = new ArrayList<>();
-        // 3.对好友列表排序
-        List<List<UserVO>> sortDataList = DSortUtils.sort(datalist, dataTitle);
-        // 4.创建适配器
-        TabWithTitleAdapter<UserVO> adapter = new TabWithTitleAdapter<>(
-                mContext,
-                sortDataList, // 排序后的数据
-                dataTitle,    // 标题
-                TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE // 展示类型
-        );
-
         /*
-        * websocket测试代码==========================================================================
-        * */
-//        // 启动链接
-//        connect();
-//        // 测试发送消息
-//        b.btnSend.setOnClickListener(new View.OnClickListener() {
-//            int count = 0;
-//
-//            @Override
-//            public void onClick(View view) {
-//                // 注意线程
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        b.tvMe.setText("发送测试信息" + count);
-//                        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-//                                SEND_MESSAGE, new WSsendContent(6, 1, 0,
-//                                "发送测试信息" + count++));
-//                        webSocket.send(gson.toJson(sendChatMsg));
-//                    }
-//                }).start();
-//            }
-//        });
+         * websocket测试代码==========================================================================
+         * */
+        // 测试发送消息
+        b.btnSend.setOnClickListener(new View.OnClickListener() {
+            int count = 0;
 
+            @Override
+            public void onClick(View view) {
+                // 注意线程
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        b.tvMe.setText("发送测试信息" + count);
+                        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
+                                SEND_MESSAGE, new WSsendContent(6, 1, 0,
+                                "发送测试信息" + count++));
+                        webSocket.send(gson.toJson(sendChatMsg));
+                    }
+                }).start();
+            }
+        });
+
+        b.btnConnext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+//                connect();
+                EchoWebSocketListener listener = new EchoWebSocketListener();
+                webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
+            }
+        });
+
+        b.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                webSocket.cancel();
+            }
+        });
 
         initPopupWindow();
 
@@ -134,6 +128,14 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         } else if (view.equals(b.btnPopSelect)) {
             singleSelectPopupWindow.show();
         }
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
     private void initPopupWindow() {

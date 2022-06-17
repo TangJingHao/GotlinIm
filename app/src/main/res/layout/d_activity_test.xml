@@ -99,6 +99,18 @@
             android:layout_height="wrap_content"
             android:text="发送测试信息" />
 
+        <Button
+            android:id="@+id/btn_connext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开启连接" />
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="关闭连接" />
+
     </LinearLayout>
 
     <Button

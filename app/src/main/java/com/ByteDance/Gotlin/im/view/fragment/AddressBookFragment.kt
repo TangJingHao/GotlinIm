@@ -9,11 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
-import com.ByteDance.Gotlin.im.adapter.UserMsgAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
-import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
-import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
@@ -61,19 +58,27 @@ class AddressBookFragment : Fragment() {
                 DLogUtils.i(TAG, "我的好友列表返回值为NULL")
                 TPhoneUtil.showToast(BaseApp.getContext(), "我的好友列表返回值为NULL")
             } else {
+                // 获取好友列表排序后放入适配器
                 val friendList = responseData.data.friendList
                 val titleList = ArrayList<String>();
                 val sortFriendList = DSortUtils.sort(friendList, titleList)
-
                 val adapter = TabWithTitleAdapter(
                     requireActivity(),
                     sortFriendList,
                     titleList,
-                    TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE)
+                    TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
+                )
+                adapter.setItemOnClickListener { v, groupPosition, relativePosition ->
+                    DLogUtils.i(
+                        TAG, "group:" + groupPosition + " " + titleList.get(groupPosition) +
+                                "   postion:" + relativePosition +
+                                "   name: " + sortFriendList.get(groupPosition).get(relativePosition).nickName
+                    )
+                }
 
                 b.memberRv.layoutManager = LinearLayoutManager(requireActivity())
                 b.memberRv.adapter = adapter
-                if(sortFriendList.size != 0 && titleList.size != 0)
+                if (sortFriendList.size != 0 && titleList.size != 0)
                     adapter.notifyDataSetChanged()
 
 
