@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.TActivityLoginBinding
 import com.ByteDance.Gotlin.im.model.LoginLiveData
 import com.ByteDance.Gotlin.im.util.Constants
@@ -77,6 +78,7 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 TPhoneUtil.showToast(mContext, responseData.msg)
                 if (responseData.msg == "登录成功") {
+                    Repository.saveUserId(responseData.data.user.userId)
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                 }
             }

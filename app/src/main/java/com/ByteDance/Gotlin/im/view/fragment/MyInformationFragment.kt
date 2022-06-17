@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.ByteDance.Gotlin.im.R
@@ -39,6 +40,7 @@ class MyInformationFragment : Fragment() {
     private lateinit var mMyEditMediaIListener: TMyEditMediaIListener
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
+    private var mStatus=0
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,13 +72,16 @@ class MyInformationFragment : Fragment() {
                 .setEditMediaInterceptListener(mMyEditMediaIListener)
                 .forResult(mLauncherResult)
         }
-        mBinding.statusChangeIv.setOnClickListener {
-            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_moon)
-            mBinding.statusChangeIv.setBackground(drawable)
-
-//                val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_sun)
-//                mBinding.statusChangeIv.background = drawable
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        mBinding.sbIosBtn.setOnClickListener {
+            if(mStatus==0){
+                val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_moon)
+                mBinding.statusChangeIv.background = drawable
+                mStatus=1
+            }else if(mStatus==1){
+                val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_sun)
+                mBinding.statusChangeIv.background = drawable
+                mStatus=0
+            }
 
         }
     }
