@@ -2,6 +2,7 @@ package com.ByteDance.Gotlin.im.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -117,6 +118,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         b.btnPopConfirm.setOnClickListener(this);
         b.btnPopInput.setOnClickListener(this);
         b.btnPopSelect.setOnClickListener(this);
+        b.btnMain.setOnClickListener(this);
     }
 
     @Override
@@ -127,15 +129,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             inputPopupWindow.show();
         } else if (view.equals(b.btnPopSelect)) {
             singleSelectPopupWindow.show();
+        } else if(view.equals(b.btnMain)){
+            startActivity(new Intent(this, MainActivity.class));
         }
-
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
     }
 
     private void initPopupWindow() {
@@ -222,7 +218,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            WebSocket webSocket1 = webSocket;
             DLogUtils.i(TAG, "链接失败/发送失败");
         }
     }

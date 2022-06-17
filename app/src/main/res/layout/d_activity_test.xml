@@ -133,4 +133,14 @@
         android:text="单选弹窗" />
 
 
+    <Button
+        android:layout_marginTop="32dp"
+        android:id="@+id/btn_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/t_login_button_bg"
+        android:text="主界面"
+        android:textColor="@color/fill_white"/>
+
+
 </LinearLayout>
