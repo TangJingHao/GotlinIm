@@ -45,8 +45,11 @@
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/d_item_user_info_statue.xml" value="0.4036458333333333" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/m_activity_group_info.xml" value="0.12335359675785208" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_activity_login.xml" value="0.21302083333333333" />
+        <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_activity_main.xml" value="0.21510416666666668" />
+        <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_activity_register.xml" value="0.21510416666666668" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_contact_list_item.xml" value="0.40260416666666665" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_fragment_address_book.xml" value="0.19630192502532928" />
+        <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_fragment_message.xml" value="0.21510416666666668" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/layout/t_fragment_my_infomation.xml" value="0.264" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2345" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/xml/net_work_config.xml" value="0.40217391304347827" />
@@ -95,7 +98,7 @@
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/m_recycle_item_shearch_result.xml" value="0.26992753623188404" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_login.xml" value="0.33" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_register.xml" value="0.4" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_fragment_address_book.xml" value="0.25" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_fragment_address_book.xml" value="0.286231884057971" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_fragment_message.xml" value="0.2740036231884058" />
       </map>
     </option>

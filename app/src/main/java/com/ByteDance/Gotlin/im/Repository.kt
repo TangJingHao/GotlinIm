@@ -30,6 +30,11 @@ object Repository {
     private var mmkv: MMKV = MMKV.defaultMMKV()
 
     private const val MMKV_USER_ID = "userId"
+    private const val MMKV_USER_STATUS="user_status"
+
+    fun saveUserStatus(userStatus:Int)= mmkv.encode(MMKV_USER_STATUS,userStatus)
+    fun getUserStatus():Int= mmkv.decodeInt(MMKV_USER_STATUS,Constants.USER_DEFAULT_MODE)
+    fun deleteUserStatus()= mmkv.removeValueForKey(MMKV_USER_STATUS)
 
     /**
      * 添加/更新当前用户id
@@ -38,8 +43,9 @@ object Repository {
 
     /**
      * 获取当前用户id
+     * -1表示还没登录过
      */
-    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID)
+    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID,Constants.USER_DEFAULT_ID)
 
     /**
      * 删除当前用户id

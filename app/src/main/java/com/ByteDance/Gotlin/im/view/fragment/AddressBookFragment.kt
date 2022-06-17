@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
 import android.annotation.SuppressLint
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,7 @@ class AddressBookFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
+        //
         vm.friendListObserverData.observe(requireActivity()) { result ->
             val responseData = result.getOrNull()
             if (responseData == null) {
@@ -88,6 +90,15 @@ class AddressBookFragment : Fragment() {
                     adapter.notifyDataSetChanged()
 
 
+            }
+        }
+        b.configSettingTv.setOnClickListener {
+            if(b.configSettingTv.text=="关闭功能区"){
+                b.topRl.visibility=View.GONE
+                b.configSettingTv.text="开启功能区"
+            }else if(b.configSettingTv.text=="开启功能区"){
+                b.topRl.visibility=View.VISIBLE
+                b.configSettingTv.text="关闭功能区"
             }
         }
     }

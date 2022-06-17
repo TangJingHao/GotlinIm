@@ -16,6 +16,13 @@ object Constants {
     const val DARK_MODE = 1
     const val LIGHT_MODE = 2
 
+    const val USER_DEFAULT_ID=-1
+
+    //用户的状态设置
+    const val USER_DEFAULT_MODE=-1
+    const val USER_DARK_MODE=1
+    const val USER_LIGHT_MODE = 2
+
     // 网络相关
     const val BASE_URL = "http://chatspace.iceclean.top/space/"
     const val BASE_WS_URL = "ws://chatspace.iceclean.top/space/ws/chat/"
