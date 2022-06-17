@@ -18,6 +18,16 @@
             android:text="通讯录"
             android:textColor="?attr/text_ultrastrong"
             android:textSize="@dimen/im_text_large" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="关闭功能区"
+            android:textColor="?attr/text_ultrastrong"
+            android:textSize="@dimen/im_text_medium" />
+
     </RelativeLayout>
 
     <RelativeLayout

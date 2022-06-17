@@ -132,6 +132,9 @@ object Repository {
         }
     }
 
+    /**
+     * websocket使用
+     */
     fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
         val request = Request.Builder()
             .url(Constants.BASE_WS_URL + getUserId())

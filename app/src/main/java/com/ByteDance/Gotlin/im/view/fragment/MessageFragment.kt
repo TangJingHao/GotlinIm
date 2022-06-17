@@ -76,6 +76,7 @@ class MessageFragment : Fragment() {
                 adapter.setItemOnClickListener { v, position ->
                     TPhoneUtil.showToast(requireActivity(), "item = " + position)
                     // TODO 跳转到聊天界面
+
                 }
                 b.rvLayout.layoutManager = LinearLayoutManager(activity)
                 b.rvLayout.adapter = adapter
@@ -94,10 +95,8 @@ class MessageFragment : Fragment() {
 //        vm.getSessionList() // 第一次刷新，为了初始化页面
         val listener = EchoWebSocketListener()
         webSocket = vm.getWebSocketAndConnect(listener)
-//        connect()
+
     }
-
-
 
     inner class EchoWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
