@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +13,12 @@ import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
 import com.ByteDance.Gotlin.im.info.vo.UserVO
+import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
+import com.ByteDance.Gotlin.im.view.activity.FriendInfoActivity
+import com.ByteDance.Gotlin.im.view.activity.MyGroupActivity
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 
 /**
@@ -81,6 +85,18 @@ class AddressBookFragment : Fragment() {
                                 "   name: " + sortFriendList.get(groupPosition)
                             .get(relativePosition).nickName
                     )
+                    //跳转到好友信息页面
+                    val intent = Intent(this.context,FriendInfoActivity::class.java)
+                    intent.putExtra(Constants.FRIEND_TYPE,Constants.FRIEND_IS)
+                    intent.putExtra(Constants.FRIEND_ACCOUNT,
+                        sortFriendList[groupPosition][relativePosition].userId)
+                    intent.putExtra(Constants.FRIEND_NAME,
+                        sortFriendList[groupPosition][relativePosition].userName)
+                    intent.putExtra(Constants.FRIEND_NICKNAME,
+                        sortFriendList[groupPosition][relativePosition].nickName)
+                    intent.putExtra(Constants.FRIEND_GROUPING,
+                        "大学同学")
+                    startActivity(intent)
                 }
                 b.memberRv.layoutManager = LinearLayoutManager(requireActivity())
                 b.memberRv.adapter = adapter
@@ -90,6 +106,12 @@ class AddressBookFragment : Fragment() {
 
             }
         }
+        //调转到我的群聊界面
+        b.myGroupChatRl.setOnClickListener {
+            val intent = Intent(this.context,MyGroupActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun initData() {

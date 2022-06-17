@@ -45,7 +45,7 @@ object Repository {
     /**
      * 获取当前用户id
      */
-    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID)
+    fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID,1)
 
     /**
      * 删除当前用户id

@@ -10,7 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.databinding.DActivityMyGroupBinding
 import com.ByteDance.Gotlin.im.info.vo.GroupVO
+import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.viewmodel.MyGroupViewModel
 
@@ -84,6 +86,13 @@ class MyGroupActivity : AppCompatActivity() {
                         groupVO.groupName + " gid:" + groupVO.groupId
                     )
                     // TODO 跳转到群聊详情页
+                    startActivity<GroupInfoActivity>(this.mContext){
+                        putExtra(Constants.GROUP_ID,groupVO.groupId)
+                        putExtra(Constants.GROUP_NAME,groupVO.groupName)
+                        putExtra(Constants.GROUP_NUM,groupVO.number)
+                        putExtra(Constants.GROUP_MY_NAME,groupVO.markName)
+                        putExtra(Constants.GROUP_OWNER,groupVO.creatorId)
+                    }
 //                    startActivity()
                 })
                 b.rvLayout.adapter = adapter

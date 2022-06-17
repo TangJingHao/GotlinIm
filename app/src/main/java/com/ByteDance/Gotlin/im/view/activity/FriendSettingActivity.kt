@@ -7,6 +7,8 @@ import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendSettingBinding
+import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.Mutils.MToastUtil.showToast
 import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
 import com.qmuiteam.qmui.kotlin.onClick
 
@@ -44,14 +46,22 @@ class FriendSettingActivity : AppCompatActivity() {
         if(newGrouping!=null) etNewGrouping.hint = newGrouping
         else etNewGrouping.hint = this.resources.getString(R.string.edit_hint_new_grouping)
 
+        etNickName.hint = intent.getStringExtra(Constants.FRIEND_NICKNAME).toString()
+        etNewGrouping.hint = intent.getStringExtra(Constants.FRIEND_GROUPING).toString()
     }
 
     private fun setListener() {
+        //返回
+        mBinding.toolbarSetFriendInfo.imgChevronLeft.onClick {
+            this.finish()
+        }
         //保存按钮 按下则确定保留
         mBinding.toolbarSetFriendInfo.imgMore.onClick {
             nickname = etNickName.text.toString()
+            "保存修改成功".showToast(this)
+            //etNickName.clearComposingText()
+            //etNickName.hint = nickname
         }
-        etNickName
 
     }
 
