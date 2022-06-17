@@ -1,31 +1,31 @@
 package com.ByteDance.Gotlin.im.info
 
-import com.ByteDance.Gotlin.im.info.VO.SessionVO
-import com.ByteDance.Gotlin.im.info.VO.UserVO
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.google.gson.annotations.SerializedName
 
 /**
  * @Author Zhicong Deng
- * @Date 2022/6/14 21:36
+ * @Date 2022/6/14 21:37
  * @Email 1520483847@qq.com
- * @Description 消息列表
- * 在每个接收域中的最后一条聊天记录
+ * @Description 聊天记录
+ * 分页获取目标用户在指定接收域中的历史聊天记录
  */
-data class SessionListDataResponse(
+data class SessionHistoryDataResponse (
     @SerializedName("status")
     val status: Int,
     @SerializedName("msg")
     val msg: String,
     @SerializedName("data")
-    val data: SessionListData
+    val data: SessionHistoryData
 )
 
-data class SessionListData(
-    @SerializedName("messageList")
-    val messageList: List<MessageList>
+data class SessionHistoryData (
+    @SerializedName("historyList")
+    val historyList: List<HistoryListBean>
 )
 
-data class MessageList(
+data class HistoryListBean (
     @SerializedName("session")
     val session: SessionVO,
     @SerializedName("sender")
@@ -38,5 +38,4 @@ data class MessageList(
     val sendTime: String,
     @SerializedName("self")
     val self: Boolean
-
 )

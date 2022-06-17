@@ -33,5 +33,34 @@ public class RedPointHelper {
         // 设置可视
         redPoint.setVisible(true);
         return redPoint;
+
+
+                /* 小红点使用Demo=============================================================================
+         文章可查阅 https://mp.weixin.qq.com/s/rdAjBQ2DRCjiEKLc6EoChw
+         */
+        // 创建小红点BadgeDrawable
+//        BadgeDrawable redPoint = RedPointHelper.getRedPointBadge(TestActivity.this, 0);
+
+        // 添加到界面---------------------------------------------------------------------------------
+//        b.itemSearch.imgUserPic.getViewTreeObserver().addOnGlobalLayoutListener(
+//                new ViewTreeObserver.OnGlobalLayoutListener() {
+//                    @SuppressLint("UnsafeOptInUsageError")
+//                    @Override
+//                    public void onGlobalLayout() {
+//                        // 参数为：小红点，需要添加小红点的对象，被添加对象的父控件（一般是Fragment，用于限制大小）
+//                        BadgeUtils.attachBadgeDrawable(redPoint, b.itemSearch.imgUserPic, b.itemSearch.flImg);
+//                        b.itemSearch.imgUserPic.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                    }
+//                });
+//
+//        // 更改小红点的数值----------------------------------------------------------------------------
+//        b.itemSearch.rLayout.setOnClickListener(new View.OnClickListener() {
+//            int i = 1;
+//
+//            @Override
+//            public void onClick(View view) {
+//                redPoint.setNumber(i++);
+//            }
+//        });
     }
 }

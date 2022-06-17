@@ -1,34 +1,32 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.arch.core.util.Function;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.Transformations;
-import androidx.room.Room;
 
 import com.ByteDance.Gotlin.im.Repository;
-import com.ByteDance.Gotlin.im.application.BaseApp;
 import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
-import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase;
-import com.ByteDance.Gotlin.im.entity.Book;
-import com.ByteDance.Gotlin.im.info.FriendListDataResponse;
-import com.ByteDance.Gotlin.im.info.GroupListDataResponse;
-import com.ByteDance.Gotlin.im.info.LoginDataResponse;
-import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse;
-import com.ByteDance.Gotlin.im.info.SessionListDataResponse;
-import com.ByteDance.Gotlin.im.info.VO.TestUser;
+import com.ByteDance.Gotlin.im.info.WSsendContent;
+import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
+import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow;
+import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow;
+import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow;
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import kotlin.Result;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 
 /**
  * @Author Zhicong Deng
@@ -36,20 +34,31 @@ import kotlin.Result;
  * @Email 1520483847@qq.com
  * @Description 测试用Activity
  */
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DActivityTestBinding b;
+    private Context mContext;
+
+    ConfirmPopupWindow confirmPopupWindow;
+    InputPopupWindow inputPopupWindow;
+    SingleSelectPopupWindow singleSelectPopupWindow;
+
     private static final String TAG = "TestActivity";
+
+    private static final Repository repository = Repository.INSTANCE;
+
+    private static final String BASE_WS_URL = "ws://chatspace.iceclean.top/space/ws/chat/";
+    private static final String SEND_MESSAGE = "SEND_MESSAGE";
+    private static final String USER_ONLINE = "USER_ONLINE";
 
     private static final String SEARCH_TYPE = "search_type";
     private static final int SEARCH_TYPE_FRIEND = 0;
     private static final int SEARCH_TYPE_GROUP_CHAT = 1;
     private static final int SEARCH_TYPE_MESSAGE = 2;
 
-    LiveData<Result<FriendListDataResponse>> friendList;
-    LiveData<Result<GroupListDataResponse>> groupList;
-    LiveData<Result<SessionListDataResponse>> sessionList;
-    LiveData<Result<SessionHistoryDataResponse>> sessionHistoryList;
+    WebSocket webSocket;
+
+    Gson gson = new Gson();
 
     @SuppressLint("UnsafeOptInUsageError")
     @Override
@@ -58,199 +67,163 @@ public class TestActivity extends AppCompatActivity {
         b = DActivityTestBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
 
+        mContext = this;
+
         b.testBar.imgChevronLeft.setVisibility(View.GONE);
-        b.testBar.title.setText("混乱的测试页面");
+        b.testBar.title.setText("测试页面");
 
-        Repository repository = Repository.INSTANCE;
+        /*
+         * websocket测试代码==========================================================================
+         * */
+        // 测试发送消息
+        b.btnSend.setOnClickListener(new View.OnClickListener() {
+            int count = 0;
 
-        new Thread(new Runnable() {
+            @Override
+            public void onClick(View view) {
+                // 注意线程
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        b.tvMe.setText("发送测试信息" + count);
+                        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
+                                SEND_MESSAGE, new WSsendContent(6, 1, 0,
+                                "发送测试信息" + count++));
+                        webSocket.send(gson.toJson(sendChatMsg));
+                    }
+                }).start();
+            }
+        });
+
+        b.btnConnext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+//                connect();
+                EchoWebSocketListener listener = new EchoWebSocketListener();
+                webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
+            }
+        });
+
+        b.btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                webSocket.cancel();
+            }
+        });
+
+        initPopupWindow();
+
+        b.btnPopConfirm.setOnClickListener(this);
+        b.btnPopInput.setOnClickListener(this);
+        b.btnPopSelect.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.equals(b.btnPopConfirm)) {
+            confirmPopupWindow.show();
+        } else if (view.equals(b.btnPopInput)) {
+            inputPopupWindow.show();
+        } else if (view.equals(b.btnPopSelect)) {
+            singleSelectPopupWindow.show();
+        }
+
+
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                SQLDatabase db = Room.databaseBuilder(TestActivity.this, SQLDatabase.class, "IMDB").build();
-
-//                db.book().insert(new Book(1,"西游记"));
-//                db.book().insert(new Book(2,"水浒传"));
-//                db.book().insert(new Book(3,"三国演义"));
-//                db.book().insert(new Book(4,"红楼梦"));
-
-                List<Book> books = db.book().qeuryAll();
-
-                DLogUtils.i(TAG, books.get(0).getTitle());
-                DLogUtils.i(TAG, books.get(1).getTitle());
-                DLogUtils.i(TAG, books.get(2).getTitle());
-                DLogUtils.i(TAG, books.get(3).getTitle());
-            }
-        }).start();
-
-
-
-
-////
-//        friendList = repository.getFriendList(1);
-//        groupList = repository.getGroupList(1);
-//        sessionList = repository.getSessionList(1);
-//        sessionHistoryList = repository.getSessionHistoryList(1, 3, 0);
-//
-//
-//        friendList.observe(this, new Observer<Result<FriendListDataResponse>>() {
-//            @Override
-//            public void onChanged(Result<FriendListDataResponse> result) {
-//
-//            }
-//        });
-//        groupList.observe(this, new Observer<Result<GroupListDataResponse>>() {
-//            @Override
-//            public void onChanged(Result<GroupListDataResponse> groupListDataResponseResult) {
-//
-//            }
-//        });
-//        sessionList.observe(this, new Observer<Result<SessionListDataResponse>>() {
-//            @Override
-//            public void onChanged(Result<SessionListDataResponse> sessionListDataResponseResult) {
-//
-//            }
-//        });
-//        sessionHistoryList.observe(this, new Observer<Result<SessionHistoryDataResponse>>() {
-//            @Override
-//            public void onChanged(Result<SessionHistoryDataResponse> sessionHistoryDataResponseResult) {
-//
-//            }
-//        });
-//
-//
-        b.btnAdd0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                friendList = repository.getFriendList(1);
-//                Result<GroupListDataResponse> groupListDataResponseResult = repository.getGroupList(userId).getValue();
-//                Result<SessionListDataResponse> sessionListDataResponseResult = repository.getSessionList(userId).getValue();
-//                Result<SessionHistoryDataResponse> sessionHistoryDataResponseResult = repository.getSessionHistoryList(userId, 6, 0).getValue();
             }
         });
-
-//        initViewAndEvent();
-
-        //  测试用title
-        ArrayList<String> testLittleTitle = new ArrayList<>();
-        testLittleTitle.add("小红点测试");
-
     }
 
-    private void initViewAndEvent() {
-        //        List<TestUser> userMsgList = getOneUserGroupWithoutTitle();
-//        UserMsgAdapter adapter = new UserMsgAdapter(TestActivity.this, userMsgList);
-//        b.testRvLayout.setAdapter(adapter);
-//        b.testRvLayout.setLayoutManager(new LinearLayoutManager(TestActivity.this));
-//        adapter.notifyDataSetChanged();
+    private void initPopupWindow() {
+        // 新建弹窗
+        confirmPopupWindow = new ConfirmPopupWindow(this, "测试");
+        // 设置确认回调
+        confirmPopupWindow.setOnConfirmListener(() ->
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "点击确认"));
+        // （可选）设置按钮文本
+        confirmPopupWindow.setConfirmText("确认文本");
+        confirmPopupWindow.setCancelText("取消测试文本");
+        // （可选）设置警告类型颜色模式
+        confirmPopupWindow.setWarnTextColorType();
 
-        b.btnAdd0.setOnClickListener(new View.OnClickListener() {
-            int i = 0;
-
+        inputPopupWindow = new InputPopupWindow(mContext, "输入弹窗测试");
+        inputPopupWindow.setOnConfirmListener(new InputPopupWindow.OnConfirmListener() {
             @Override
-            public void onClick(View view) {
-                b.itemMsg0.tvRedPoint.setText(String.valueOf(i++));
-                if (i > 0)
-                    b.itemMsg0.tvRedPoint.setVisibility(View.VISIBLE);
+            public void onConfirm(String inputText) {
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, inputText);
             }
         });
 
-        b.btnAdd1.setOnClickListener(new View.OnClickListener() {
-            int i = 0;
+        singleSelectPopupWindow = new SingleSelectPopupWindow(mContext,
+                "单选弹窗测试", "选项一", "选项二");
 
+        singleSelectPopupWindow.setOnConfirmListener(new SingleSelectPopupWindow.OnConfirmListener() {
             @Override
-            public void onClick(View view) {
-                b.itemMsg1.tvRedPoint.setText(String.valueOf(i++));
-                if (i > 0)
-                    b.itemMsg1.tvRedPoint.setVisibility(View.VISIBLE);
+            public void onConfirm(int index) {
+                TPhoneUtil.INSTANCE.showToast(mContext, "选择" + index);
             }
         });
-
-        b.btnAdd2.setOnClickListener(new View.OnClickListener() {
-            int i = 0;
-
-            @Override
-            public void onClick(View view) {
-                b.itemMsg2.tvRedPoint.setText(String.valueOf(i++));
-                if (i > 0)
-                    b.itemMsg2.tvRedPoint.setVisibility(View.VISIBLE);
-            }
-        });
-
-        b.btnClean.setOnClickListener(new View.OnClickListener() {
-            int i = 0;
-
-            @Override
-            public void onClick(View view) {
-                b.itemMsg0.tvRedPoint.setText(i++);
-                if (i > 0)
-                    b.itemMsg0.tvRedPoint.setVisibility(View.VISIBLE);
-            }
-        });
-
-
-        Intent intent = new Intent(TestActivity.this, SearchActivity.class);
-
-        b.btnNewFriend.setOnClickListener(view -> {
-            intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_FRIEND);
-            startActivity(intent);
-
-        });
-
-        b.btnNewGroupChat.setOnClickListener(view -> {
-            intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_GROUP_CHAT);
-            startActivity(intent);
-        });
-
-        b.btnHistoryMessage.setOnClickListener(view -> {
-            intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_MESSAGE);
-            startActivity(intent);
-        });
-
-        b.btnFriendApplication.setOnClickListener(view ->
-                startActivity(new Intent(TestActivity.this, FriendApplicationActivity.class)));
-
-        b.btnMyGroup.setOnClickListener(view ->
-                startActivity(new Intent(TestActivity.this, MyGroupActivity.class)));
-
-        /* 小红点使用Demo=============================================================================
-         文章可查阅 https://mp.weixin.qq.com/s/rdAjBQ2DRCjiEKLc6EoChw
-         */
-        // 创建小红点BadgeDrawable
-//        BadgeDrawable redPoint = RedPointHelper.getRedPointBadge(TestActivity.this, 0);
-
-        // 添加到界面---------------------------------------------------------------------------------
-//        b.itemSearch.imgUserPic.getViewTreeObserver().addOnGlobalLayoutListener(
-//                new ViewTreeObserver.OnGlobalLayoutListener() {
-//                    @SuppressLint("UnsafeOptInUsageError")
-//                    @Override
-//                    public void onGlobalLayout() {
-//                        // 参数为：小红点，需要添加小红点的对象，被添加对象的父控件（一般是Fragment，用于限制大小）
-//                        BadgeUtils.attachBadgeDrawable(redPoint, b.itemSearch.imgUserPic, b.itemSearch.flImg);
-//                        b.itemSearch.imgUserPic.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                    }
-//                });
-//
-//        // 更改小红点的数值----------------------------------------------------------------------------
-//        b.itemSearch.rLayout.setOnClickListener(new View.OnClickListener() {
-//            int i = 1;
-//
-//            @Override
-//            public void onClick(View view) {
-//                redPoint.setNumber(i++);
-//            }
-//        });
     }
 
-    public List<TestUser> getOneUserGroupWithoutTitle() {
-        List<List<TestUser>> dataList;
-        TestUser u5 = new TestUser("null", "123456789@qq.com", "小福贵", "厨子", "做饭");
-        TestUser u6 = new TestUser("null", "123456789@qq.com", "小飞碟", "格格", "刺杀");
-        TestUser u7 = new TestUser("null", "123456789@qq.com", "小李子", "公公", "捣乱");
-        ArrayList<TestUser> G2 = new ArrayList<>();
-        G2.add(u5);
-        G2.add(u6);
-        G2.add(u7);
-        return G2;
+    /**
+     * WebSocket链接测试
+     */
+    private void connect() {
+        DLogUtils.i(TAG, "创建wedSocket");
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        Request request = new Request.Builder()
+                .url(BASE_WS_URL + repository.getUserId())
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(3, TimeUnit.SECONDS)
+                .build();
+        webSocket = client.newWebSocket(request, listener);
+        client.dispatcher().executorService().shutdown();
+        DLogUtils.i(TAG, "创建wedSocket完成");
+    }
+
+    class EchoWebSocketListener extends WebSocketListener {
+
+        @Override
+        public void onOpen(WebSocket webSocket, Response response) {
+            DLogUtils.i(TAG, "链接开启");
+            WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
+                    SEND_MESSAGE, new WSsendContent(6, 1, 0, "开始聊天吧"));
+            boolean b = webSocket.send(gson.toJson(sendChatMsg));
+        }
+
+        // 回调,展示消息
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
+            DLogUtils.i(TAG, "回调" + text);
+            b.tvOther.setText(msg.getWsContent().getSendTime() + " " + msg.getWsContent().getContent());
+        }
+
+        // 回调
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+            DLogUtils.i(TAG, "回调" + bytes);
+        }
+
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            DLogUtils.i(TAG, "链接关闭中");
+        }
+
+        @Override
+        public void onClosed(WebSocket webSocket, int code, String reason) {
+            DLogUtils.i(TAG, "链接已关闭");
+        }
+
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            WebSocket webSocket1 = webSocket;
+            DLogUtils.i(TAG, "链接失败/发送失败");
+        }
     }
 }

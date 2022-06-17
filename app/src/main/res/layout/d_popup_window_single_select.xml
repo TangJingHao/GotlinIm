@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="248dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/d_bg_pop_win">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/l_layout"
+            android:paddingHorizontal="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_pop_title"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:lines="3"
+                android:text="@string/preview_text"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_medium" />
+
+            <RadioGroup
+                android:id="@+id/rg_select_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RadioButton
+                    android:id="@+id/options1"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginVertical="2dp"
+                    android:background="?attr/tsp_fill_weak"
+                    android:text="选项一"/>
+                <RadioButton
+                    android:id="@+id/options2"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginVertical="2dp"
+                    android:background="?attr/tsp_fill_weak"
+                    android:text="选项二"/>
+            </RadioGroup>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@id/l_layout"
+            android:background="?attr/border_ultrastrong" />
+
+        <LinearLayout
+            android:id="@+id/l_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_select_confirm"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="确认键文字"
+                android:textColor="?attr/text_link"
+                android:textSize="@dimen/im_text_medium" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="?attr/border_medium" />
+
+            <TextView
+                android:id="@+id/tv_select_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消键文字"
+                android:textColor="?attr/text_error"
+                android:textSize="@dimen/im_text_medium" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

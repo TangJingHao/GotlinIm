@@ -3,6 +3,8 @@ package com.ByteDance.Gotlin.im.util.Tutils
 import android.content.Context
 import android.widget.Toast
 import com.ByteDance.Gotlin.im.util.Constants
+import com.luck.picture.lib.thread.PictureThreadUtils
+import com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread
 import com.xuexiang.xui.XUI
 import java.io.File
 
@@ -29,7 +31,7 @@ object TPhoneUtil {
      * 用来发送吐司的工具类
      */
     fun showToast(context: Context,msg:String){
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        runOnUiThread(Runnable { Toast.makeText(context, msg, Toast.LENGTH_SHORT).show() })
     }
 
     /**

@@ -44,9 +44,22 @@
         <item name="bg_weak"                >@color/dark_bg_weak                 </item>
     </style>
     <!--底部导航栏按钮主题-->
-    <style name="navigaion_button_bg" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="navigation_button_bg" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="android:textSize">@dimen/im_text_tiny</item>
         <item name="colorPrimary">?attr/text_strong</item>
         <item name="android:textColorSecondary">?attr/text_ultraweak</item>
     </style>
+
+    <!--tjh的弹窗style-->
+    <style name="t_popup_window_style" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/t_anim_pop_enter</item>
+        <item name="android:windowExitAnimation">@anim/t_anim_pop_exit</item>
+    </style>
+
+    <declare-styleable name="SideBar">
+        <attr name="scaleSize" format="integer"/>
+        <attr name="scaleItemCount" format="integer"/>
+        <attr name="scaleWidth" format="dimension"/>
+    </declare-styleable>
+
 </resources>

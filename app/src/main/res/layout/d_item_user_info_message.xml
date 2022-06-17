@@ -4,7 +4,7 @@
     android:id="@+id/r_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/im_user_item_detail_height"
-    android:background="@color/bg_weak"
+    android:background="?attr/bg_weak"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/im_common_horizontal">
 
@@ -72,10 +72,10 @@
         android:id="@+id/img_user_pic"
         android:layout_width="@dimen/user_pic"
         android:layout_height="@dimen/user_pic"
-        android:layout_gravity="left"
         android:layout_centerVertical="true"
+        android:layout_gravity="left"
         android:layout_marginRight="@dimen/im_spacing_large"
-        android:contentDescription="Image小红点示例"
+        android:scaleType="fitCenter"
         android:src="@drawable/d_img_useravatar1" />
 
 

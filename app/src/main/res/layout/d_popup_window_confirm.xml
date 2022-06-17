@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="176dp"
+        android:background="@drawable/d_bg_pop_win"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/tv_confirm_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/l_layout"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:lines="3"
+            android:text="@string/preview_text"
+            android:textColor="?attr/text_ultrastrong"
+            android:textSize="@dimen/im_text_medium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="?attr/border_ultrastrong"
+            android:layout_above="@id/l_layout"/>
+
+        <LinearLayout
+            android:id="@+id/l_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_select_confirm"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="确认键文字"
+                android:textSize="@dimen/im_text_medium"
+                android:textColor="?attr/text_link"
+                android:layout_weight="1"/>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="?attr/border_medium"/>
+
+            <TextView
+                android:id="@+id/tv_select_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="取消键文字"
+                android:textSize="@dimen/im_text_medium"
+                android:textColor="?attr/text_error"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

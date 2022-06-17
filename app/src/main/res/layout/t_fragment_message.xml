@@ -4,27 +4,14 @@
     android:layout_height="match_parent"
     android:background="?attr/bg_default">
 
-    <RelativeLayout
+    <include
+        android:id="@+id/my_toolbar"
+        layout="@layout/d_include_my_toolbar"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_layout"
+        android:layout_below="@id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/im_toolbar_height"
-        android:background="?attr/bg_weak"
-        android:paddingHorizontal="@dimen/im_common_horizontal">
-
-        <TextView
-            android:id="@+id/message_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="IM聊天工具（2）"
-            android:textColor="?attr/text_ultrastrong"
-            android:textSize="@dimen/im_text_large" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_28_more_horizontal" />
-    </RelativeLayout>
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

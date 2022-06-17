@@ -11,6 +11,7 @@
         android:id="@+id/test_bar"
         layout="@layout/d_include_my_toolbar" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,61 +57,80 @@
         android:layout_weight="1"
         android:visibility="gone"/>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/item_msg_0"
-            layout="@layout/d_item_user_info_message" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="[我]"
+            android:textColor="@color/PrimaryBlue_03"/>
 
-        <include
-            android:id="@+id/item_msg_1"
-            layout="@layout/d_item_user_info_message" />
+        <TextView
+            android:id="@+id/tv_me"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/preview_text"
+            android:textColor="@color/PrimaryBlue_03"/>
 
-        <include
-            android:id="@+id/item_msg_2"
-            layout="@layout/d_item_user_info_message" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="[复读机]"
+            android:textColor="@color/text_ultrastrong"/>
+
+        <TextView
+            android:id="@+id/tv_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="@string/preview_text"
+            android:textColor="@color/text_ultrastrong"/>
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="发送测试信息" />
+
+        <Button
+            android:id="@+id/btn_connext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开启连接" />
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="关闭连接" />
 
     </LinearLayout>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btn_pop_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:layout_marginTop="32dp"
+        android:text="确认弹窗" />
 
-        <Button
-            android:id="@+id/btn_add_0"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="add item 0"
-            />
+    <Button
+        android:id="@+id/btn_pop_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="输入框弹窗" />
 
-        <Button
-            android:id="@+id/btn_add_1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="add item 1"/>
-
-        <Button
-            android:id="@+id/btn_add_2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="add item 2"/>
-
-        <Button
-            android:id="@+id/btn_clean"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="clean all"/>
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/btn_pop_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="单选弹窗" />
 
 
 </LinearLayout>

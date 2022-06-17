@@ -5,6 +5,7 @@
     android:background="?attr/bg_default">
 
     <RelativeLayout
+        android:id="@+id/toolbar_rl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/im_toolbar_height"
         android:background="?attr/bg_weak"
@@ -18,4 +19,152 @@
             android:textColor="?attr/text_ultrastrong"
             android:textSize="@dimen/im_text_large" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_rl"
+
+        android:background="?attr/bg_weak"
+        android:paddingHorizontal="@dimen/im_common_horizontal">
+
+        <RelativeLayout
+            android:id="@+id/search_new_friend_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/im_spacing_medium">
+
+            <ImageView
+                android:id="@+id/search_new_friend_iv"
+                android:layout_width="@dimen/im_icon_huge"
+                android:layout_height="@dimen/im_icon_huge"
+                android:background="@drawable/t_icon_iv_bg" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/im_spacing_huge"
+                android:layout_toRightOf="@id/search_new_friend_iv"
+                android:text="查找新好友"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_large" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/new_friend_apply_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_new_friend_rl"
+            android:layout_marginTop="@dimen/im_spacing_medium">
+
+            <ImageView
+                android:id="@+id/new_friend_apply_iv"
+                android:layout_width="@dimen/im_icon_huge"
+                android:layout_height="@dimen/im_icon_huge"
+                android:background="@drawable/t_icon_iv_bg" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/im_spacing_huge"
+                android:layout_toRightOf="@id/new_friend_apply_iv"
+                android:text="好友申请"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_large" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/search_new_group_chat_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/new_friend_apply_rl"
+            android:layout_marginTop="@dimen/im_spacing_medium">
+
+            <ImageView
+                android:id="@+id/search_new_group_chat_iv"
+                android:layout_width="@dimen/im_icon_huge"
+                android:layout_height="@dimen/im_icon_huge"
+                android:background="@drawable/t_icon_iv_bg" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/im_spacing_huge"
+                android:layout_toRightOf="@id/search_new_group_chat_iv"
+                android:text="查找新群聊"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_large" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/my_group_chat_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_new_group_chat_rl"
+            android:layout_marginTop="@dimen/im_spacing_medium">
+
+            <ImageView
+                android:id="@+id/my_group_chat_iv"
+                android:layout_width="@dimen/im_icon_huge"
+                android:layout_height="@dimen/im_icon_huge"
+                android:background="@drawable/t_icon_iv_bg" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/im_spacing_huge"
+                android:layout_toRightOf="@id/my_group_chat_iv"
+                android:text="我的群聊"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_large" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/my_group_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/my_group_chat_rl"
+            android:layout_marginTop="@dimen/im_spacing_medium"
+            android:layout_marginBottom="@dimen/im_spacing_medium">
+
+            <ImageView
+                android:id="@+id/my_group_iv"
+                android:layout_width="@dimen/im_icon_huge"
+                android:layout_height="@dimen/im_icon_huge"
+                android:background="@drawable/t_icon_iv_bg" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/im_spacing_huge"
+                android:layout_toRightOf="@id/my_group_iv"
+                android:text="我的分组"
+                android:textColor="?attr/text_ultrastrong"
+                android:textSize="@dimen/im_text_large" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/member_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_rl" />
+
+    <com.ByteDance.Gotlin.im.view.custom.TSideBar
+        android:id="@+id/side_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_rl"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/im_common_horizontal_large"
+        android:layout_marginBottom="@dimen/im_common_horizontal_large"
+        android:paddingRight="@dimen/im_spacing_large"
+        android:textColor="?attr/text_ultrastrong"
+        android:textSize="9sp" />7
 </RelativeLayout>
