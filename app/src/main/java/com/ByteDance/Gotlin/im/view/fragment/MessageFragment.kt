@@ -98,71 +98,11 @@ class MessageFragment : Fragment() {
     }
 
 
-    /**
-     * WebSocket链接测试
-     */
-    private fun connect() {
-        DLogUtils.i(TAG, "创建wedSocket")
-        val request = Request.Builder()
-            .url("ws://chatspace.iceclean.top/space/ws/chat/1")
-            .build()
-        val client = OkHttpClient.Builder()
-            .readTimeout(3, TimeUnit.SECONDS)
-            .build()
-        webSocket = client.newWebSocket(request, object : WebSocketListener() {
-            override fun onOpen(webSocket: WebSocket, response: Response) {
-                super.onOpen(webSocket, response)
-                DLogUtils.i(TAG, "链接开启" + response.message().toString())
-                vm.getSessionList() // 第二次刷新，因为网络连接打开
-                TPhoneUtil.showToast(requireActivity(), "新消息")
-                val sendChatMsg = WebSocketSendChatMsg(
-                    SEND_MESSAGE, WSsendContent(6, 1, 0, "开始聊天吧")
-                )
-                val b: Boolean = webSocket.send(gson.toJson(sendChatMsg))
-            }
-
-            override fun onMessage(webSocket: WebSocket, text: String) {
-                super.onMessage(webSocket, text)
-                val (wsContent) = gson.fromJson<WebSocketReceiveChatMsg>(
-                    text,
-                    WebSocketReceiveChatMsg::class.java
-                )
-                DLogUtils.i(TAG, "回调$text")
-            }
-
-            override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-                super.onMessage(webSocket, bytes)
-                DLogUtils.i(TAG, "回调$bytes")
-            }
-
-            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                super.onClosing(webSocket, code, reason)
-                DLogUtils.i(TAG, "链接关闭中")
-            }
-
-            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                super.onClosed(webSocket, code, reason)
-                DLogUtils.i(TAG, "链接已关闭")
-            }
-
-            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                super.onFailure(webSocket, t, response)
-                DLogUtils.i(TAG, "链接失败/发送失败")
-            }
-        })
-        client.dispatcher().executorService().shutdown()
-        DLogUtils.i(TAG, "创建wedSocket完成")
-    }
 
     inner class EchoWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             DLogUtils.i(TAG, "链接开启")
-            runOnUiThread(Runnable { vm.getSessionList() })
-//            vm.getSessionList()
-//            val sendChatMsg = WebSocketSendChatMsg(
-//                SEND_MESSAGE, WSsendContent(6, 1, 0, "开始聊天吧")
-//            )
-//            val b: Boolean = webSocket.send(gson.toJson(sendChatMsg))
+            runOnUiThread(Runnable { vm.getSessionList() }) // 加载数据
         }
 
         // 回调,展示消息

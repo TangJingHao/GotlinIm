@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_weak"
+    android:background="?attr/bg_weak"
     android:paddingHorizontal="@dimen/im_common_horizontal">
     <TextView
         android:id="@+id/tv_list_title"
@@ -12,11 +12,11 @@
         android:background="?attr/bg_weak"
         android:gravity="center|left"
         android:text="@string/preview_text"
-        android:textColor="@color/text_strong"
+        android:textColor="@color/fill_white"
         android:textSize="@dimen/im_text_small" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="?attr/border_medium"/>
+        android:layout_height="2px"
+        android:background="?attr/border_ultrastrong"/>
 </FrameLayout>
