@@ -24,6 +24,9 @@
         <item name="icon_medium"            >@color/dark_icon_medium             </item>
         <item name="icon_weak"              >@color/dark_icon_weak               </item>
 
+        <item name="icon_primary"           >@color/Acidblue_03                  </item>
+        <item name="icon_secondary"         >@color/PrimaryBlue_01               </item>
+
         <item name="border_weak"            >@color/dark_border_weak             </item>
         <item name="border_medium"          >@color/dark_border_medium           </item>
         <item name="border_strong"          >@color/dark_border_strong           </item>
