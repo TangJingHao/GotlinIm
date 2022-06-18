@@ -18,10 +18,10 @@ class FriendInfoViewModel : ViewModel() {
     private val friendAccountLivaData = MutableLiveData<String>()
 
     //获取到的好友信息
-//    val friendInfoLiveData = Transformations.switchMap(friendAccountLivaData){account->
-//        i(TAG_FRIEND_INFO,"===中转：向仓库层获取好友信息===")
-//        Repository.getFriendInfo(account)
-//    }
+    val friendInfoLiveData = Transformations.switchMap(friendAccountLivaData){account->
+        i(TAG_FRIEND_INFO,"===中转：向仓库层获取好友信息===")
+        Repository.getFriendInfo(account)
+    }
 
     //修改的昵称
     private val modifyNicknameLiveData = MutableLiveData<String>()

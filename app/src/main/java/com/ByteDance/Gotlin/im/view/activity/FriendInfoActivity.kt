@@ -71,7 +71,6 @@ class FriendInfoActivity : AppCompatActivity() {
         })
     }
 
-
     /**
      * 设置点击事件
      */
@@ -101,7 +100,6 @@ class FriendInfoActivity : AppCompatActivity() {
                 putExtra(Constants.SEARCH_FROM_INFO_TYPE,Constants.SEARCH_TYPE_FROM_FRIEND)
             }
         }
-
     }
 
     /**

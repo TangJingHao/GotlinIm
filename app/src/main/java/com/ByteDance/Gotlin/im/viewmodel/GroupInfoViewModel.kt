@@ -16,10 +16,10 @@ class GroupInfoViewModel:ViewModel() {
 
     private val groupIdLivaData = MutableLiveData<String>()
 
-//    val groupInfoLiveData = Transformations.switchMap(groupIdLivaData){ groupId->
-//        MLogUtil.i(Constants.TAG_FRIEND_INFO, "")
-//        Repository.getGroupInfo(groupId)
-//    }
+    val groupInfoLiveData = Transformations.switchMap(groupIdLivaData){ groupId->
+        MLogUtil.i(Constants.TAG_FRIEND_INFO, "")
+        Repository.getGroupInfo(groupId)
+    }
 
     fun getGroupInfo(groupId:String) {
         MLogUtil.i(Constants.TAG_FRIEND_INFO, "---获群聊信息---")
