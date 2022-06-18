@@ -1,10 +1,9 @@
 package com.ByteDance.Gotlin.im.util.DUtils.diy;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
@@ -19,52 +18,33 @@ import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
  * @Description 请求确认类型弹窗
  */
 public class ConfirmPopupWindow extends BasePopupWindow {
-    private DPopupWindowConfirmBinding b;
+    @SuppressLint("StaticFieldLeak")
+    private static DPopupWindowConfirmBinding b;
 
-    private OnConfirmListener mOnConfirmListener;
-
-    /**
-     * 确认回调接口
-     */
-    public interface OnConfirmListener {
-        void onConfirm();
-    }
-
-    public ConfirmPopupWindow(Context context, String title) {
-        mContext = context;
-        b = DPopupWindowConfirmBinding.inflate(LayoutInflater.from(context));
-
-        popupWindow = new PopupWindow(b.getRoot(),
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.setFocusable(true);
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                backgroundAlpha(1f);
-            }
-        });
+    public ConfirmPopupWindow(Context context, String title, PopupWindowListener listener) {
+        super(
+                context,
+                new PopupWindow(
+                        getBinding(context).getRoot(),
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        true),
+                listener
+        );
 
         b.tvConfirmMsg.setText(title);
-        b.tvSelectCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popupWindow.dismiss();
-            }
-        });
     }
 
-    public void setOnConfirmListener(OnConfirmListener listener) {
-        this.mOnConfirmListener = listener;
-        if (mOnConfirmListener != null)
-            b.tvSelectConfirm.setOnClickListener(view -> {
-                mOnConfirmListener.onConfirm();
-                popupWindow.dismiss();
-            });
+    public static DPopupWindowConfirmBinding getBinding(Context context) {
+        if (b == null) {
+            b = DPopupWindowConfirmBinding.inflate(LayoutInflater.from(context));
+        }
+        return b;
     }
 
+    /**
+     * 将确认文字类型改为警告模式
+     */
     public void setWarnTextColorType() {
         b.tvSelectConfirm.setTextColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.text_error));
         b.tvSelectCancel.setTextColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.text_strong));
@@ -72,11 +52,29 @@ public class ConfirmPopupWindow extends BasePopupWindow {
 
     @Override
     public void show() {
-        if (popupWindow != null && popupWindow.isShowing()) {
-            popupWindow.dismiss();
+        if (mPopupWindow != null && mPopupWindow.isShowing()) {
+            mPopupWindow.dismiss();
         } else {
             backgroundAlpha(0.8f);
-            popupWindow.showAtLocation(b.getRoot(), Gravity.CENTER, 0, 0);
+            mPopupWindow.showAtLocation(b.getRoot(), Gravity.CENTER, 0, 0);
+        }
+    }
+
+    @Override
+    void setPopupWindowListener() {
+        if (mListener != null) {
+            b.tvSelectConfirm.setOnClickListener(view -> {
+                mListener.onConfirm("CONFIRM");
+                mPopupWindow.dismiss();
+            });
+            b.tvSelectCancel.setOnClickListener(view -> {
+                mListener.onCancel();
+                mPopupWindow.dismiss();
+            });
+            mPopupWindow.setOnDismissListener(() -> {
+                backgroundAlpha(1f);
+                mListener.onDismiss();
+            });
         }
     }
 

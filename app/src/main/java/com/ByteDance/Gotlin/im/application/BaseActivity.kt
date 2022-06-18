@@ -25,7 +25,7 @@ class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         //判断用户是否登录过，后期可以写在闪屏页面
         if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this,TestActivity::class.java))
             finish()
         }else{
             val intent = Intent(this, LoginActivity::class.java)
