@@ -46,10 +46,22 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     private final List<String> mTitleList;
     // 记录标题下标
     private final List<Integer> mTitleIndexList;
-    // 当前所在组
-    private int curGroupIndex = 0;
     // item总个数
     private int totalLen = 0;
+
+    /*
+    建立哈希表存储绝对布局与相对布局的对应关系
+    前6位为组编号，若组编号为31（111111），则判定为标题
+    后26位为相对编号
+    * */
+    // 后26位为1
+    private final static int MASK_POSITION = 67108863;
+    // 前6位为1
+    private final static int MASK_GROUP = ~MASK_POSITION;
+    // 判断标题值
+    private final static int GROUP_TITLE = 31;
+    // 哈希表
+    private int[] map;
 
     // 标题
     private static final int TYPE_TITLE = 0;
@@ -89,7 +101,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
      * adapter构造方法
      *
      * @param context        context
-     * @param dataList 需要展示的用户信息集合
+     * @param dataList       需要展示的用户信息集合
      * @param groupTitleList 对应用户信息的各组标题（使用必须注意两参数是否大小一致）
      * @param tabType        展示类型，如 TYPE_USER_INFO_STATUE
      */
@@ -112,7 +124,63 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
             titlePositionIndex += 1 + curGroupsize;
             totalLen += curGroupsize;
         }
+        initMap();
     }
+
+    /**
+     * 存入初始化表
+     */
+    private void initMap() {
+        map = new int[totalLen];
+        int curGroupIndex = 0;
+        for (int i = 0; i < totalLen; i++) {
+            int group;
+            int position;
+            if (getItemViewType(i) == TYPE_TITLE) {
+                group = GROUP_TITLE;
+                position = curGroupIndex;
+                curGroupIndex++;
+            } else {
+                int curGroupLen;    // 当前所在组长度
+                if (curGroupIndex == mDataInfoList.size()) { // 到了最后一组
+                    curGroupLen = totalLen - mTitleIndexList.get(curGroupIndex - 1) - 1;
+                } else {
+                    curGroupLen = mTitleIndexList.get(curGroupIndex) - mTitleIndexList.get(curGroupIndex - 1) - 1;
+                }
+                int curGroupTitleIndex = mTitleIndexList.get(curGroupIndex - 1);
+
+                group = curGroupIndex - 1;
+                position = curGroupLen - (curGroupLen - (i - curGroupTitleIndex)) - 1;
+            }
+            map[i] = group << 26 | position;
+        }
+
+        // 测试结果
+//        for (int i = 0; i < map.length; i++) {
+//            int group = getGroupFromMap(i);
+//            int position = getRelativePositionFromMap(i);
+//            if(group == GROUP_TITLE){
+//                DLogUtils.i(TAG,"\n" + mTitleList.get(position));
+//            }else{
+//                DLogUtils.i(TAG,"\n G: " + group + "\t P: " + position);
+//            }
+//        }
+    }
+
+    /**
+     * 根据绝对位置获取当前组别
+     */
+    private int getGroupFromMap(int position) {
+        return (map[position] & MASK_GROUP) >> 26;
+    }
+
+    /**
+     * 根据绝对位置获取当前组别下的相对位置
+     */
+    private int getRelativePositionFromMap(int position) {
+        return map[position] & MASK_POSITION;
+    }
+
 
     @NonNull
     @Override
@@ -143,29 +211,17 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        int p = position;
-        if (getItemViewType(position) == TYPE_TITLE) {
+        int group = getGroupFromMap(position);
+        int relativePosition = getRelativePositionFromMap(position);
+        if(group == GROUP_TITLE){ // 是标题类型，此时relativePosition表示第几组
             TitleViewHolder titleHolder = (TitleViewHolder) holder;
-            if (curGroupIndex < mTitleList.size()) {
-                titleHolder.b.tvListTitle.setText(mTitleList.get(curGroupIndex));
-            } else {
+            if(relativePosition < mTitleList.size()){
+                titleHolder.b.tvListTitle.setText(mTitleList.get(relativePosition));
+            }else{
                 titleHolder.b.tvListTitle.setText("未知分组");
             }
-            curGroupIndex++;
         } else {
-            // 一些数学推导,重定位position相对位置
-            int curGroupLen;
-            if (curGroupIndex == mDataInfoList.size()) { // 到了最后一组
-                curGroupLen = totalLen - mTitleIndexList.get(curGroupIndex - 1) - 1;
-            } else {
-                curGroupLen = mTitleIndexList.get(curGroupIndex) - mTitleIndexList.get(curGroupIndex - 1) - 1;
-            }
-            int curGroupTitleIndex = mTitleIndexList.get(curGroupIndex - 1);
-            int relativePosition = curGroupLen - (curGroupLen - (p - curGroupTitleIndex)) - 1;
-
-            // 适配不同的tab,当前组编号为curGroupIndex - 1，相对组内位置为relativePosition
-            int realCurGroupIndex = curGroupIndex - 1;
-            E data = mDataInfoList.get(realCurGroupIndex).get(relativePosition);
+            E data = mDataInfoList.get(group).get(relativePosition);
 
             // TODO 泛型适配不同的User类，需要修改的靓仔请找到自己的case修改
             switch (mTabType) {
@@ -189,11 +245,11 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     }
                     if (mItemOnClickListener != null)
                         userHolder.b.rLayout.setOnClickListener(view ->
-                                mItemOnClickListener.onItemClick(view, realCurGroupIndex, relativePosition));
+                                mItemOnClickListener.onItemClick(view, group, relativePosition));
                     if (mOnMoreClickListener != null) {
                         userHolder.b.tvStatue.setOnClickListener(view ->
                                 mOnMoreClickListener.onMoreClick(view,
-                                        curGroupIndex - 1, relativePosition));
+                                        group, relativePosition));
                         userHolder.b.tvStatue.setBackgroundColor(
                                 AttrColorUtils.getValueOfColorAttr(mContext, R.attr.accent_default));
                         userHolder.b.tvStatue.setText("操作");
@@ -221,7 +277,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         simpleHolder.b.rLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                mItemOnClickListener.onItemClick(view, realCurGroupIndex, relativePosition);
+                                mItemOnClickListener.onItemClick(view, group, relativePosition);
                             }
                         });
                     }
@@ -229,7 +285,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                 }
                 case TYPE_USER_MESSAGE: {
                     // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mDataInfoList.get(curGroupIndex - 1).get(relativePosition);
+                    TestUser user = (TestUser) mDataInfoList.get(group).get(relativePosition);
                     UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
 
                     // TODO 网络头像加载，目前仅加载默认头像
@@ -241,7 +297,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     MessageHolder.b.tvTime.setText("当前时间");
                     if (mItemOnClickListener != null)
                         MessageHolder.b.rLayout.setOnClickListener(view ->
-                                mItemOnClickListener.onItemClick(view, realCurGroupIndex, relativePosition));
+                                mItemOnClickListener.onItemClick(view, group, relativePosition));
                     break;
                 }
                 default:

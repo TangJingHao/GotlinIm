@@ -76,7 +76,6 @@ class AddressBookFragment : Fragment() {
                     TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
                 )
 
-
                 adapter.setItemOnClickListener { v, groupPosition, relativePosition ->
                     // TODO 跳转事件
                     TPhoneUtil.showToast(

@@ -23,7 +23,7 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
 
     private int selectIndex = 0;
 
-    String[] options = new String[2];
+    String[] options = new String[]{"选项0","选项1"};
 
     public SingleSelectPopupWindow(Context context, String title, String option0, String option1,
                                    PopupWindowListener listener) {
