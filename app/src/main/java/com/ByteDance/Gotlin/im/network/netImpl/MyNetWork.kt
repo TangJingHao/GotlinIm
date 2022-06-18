@@ -41,10 +41,11 @@ object MyNetWork {
     suspend fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) =
         msgService.getSessionHistoryList(userId, sessionId, page).await()
 
+
     // 测试用websocket方法
     fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {
         val webSocket = ServiceCreator.WebSocketClient.newWebSocket(request, listener)
-        ServiceCreator.WebSocketClient.dispatcher().executorService().shutdown()
+        ServiceCreator.WebSocketClient.dispatcher.executorService.shutdown()
         return webSocket
     }
 
