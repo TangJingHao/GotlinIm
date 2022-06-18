@@ -1,13 +1,12 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
+import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,9 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ByteDance.Gotlin.im.Repository;
-import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
@@ -38,7 +36,7 @@ import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import okhttp3.Response;
 import okhttp3.WebSocket;
@@ -51,14 +49,8 @@ import okio.ByteString;
  */
 public class ChatActivity extends AppCompatActivity {
 
-    //聊天类型[1单人/2群聊]
-    private static final int TYPE_SINGLE = 1;
-    private static final int TYPE_GROUPS = 2;
-
-    private static final String TAG = "TAG_ChatActivity";
+    private static final String TAG = "ChatActivity";
     private static int sessionId;
-    WebSocket webSocket;
-    Gson gson = new Gson();
     private HActivityChatBinding view;
     private DIncludeMyToolbarBinding toolbar;
     private EditText input;
@@ -67,16 +59,13 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton back;
     private RecyclerView chatList;
     private SwipeRefreshLayout refresh;
-    private ArrayList<MessageVO> list;
-    private ChatListAdapter adapter;
-    private String sessinoName;
+    private String sessionName;
 
-    public static void startChat(Context context, int sessionId, String sessinoName) {
+    public static void startChat(Context context, int sessionId, String sessionName) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra("sessionId", sessionId);
-        intent.putExtra("sessinoName", sessinoName);
+        intent.putExtra("sessionName", sessionName);
         context.startActivity(intent);
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
     }
 
     public static int getSessionId() {
@@ -89,19 +78,20 @@ public class ChatActivity extends AppCompatActivity {
         view = HActivityChatBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
         sessionId = getIntent().getIntExtra("sessionId", 0);
-        sessinoName = getIntent().getStringExtra("sessinoName");
+        sessionName = getIntent().getStringExtra("sessionName");
 
         bind();
         func();
-        initUiData();
-        connect();
+        initUi();
     }
 
     /**
      * 初始化ui数据
      */
-    private void initUiData() {
-        toolbar.title.setText(sessinoName);
+    private void initUi() {
+        toolbar.title.setText(sessionName);
+        model.refresh();
+        
     }
 
     /**
@@ -116,35 +106,33 @@ public class ChatActivity extends AppCompatActivity {
         chatList = view.chatList;
         refresh = view.refresh;
         model = new ViewModelProvider(this, new ChatViewModelFactory()).get(ChatViewModel.class);
-        list = new ArrayList<>();
-        adapter = new ChatListAdapter(list);
 
-    }
-
-    private void connect() {
-        SocketListener listener = new SocketListener();
-        webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(RecyclerView.VERTICAL);
+        manager.setSmoothScrollbarEnabled(true);
+        chatList.setLayoutManager(manager);
+        chatList.setAdapter(model.getAdapter());
     }
 
     /**
      * 初始化功能
      */
     private void func() {
-        //刷新监听
-        model.refreshMsgList().observe(this, new Observer<ArrayList<MessageVO>>() {
-            @Override
-            public void onChanged(ArrayList<MessageVO> messages) {
-                ArrayList<MessageVO> list = adapter.getData();
-                adapter.setList(messages);
-                DiffUtil.DiffResult diffResult
-                        = DiffUtil.calculateDiff(new DifferCallback(list, messages));
-                diffResult.dispatchUpdatesTo(adapter);
-//                chatList.scrollToPosition(0);
-//                refresh.setRefreshing(false);
-            }
+        //消息更新监听
+        model.updateMsgList().observe(this, messages -> {
+
+            LinkedList<MessageVO> old = model.getAdapter().getData();
+            model.getAdapter().setList(messages);
+            //刷新消息列表
+            DiffUtil.DiffResult diffResult
+                    = DiffUtil.calculateDiff(new DifferCallback(old, messages));
+            diffResult.dispatchUpdatesTo(model.getAdapter());
+
+            if (refresh.isRefreshing())
+                refresh.setRefreshing(false);
         });
 
-        //文本监测
+        //输入文本监测
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -161,7 +149,8 @@ public class ChatActivity extends AppCompatActivity {
                 send.setEnabled(isMsgValid(s.toString()));
             }
         });
-        //回车监测
+
+        //回车键监测
         input.setOnEditorActionListener((v, actionId, event) -> {
             send();
             return true;
@@ -170,15 +159,9 @@ public class ChatActivity extends AppCompatActivity {
         send.setOnClickListener(view -> send());
         back.setOnClickListener(view -> back());
 
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(RecyclerView.VERTICAL);
-        manager.setSmoothScrollbarEnabled(true);
-        chatList.setLayoutManager(manager);
-        chatList.setAdapter(adapter);
-
         //刷新
         refresh.setOnRefreshListener(() -> {
-//            model.refresh(adapter.getData());
+            model.refresh();
             refresh.setRefreshing(false);
         });
     }
@@ -195,27 +178,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /**
-     * 检查输入是否合法
-     *
-     * @param msg 消息
-     * @return true/false
-     */
-    private boolean isMsgValid(String msg) {
-        return null != msg && !TextUtils.isEmpty(msg) && msg.trim().length() > 0;
-    }
-
-    /**
      * 发送消息
      */
     private void send() {
-        new Thread(() -> {
-            WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                    SEND_MESSAGE, new WSsendContent(6, 1, 0,
-                    input.getText().toString()));
-            webSocket.send(gson.toJson(sendChatMsg));
-        }).start();
-
-        model.send(adapter.getData(), input.getText().toString());
+        model.send(input.getText().toString());
+        //清理输入框
         input.clearFocus();
         input.setText("");
         hideKeyboard();
@@ -225,55 +192,12 @@ public class ChatActivity extends AppCompatActivity {
      * 返回
      */
     private void back() {
-        //TODO:返回时数据处理
         finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        webSocket.cancel();
-    }
-
-    class SocketListener extends WebSocketListener {
-
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            DLogUtils.i(TAG, "链接开启");
-            WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                    SEND_MESSAGE, new WSsendContent(6, 1, 0, "开始聊天吧"));
-            webSocket.send(gson.toJson(sendChatMsg));
-        }
-
-        // 回调,展示消息
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
-            DLogUtils.i(TAG, "回调" + text);
-            model.refresh(adapter.getData(), msg.getWsContent());
-        }
-
-        // 回调
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            DLogUtils.i(TAG, "回调" + bytes);
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            DLogUtils.i(TAG, "链接关闭中");
-        }
-
-        @Override
-        public void onClosed(WebSocket webSocket, int code, String reason) {
-            DLogUtils.i(TAG, "链接已关闭");
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-//            WebSocket webSocket1 = webSocket;
-            DLogUtils.i(TAG, "链接失败/发送失败");
-        }
     }
 }
 

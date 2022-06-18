@@ -76,7 +76,8 @@ class MessageFragment : Fragment() {
                     TPhoneUtil.showToast(requireActivity(), "item = " + position)
                     // TODO 跳转到聊天界面
                     val SessionName: String = messageList.get(position).session.name
-                    startChat(context, position, SessionName);
+                    val SessionId: Int = messageList.get(position).session.sessionId
+                    startChat(context, SessionId, SessionName);
                 }
                 b.rvLayout.layoutManager = LinearLayoutManager(activity)
                 b.rvLayout.adapter = adapter
@@ -95,7 +96,6 @@ class MessageFragment : Fragment() {
 //        vm.getSessionList() // 第一次刷新，为了初始化页面
         val listener = EchoWebSocketListener()
         webSocket = vm.getWebSocketAndConnect(listener)
-
     }
 
     inner class EchoWebSocketListener : WebSocketListener() {
@@ -106,13 +106,13 @@ class MessageFragment : Fragment() {
 
         // 回调,展示消息
         override fun onMessage(webSocket: WebSocket, text: String) {
-            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
-            DLogUtils.i(TAG, "回调$text")
+//            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
+//            DLogUtils.i(TAG, "回调$text")
         }
 
         // 回调
         override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            DLogUtils.i(TAG, "回调$bytes")
+//            DLogUtils.i(TAG, "回调$bytes")
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {

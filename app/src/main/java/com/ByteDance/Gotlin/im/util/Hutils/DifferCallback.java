@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * @author: Hx
@@ -13,10 +13,10 @@ import java.util.ArrayList;
  */
 public class DifferCallback extends DiffUtil.Callback {
 
-    private ArrayList<MessageVO> oldData;
-    private ArrayList<MessageVO> newData;
+    private LinkedList<MessageVO> oldData;
+    private LinkedList<MessageVO> newData;
 
-    public DifferCallback(ArrayList<MessageVO> oldData, ArrayList<MessageVO> newData) {
+    public DifferCallback(LinkedList<MessageVO> oldData, LinkedList<MessageVO> newData) {
         this.oldData = oldData;
         this.newData = newData;
     }

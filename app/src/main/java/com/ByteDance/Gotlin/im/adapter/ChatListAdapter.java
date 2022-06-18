@@ -13,6 +13,7 @@ import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * @author: Hx
@@ -20,9 +21,9 @@ import java.util.ArrayList;
  */
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
 
-    private ArrayList<MessageVO> list;
+    private LinkedList<MessageVO> list;
 
-    public ChatListAdapter(ArrayList<MessageVO> list) {
+    public ChatListAdapter(LinkedList<MessageVO> list) {
         this.list = list;
     }
 
@@ -31,7 +32,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
      *
      * @return list
      */
-    public ArrayList<MessageVO> getData() {
+    public LinkedList<MessageVO> getData() {
         return list;
     }
 
@@ -40,7 +41,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
      *
      * @param list
      */
-    public void setList(ArrayList<MessageVO> list) {
+    public void setList(LinkedList<MessageVO> list) {
         this.list = list;
     }
 
