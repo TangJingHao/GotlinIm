@@ -17,7 +17,7 @@ data class UserVO(
     val nickName: String,
 
     /** 用户头像 */
-    val avatar: String,
+    val avatar: String? = null,
 
     /** 用户是否在线 */
     val online: Boolean

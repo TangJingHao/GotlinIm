@@ -75,7 +75,7 @@
         android:layout_centerVertical="true"
         android:layout_gravity="left"
         android:layout_marginRight="@dimen/im_spacing_large"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/d_img_useravatar1" />
 
 

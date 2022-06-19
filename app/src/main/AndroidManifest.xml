@@ -40,7 +40,7 @@
             android:name=".view.activity.MyGroupActivity"
             android:exported="false" />
         <activity
-            android:name=".view.activity.FriendApplicationActivity"
+            android:name=".view.activity.ApplicationInfoActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.FriendSettingActivity"

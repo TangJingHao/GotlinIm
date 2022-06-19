@@ -50,9 +50,11 @@ public class SearchActivity extends AppCompatActivity {
     private static final int SEARCH_MAILBOX = 0;
     private static final int SEARCH_NICKNAME = 1;
     private static final int MY_APPLICATION = 2;
+
     private static final int SEARCH_GROUP_CHAT_ID = 3;
     private static final int SEARCH_GROUP_CHAT_NICKNAME = 4;
     private static final int MY_GROUP_CHAR_APPLICATION = 5;
+
     private static final int SEARCH_HISTORY_MESSAGE = 6;
 
     @Override

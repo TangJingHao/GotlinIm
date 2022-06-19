@@ -1,7 +1,6 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
 import android.annotation.SuppressLint
-import android.opengl.Visibility
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,8 +17,10 @@ import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
+import com.ByteDance.Gotlin.im.view.activity.ApplicationInfoActivity
 import com.ByteDance.Gotlin.im.view.activity.FriendInfoActivity
 import com.ByteDance.Gotlin.im.view.activity.MyGroupActivity
+import com.ByteDance.Gotlin.im.view.activity.SearchActivity
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 
 /**
@@ -33,6 +34,19 @@ import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 class AddressBookFragment : Fragment() {
     companion object {
         private const val TAG = "AddressBookFragment"
+
+        // 搜索类型（好友群聊）
+        private const val SEARCH_TYPE = "search_type"
+        private const val SEARCH_TYPE_FRIEND = 0
+        private const val SEARCH_TYPE_GROUP_CHAT = 1
+        private const val SEARCH_TYPE_MESSAGE = 2
+
+        // 功能区对应
+        private const val SYSTEM_NEW_FRIEND = 0
+        private const val SYSTEM_NEW_GROUP_CHAT = 1
+        private const val SYSTEM_MY_GROUP_CHAT = 2
+        private const val SYSTEM_APPLICATION_INFO = 3
+
     }
 
     private val vm: MainViewModel by lazy {
@@ -68,6 +82,18 @@ class AddressBookFragment : Fragment() {
                 val friendList = responseData.data.friendList
                 val titleList = ArrayList<String>();
                 val sortFriendList = DSortUtils.sort(friendList, titleList)
+                // 假数据充当功能区按键
+                var systemList = ArrayList<UserVO>()
+                val u0 = UserVO(1024, "查找新好友", "查找新好友", null, false)
+                val u1 = UserVO(1024, "查找新群聊", "查找新群聊", null, false)
+                val u2 = UserVO(1024, "我的群聊", "我的群聊", null, false)
+                val u3 = UserVO(1024, "申请通知", "申请通知", null, false)
+                systemList.add(u0)
+                systemList.add(u1)
+                systemList.add(u2)
+                systemList.add(u3)
+                sortFriendList.add(0, systemList)
+                titleList.add(0, "功能区")
                 // 适配器
                 val adapter = TabWithTitleAdapter(
                     requireActivity(),
@@ -75,52 +101,79 @@ class AddressBookFragment : Fragment() {
                     titleList,
                     TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
                 )
-
+                // 跳转事件
                 adapter.setItemOnClickListener { v, groupPosition, relativePosition ->
-                    // TODO 跳转事件
                     TPhoneUtil.showToast(
                         requireActivity(),
-                        "group:" + groupPosition + " " + titleList.get(groupPosition) +
+                        "group:" + groupPosition + " " +
                                 "   postion:" + relativePosition +
                                 "   name: " + sortFriendList.get(groupPosition)
                             .get(relativePosition).nickName
                     )
-                    //跳转到好友信息页面
-                    val intent = Intent(this.context,FriendInfoActivity::class.java)
-                    intent.putExtra(Constants.FRIEND_TYPE,Constants.FRIEND_IS)
-                    intent.putExtra(Constants.FRIEND_ACCOUNT,
-                        sortFriendList[groupPosition][relativePosition].userId)
-                    intent.putExtra(Constants.FRIEND_NAME,
-                        sortFriendList[groupPosition][relativePosition].userName)
-                    intent.putExtra(Constants.FRIEND_NICKNAME,
-                        sortFriendList[groupPosition][relativePosition].nickName)
-                    intent.putExtra(Constants.FRIEND_GROUPING,
-                        "大学同学")
-                    startActivity(intent)
+                    // 功能区跳转
+                    if (groupPosition == 0) {
+                        when (relativePosition) {
+                            SYSTEM_NEW_FRIEND -> {
+                                // 查找新好友
+                                val intent = Intent(requireActivity(), SearchActivity::class.java)
+                                intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_FRIEND)
+                                startActivity(intent)
+                            }
+                            SYSTEM_NEW_GROUP_CHAT -> {
+                                // 查找新群聊
+                                val intent = Intent(requireActivity(), SearchActivity::class.java)
+                                intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_GROUP_CHAT)
+                                startActivity(intent)
+                            }
+                            SYSTEM_APPLICATION_INFO -> {
+                                // 好友申请
+                                startActivity(
+                                    Intent(
+                                        requireActivity(),
+                                        ApplicationInfoActivity::class.java
+                                    )
+                                )
+                            }
+                            SYSTEM_MY_GROUP_CHAT -> {
+                                // 我的群聊
+                                startActivity(
+                                    Intent(
+                                        requireActivity(),
+                                        MyGroupActivity::class.java
+                                    )
+                                )
+                            }
+                        }
+                    }else{
+                        // 跳转到好友信息页面
+                        val intent = Intent(this.context, FriendInfoActivity::class.java)
+                        intent.putExtra(Constants.FRIEND_TYPE, Constants.FRIEND_IS)
+                        intent.putExtra(
+                            Constants.FRIEND_ACCOUNT,
+                            sortFriendList[groupPosition][relativePosition].userId
+                        )
+                        intent.putExtra(
+                            Constants.FRIEND_NAME,
+                            sortFriendList[groupPosition][relativePosition].userName
+                        )
+                        intent.putExtra(
+                            Constants.FRIEND_NICKNAME,
+                            sortFriendList[groupPosition][relativePosition].nickName
+                        )
+                        intent.putExtra(
+                            Constants.FRIEND_GROUPING,
+                            "大学同学"
+                        )
+                        startActivity(intent)
+                    }
+
                 }
                 b.memberRv.layoutManager = LinearLayoutManager(requireActivity())
                 b.memberRv.adapter = adapter
                 if (sortFriendList.size != 0 && titleList.size != 0)
                     adapter.notifyDataSetChanged()
-
-
             }
         }
-        b.configSettingTv.setOnClickListener {
-            if(b.configSettingTv.text=="关闭功能区"){
-                b.topRl.visibility=View.GONE
-                b.configSettingTv.text="开启功能区"
-            }else if(b.configSettingTv.text=="开启功能区"){
-                b.topRl.visibility=View.VISIBLE
-                b.configSettingTv.text="关闭功能区"
-            }
-        }
-        //调转到我的群聊界面
-        b.myGroupChatRl.setOnClickListener {
-            val intent = Intent(this.context,MyGroupActivity::class.java)
-            startActivity(intent)
-        }
-
     }
 
     private fun initData() {
@@ -128,7 +181,8 @@ class AddressBookFragment : Fragment() {
     }
 
     private fun initView() {
-
+        b.toolbarRl.title.text = "通讯录"
+        b.toolbarRl.imgChevronLeft.visibility = View.GONE
     }
 
 

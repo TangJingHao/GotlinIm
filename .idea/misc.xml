@@ -34,6 +34,7 @@
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_green_track.xml" value="0.1945" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_input_dash.xml" value="0.1945" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_open_thumb.xml" value="0.1945" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_ios_thumb_selector.xml" value="0.252" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_login_button_bg.xml" value="0.111" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_login_input_bg.xml" value="0.237" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_login_point.xml" value="0.2475" />
@@ -43,6 +44,7 @@
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_ps_preview_checkbox_selector.xml" value="0.2475" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_ps_preview_gallery_bg.xml" value="0.2475" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_ps_select_complete_bg.xml" value="0.2475" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_view_slice_bg.xml" value="0.252" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_friend_application.xml" value="0.16485507246376813" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_my_group.xml" value="0.14175724637681159" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_search.xml" value="0.2776268115942029" />

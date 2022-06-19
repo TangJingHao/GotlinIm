@@ -45,6 +45,7 @@
         android:layout_marginTop="@dimen/im_spacing_medium"
         android:layout_marginEnd="@dimen/im_spacing_medium"
         android:layout_marginBottom="@dimen/im_spacing_medium"
+        android:scaleType="centerCrop"
         android:src="@drawable/d_img_useravatar1" />
 
     <TextView

@@ -72,6 +72,8 @@ class MyInformationFragment : Fragment() {
      * 配置模式切换监听
      */
     private fun initView() {
+        mBinding.toolbarRl.title.text = "我的"
+        mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
         if(mViewModel.mStatus.value==Constants.USER_LIGHT_MODE){
             val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_sun)
             mBinding.statusChangeIv.background = drawable

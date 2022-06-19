@@ -1,5 +1,7 @@
 package com.ByteDance.Gotlin.im.adapter;
 
+import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +10,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.info.MessageList;
 import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.RedPointHelper;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.badge.BadgeDrawable;
 
 import java.util.List;
@@ -27,6 +35,14 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
 
     private final Context mContext;
     private final List<MessageList> mDataList;
+
+    RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
+    RequestOptions options = new RequestOptions()
+            .transforms(new CenterCrop(),roundedCorners)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)//不做磁盘缓存
+            .skipMemoryCache(true);//不做内存缓存
+
+    private static int DEFAULT_IMG = R.drawable.d_img_useravatar1;
 
     public UserMsgAdapter(Context mContext, List<MessageList> mDataList) {
         this.mContext = mContext;
@@ -58,6 +74,11 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
         Integer sessionId = mDataList.get(position).getSession().getSessionId();
         String SessionName = mDataList.get(position).getSession().getName();
         String senderNickName = mDataList.get(position).getSender().getNickName();
+        String senderAvatar = mDataList.get(position).getSender().getAvatar();
+        Glide.with(mContext)
+                .load(senderAvatar == null ? DEFAULT_IMG : BASE_URL + senderAvatar)
+                .apply(options)
+                .into(holder.b.imgUserPic);
         holder.b.tvUserName.setText(SessionName + sessionId);
         holder.b.tvUserMsg.setText(senderNickName + ": " + mDataList.get(position).getContent());
         holder.b.tvTime.setText(mDataList.get(position).getSendTime());

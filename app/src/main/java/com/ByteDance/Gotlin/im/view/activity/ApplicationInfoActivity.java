@@ -1,14 +1,14 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter;
-import com.ByteDance.Gotlin.im.databinding.DActivityFriendApplicationBinding;
+import com.ByteDance.Gotlin.im.databinding.DActivityApplicationInfoBinding;
 import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 
@@ -20,13 +20,13 @@ import java.util.List;
  * @Author Zhicong Deng
  * @Date 2022/6/13 15:51
  * @Email 1520483847@qq.com
- * @Description 好友申请界面
+ * @Description 好友申请通知界面
  */
-public class FriendApplicationActivity extends AppCompatActivity {
+public class ApplicationInfoActivity extends AppCompatActivity {
 
     private static final String TAG = "FriendApplicationActivity";
 
-    private DActivityFriendApplicationBinding b;
+    private DActivityApplicationInfoBinding b;
     private TabWithTitleAdapter adapter;
     private List<List<TestUser>> mDateList;
     private String[] mDateTitleList;
@@ -34,12 +34,12 @@ public class FriendApplicationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        b = DActivityFriendApplicationBinding.inflate(getLayoutInflater());
+        b = DActivityApplicationInfoBinding.inflate(getLayoutInflater());
         setContentView(b.getRoot());
 
         initDate();
         int num = mDateList.size();
-        b.myToolbar.title.setText("好友申请（" + num + "）");
+        b.myToolbar.title.setText("申请通知（" + num + "）");
         b.myToolbar.imgChevronLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,7 +48,7 @@ public class FriendApplicationActivity extends AppCompatActivity {
         });
 
         adapter = new TabWithTitleAdapter(
-                FriendApplicationActivity.this,
+                ApplicationInfoActivity.this,
                 mDateList,
                 Arrays.asList(mDateTitleList),
                 TabWithTitleAdapter.TYPE_USER_INFO_STATUE);

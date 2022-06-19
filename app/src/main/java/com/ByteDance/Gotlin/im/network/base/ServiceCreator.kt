@@ -58,7 +58,7 @@ object ServiceCreator {
 
     // 用于webSocket
     var WebSocketClient = OkHttpClient.Builder()
-//        .addInterceptor(customLogInterceptor) // 添加了日志拦截器，不用可以注释掉,websocket的获取好像有问题
+        .pingInterval(30,TimeUnit.SECONDS)
         .readTimeout(3, TimeUnit.SECONDS)
         .build()
 

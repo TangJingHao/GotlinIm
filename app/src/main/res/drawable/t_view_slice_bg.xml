@@ -4,10 +4,7 @@
         <shape android:shape="rectangle">
             <solid android:color="?attr/bg_weak" />
             <corners
-                android:topLeftRadius="@dimen/im_spacing_large"
-                android:topRightRadius="@dimen/im_spacing_large"
-                android:bottomLeftRadius="@dimen/im_spacing_large"
-                android:bottomRightRadius="@dimen/im_spacing_large" />
+                android:radius="4dp" />
         </shape>
     </item>
 </selector>

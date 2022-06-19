@@ -22,6 +22,10 @@ import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +79,12 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public int mTabType;
 
     private static int DEFAULT_IMG = R.drawable.d_img_useravatar1;
+
+    RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
+    RequestOptions options = new RequestOptions()
+            .transforms(new CenterCrop(),roundedCorners)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)//不做磁盘缓存
+            .skipMemoryCache(true);//不做内存缓存
 
     // 点击tab的事件
     public interface OnItemClickListener {
@@ -213,11 +223,11 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int group = getGroupFromMap(position);
         int relativePosition = getRelativePositionFromMap(position);
-        if(group == GROUP_TITLE){ // 是标题类型，此时relativePosition表示第几组
+        if (group == GROUP_TITLE) { // 是标题类型，此时relativePosition表示第几组
             TitleViewHolder titleHolder = (TitleViewHolder) holder;
-            if(relativePosition < mTitleList.size()){
+            if (relativePosition < mTitleList.size()) {
                 titleHolder.b.tvListTitle.setText(mTitleList.get(relativePosition));
-            }else{
+            } else {
                 titleHolder.b.tvListTitle.setText("未知分组");
             }
         } else {
@@ -230,14 +240,14 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     if (data instanceof GroupVO) {
                         GroupVO item = (GroupVO) data;
                         Glide.with(mContext)
-                                .load(BASE_URL + item.getAvatar())
+                                .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .into(userHolder.b.imgUserPic);
                         userHolder.b.tvUserName.setText(item.getGroupName());
                         userHolder.b.tvUserMail.setText("gid：" + item.getGroupId());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
-                                .load(BASE_URL + item.getAvatar())
+                                .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .into(userHolder.b.imgUserPic);
                         userHolder.b.tvUserName.setText(item.getUserName());
                         userHolder.b.tvUserMail.setText("uid：" + item.getUserId());
@@ -263,13 +273,15 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     if (data instanceof GroupVO) {
                         GroupVO item = (GroupVO) data;
                         Glide.with(mContext)
-                                .load(DEFAULT_IMG)
+                                .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
+                                .apply(options)
                                 .into(simpleHolder.b.imgUserPic);
                         simpleHolder.b.tvUserName.setText(item.getGroupName());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
-                                .load(DEFAULT_IMG)
+                                .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
+                                .apply(options)
                                 .into(simpleHolder.b.imgUserPic);
                         simpleHolder.b.tvUserName.setText(item.getUserName());
                     }
@@ -284,21 +296,21 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     break;
                 }
                 case TYPE_USER_MESSAGE: {
-                    // TODO 在此处处理泛型类的转换
-                    TestUser user = (TestUser) mDataInfoList.get(group).get(relativePosition);
-                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
-
-                    // TODO 网络头像加载，目前仅加载默认头像
-                    Glide.with(mContext)
-                            .load(DEFAULT_IMG)
-                            .into(MessageHolder.b.imgUserPic);
-                    MessageHolder.b.tvUserName.setText(user.getUserName());
-                    MessageHolder.b.tvUserMsg.setText(user.getMsg());
-                    MessageHolder.b.tvTime.setText("当前时间");
-                    if (mItemOnClickListener != null)
-                        MessageHolder.b.rLayout.setOnClickListener(view ->
-                                mItemOnClickListener.onItemClick(view, group, relativePosition));
-                    break;
+//                    // TODO 在此处处理泛型类的转换
+//                    UserVO item = (UserVO) mDataInfoList.get(group).get(relativePosition);
+//                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
+//
+//                    // TODO 网络头像加载，目前仅加载默认头像
+//                    Glide.with(mContext)
+//                            .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
+//                            .into(MessageHolder.b.imgUserPic);
+//                    MessageHolder.b.tvUserName.setText(item.getUserName());
+//                    MessageHolder.b.tvUserMsg.setText(item.getMsg());
+//                    MessageHolder.b.tvTime.setText("当前时间");
+//                    if (mItemOnClickListener != null)
+//                        MessageHolder.b.rLayout.setOnClickListener(view ->
+//                                mItemOnClickListener.onItemClick(view, group, relativePosition));
+//                    break;
                 }
                 default:
                     break;
