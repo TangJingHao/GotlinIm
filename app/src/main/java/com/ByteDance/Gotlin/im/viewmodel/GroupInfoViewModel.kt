@@ -37,4 +37,16 @@ class GroupInfoViewModel:ViewModel() {
         MLogUtil.i(Constants.TAG_GROUP_INFO, "---获群聊成员列表---")
         groupMembersLiveData.postValue(groupId)
     }
+
+    private val getGroupInviteLivaData= MutableLiveData<Int>()
+
+    val  groupInviteLiveData = Transformations.switchMap(getGroupInviteLivaData){id->
+        Repository.getFriendList(id)
+    }
+
+    fun getInviteMembers(groupId:Int){
+        MLogUtil.i(Constants.TAG_GROUP_INFO, "---邀请群聊成员---")
+        getGroupInviteLivaData.postValue(groupId)
+    }
+
 }

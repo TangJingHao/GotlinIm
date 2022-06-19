@@ -14,6 +14,7 @@ import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.TAG_GROUP_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.viewmodel.GroupInfoViewModel
 
@@ -24,6 +25,7 @@ import com.ByteDance.Gotlin.im.viewmodel.GroupInfoViewModel
  */
 class GroupMembersActivity : AppCompatActivity() {
     private lateinit var mContext: Context
+    private val mGroupId by lazy { intent.getIntExtra(Constants.GROUP_ID,0) }
 
     private val mBinding: MActivityGroupMembersBinding by lazy {
         MActivityGroupMembersBinding.inflate(LayoutInflater.from(this))
@@ -44,17 +46,22 @@ class GroupMembersActivity : AppCompatActivity() {
     }
 
     private fun initDate() {
-        mViewModel.getGroupMembers(intent.getIntExtra(Constants.GROUP_ID,0))
+        mViewModel.getGroupMembers(mGroupId)
     }
 
     private fun initView() {
         mBinding.toolbarGroupMembers.title.text = this.resources.getString(R.string.title_info_group_members)
         mBinding.toolbarGroupMembers.imgChevronLeft.setOnClickListener { onBackPressed() }
-
+        mBinding.tabInviteNumbers.tvUserName.text = this.resources.getString(R.string.title_info_group_invite)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
+        mBinding.tabInviteNumbers.root.setOnClickListener {
+            startActivity<GroupInviteActivity>(this){
+                putExtra(Constants.GROUP_ID,mGroupId)
+            }
+        }
         mViewModel.groupMemberListLiveData.observe(this) { result ->
             val responseData = result.getOrNull()
             if (responseData == null) {
@@ -75,33 +82,32 @@ class GroupMembersActivity : AppCompatActivity() {
                 )
                 adapter.setItemOnClickListener(
                     TabWithTitleAdapter.OnItemClickListener
-                { v, groupPosition, relativePosition ->
-                    val memberUserVO = dataList.get(groupPosition).get(relativePosition)
-                    TPhoneUtil.showToast(
-                        mContext,
-                        memberUserVO.userName + " userId:" + memberUserVO.userId
-                    )
-                    // TODO 跳转到群聊详情页
-                    com.ByteDance.Gotlin.im.util.Mutils.startActivity<FriendInfoActivity>(this.mContext) {
-                        putExtra(Constants.FRIEND_TYPE,Constants.FRIEND_IS)
-                        putExtra(Constants.FRIEND_ACCOUNT,
-                            memberUserVO.userId)
-                        putExtra(Constants.FRIEND_NAME,
-                            memberUserVO.userName)
-                        putExtra(Constants.FRIEND_NICKNAME,
-                            memberUserVO.nickName)
-                        putExtra(Constants.FRIEND_GROUPING,
-                            "大学同学")
-                    }
+                    { v, groupPosition, relativePosition ->
+                        val memberUserVO = dataList.get(groupPosition).get(relativePosition)
+                        TPhoneUtil.showToast(
+                            mContext,
+                            memberUserVO.userName + " userId:" + memberUserVO.userId
+                        )
+                        // TODO 跳转到群聊详情页
+                        startActivity<FriendInfoActivity>(this.mContext) {
+                            putExtra(Constants.FRIEND_TYPE,Constants.FRIEND_IS)
+                            putExtra(Constants.FRIEND_ACCOUNT,
+                                memberUserVO.userId)
+                            putExtra(Constants.FRIEND_NAME,
+                                memberUserVO.userName)
+                            putExtra(Constants.FRIEND_NICKNAME,
+                                memberUserVO.nickName)
+                            putExtra(Constants.FRIEND_GROUPING,
+                                "大学同学")
+                        }
 //                    startActivity()
-                })
+                    })
                 mBinding.rvMember.adapter = adapter
                 mBinding.rvMember.layoutManager = LinearLayoutManager(mContext)
                 if (groupMemberList.size != 0)
                     adapter.notifyDataSetChanged()
             }
         }
-     }
-
+    }
 
 }
