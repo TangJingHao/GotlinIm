@@ -18,7 +18,7 @@ import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
-import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork;
+import com.ByteDance.Gotlin.im.network.netImpl.NetWork;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 import com.google.gson.Gson;
 
@@ -88,7 +88,7 @@ public class ChatViewModel extends ViewModel {
      */
     public void refresh() {
         //从数据库加载聊天记录
-        MyNetWork.INSTANCE.getSessionHistoryList(re.getUserId(), sessionId, page++, new Continuation<SessionHistoryDataResponse>() {
+        NetWork.INSTANCE.getSessionHistoryList(re.getUserId(), sessionId, page++, new Continuation<SessionHistoryDataResponse>() {
             @NonNull
             @Override
             public CoroutineContext getContext() {

@@ -1,7 +1,7 @@
 package com.ByteDance.Gotlin.im
 
 import androidx.lifecycle.liveData
-import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork
+import com.ByteDance.Gotlin.im.network.netImpl.NetWork
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
@@ -87,7 +87,7 @@ object Repository {
      * 登录
      */
     fun login(userName: String, userPass: String) = fire(Dispatchers.IO) {
-        val loginDataResponse = MyNetWork.login(userName, userPass)
+        val loginDataResponse = NetWork.login(userName, userPass)
         if (loginDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(loginDataResponse)
         } else {
@@ -99,7 +99,7 @@ object Repository {
      * 获取群聊列表
      */
     fun getGroupList(userId: Int) = fire(Dispatchers.IO) {
-        val groupListDataResponse = MyNetWork.getGroupList(userId)
+        val groupListDataResponse = NetWork.getGroupList(userId)
         if (groupListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(groupListDataResponse)
         } else {
@@ -111,7 +111,7 @@ object Repository {
      * 获取好友列表
      */
     fun getFriendList(userId: Int) = fire(Dispatchers.IO) {
-        val friendListDataResponse = MyNetWork.getFriendList(userId)
+        val friendListDataResponse = NetWork.getFriendList(userId)
         if (friendListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(friendListDataResponse)
         } else {
@@ -123,8 +123,8 @@ object Repository {
      * 获取用户在每个接收域中的最后一条聊天记录
      */
     fun getSessionList(userId: Int) = fire(Dispatchers.IO) {
-        val sessionListDataResponse = MyNetWork.getSessionList(userId)
-        DLogUtils.i(TAG, MyNetWork.getSessionList(userId).toString())
+        val sessionListDataResponse = NetWork.getSessionList(userId)
+        DLogUtils.i(TAG, NetWork.getSessionList(userId).toString())
         if (sessionListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(sessionListDataResponse)
         } else {
@@ -136,7 +136,7 @@ object Repository {
      * 分页获取目标用户在指定接收域中的历史聊天记录
      */
     fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) = fire(Dispatchers.IO) {
-        val sessionHistoryDataResponse = MyNetWork.getSessionHistoryList(userId, sessionId, page)
+        val sessionHistoryDataResponse = NetWork.getSessionHistoryList(userId, sessionId, page)
         if (sessionHistoryDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(sessionHistoryDataResponse)
         } else {
@@ -183,7 +183,7 @@ object Repository {
         val request = Request.Builder()
             .url(Constants.BASE_WS_URL + getUserId())
             .build()
-        return MyNetWork.getWebSocketAndConnect(request, listener)
+        return NetWork.getWebSocketAndConnect(request, listener)
     }
 
     /**

@@ -21,7 +21,7 @@ import kotlin.coroutines.suspendCoroutine
  * @Description
  */
 
-object MyNetWork {
+object NetWork {
     private val loginService = ServiceCreator.create<LoginService>()
     private val addressBookService = ServiceCreator.create<AddressBookService>()
     private val msgService = ServiceCreator.create<MsgService>()

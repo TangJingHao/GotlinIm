@@ -9,10 +9,8 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
@@ -23,7 +21,6 @@ import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TMyEditMediaIListener
-import com.ByteDance.Gotlin.im.view.activity.LoginActivity
 import com.ByteDance.Gotlin.im.viewmodel.MyInformationViewModel
 import com.bumptech.glide.Glide
 import com.luck.picture.lib.basic.PictureSelector
@@ -31,7 +28,6 @@ import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.config.SelectModeConfig
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.style.PictureSelectorStyle
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 
 /**
  * @Author 唐靖豪
@@ -102,72 +98,21 @@ class MyInformationFragment : Fragment() {
         }
         //修改昵称
         mBinding.nicknameIv.setOnClickListener {
-            mInputPopupWindow= InputPopupWindow(requireContext(),"修改昵称")
-            mInputPopupWindow.popupWindow.animationStyle=R.style.t_popup_window_style
-            mInputPopupWindow.setOnConfirmListener {
-                mBinding.nicknameTv.text=it
-            }
-            mInputPopupWindow.setOnDismissListener {
-                mInputPopupWindow.dismiss()
-            }
-            mInputPopupWindow.show()
+
         }
 
         //模式切换监听
         mBinding.sbIosBtn.setOnCheckedChangeListener { compoundButton, ischeck ->
             if(ischeck){
-                mConfirmPopupWindow= ConfirmPopupWindow(requireContext(),"设置此项需要重启APP\n是否需要?")
-                mConfirmPopupWindow.setConfirmText("重启")
-                mConfirmPopupWindow.setCancelText("取消")
-                mConfirmPopupWindow.popupWindow.animationStyle=R.style.t_popup_window_style
-                mConfirmPopupWindow.setWarnTextColorType()
-                mConfirmPopupWindow.setOnConfirmListener {
-                    Repository.saveUserStatus(Constants.USER_DARK_MODE)
-                    //TODO:后续加上token后要重新模拟登录
-                    TLogUtil.d("用户设置暗黑模式")
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    requireActivity().recreate()
-                }
-                mConfirmPopupWindow.setOnDismissListener {
-                    mBinding.sbIosBtn.isChecked=true
-                }
-                mConfirmPopupWindow.show()
+
             }else{
-                mConfirmPopupWindow= ConfirmPopupWindow(requireContext(),"设置此项需要重启APP\n是否需要?")
-                mConfirmPopupWindow.setConfirmText("重启")
-                mConfirmPopupWindow.setCancelText("取消")
-                mConfirmPopupWindow.popupWindow.animationStyle=R.style.t_popup_window_style
-                mConfirmPopupWindow.setWarnTextColorType()
-                mConfirmPopupWindow.setOnConfirmListener {
-                    Repository.saveUserStatus(Constants.USER_DEFAULT_MODE)
-                    //TODO:后续加上token后要重新模拟登录
-                    TLogUtil.d("用户设置跟随系统")
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    requireActivity().recreate()
-                }
-                mConfirmPopupWindow.setOnDismissListener {
-                    mBinding.sbIosBtn.isChecked=false
-                }
-                mConfirmPopupWindow.show()
+                
             }
+
         }
 
         mBinding.loginConfigIv.setOnClickListener {
-            mConfirmPopupWindow= ConfirmPopupWindow(requireContext(),"是否退出登录")
-            mConfirmPopupWindow.setConfirmText("确认")
-            mConfirmPopupWindow.setCancelText("取消")
-            mConfirmPopupWindow.popupWindow.animationStyle=R.style.t_popup_window_style
-            mConfirmPopupWindow.setWarnTextColorType()
-            mConfirmPopupWindow.setOnConfirmListener {
-                requireActivity().apply {
-                    startActivity(Intent(requireActivity(),LoginActivity::class.java))
-                    finish()
-                }
-            }
-            mConfirmPopupWindow.setOnDismissListener {
-                mConfirmPopupWindow.dismiss()
-            }
-            mConfirmPopupWindow.show()
+
 
         }
     }
