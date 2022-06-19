@@ -25,6 +25,7 @@ object MyNetWork {
     private val loginService = ServiceCreator.create<LoginService>()
     private val addressBookService = ServiceCreator.create<AddressBookService>()
     private val msgService = ServiceCreator.create<MsgService>()
+    private val groupService = ServiceCreator.create<GroupService>()
 
     suspend fun login(userName: String, userPass: String) =
         loginService.login(userName, userPass).await()
@@ -40,6 +41,9 @@ object MyNetWork {
 
     suspend fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) =
         msgService.getSessionHistoryList(userId, sessionId, page).await()
+
+    suspend fun getGroupMemberList(groupId: Int)=
+        groupService.getGroupMemberList(groupId).await()
 
 
     // 测试用websocket方法

@@ -117,6 +117,18 @@ object Repository {
     }
 
     /**
+     * 获取群聊成员列表
+     */
+    fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
+        val groupMemberListDataResponse = MyNetWork.getGroupMembersList(userId)
+        if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(groupMemberListDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${groupMemberListDataResponse.status}"))
+        }
+    }
+
+    /**
      * 获取好友列表
      */
     fun getFriendList(userId: Int) = fire(Dispatchers.IO) {
