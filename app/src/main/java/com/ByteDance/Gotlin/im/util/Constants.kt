@@ -18,9 +18,11 @@ object Constants {
 
     //用户默认设置
     const val USER_DEFAULT_ID = -1
-    const val USER_DEFAULT_NICKNAME = "nickname"
-    const val USER_DEFAULT_AVATAR = "avatar"
     const val USER_DEFAULT_NAME = "name"
+    const val USER_DEFAULT_NICKNAME = "nickname"
+    const val USER_DEFAULT_EMAIL = "email"
+    const val USER_DEFAULT_SEX = "sex"
+    const val USER_DEFAULT_AVATAR = "avatar"
 
     //用户的状态设置
     const val USER_DEFAULT_MODE = -1

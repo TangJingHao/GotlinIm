@@ -95,7 +95,7 @@ class MessageFragment : Fragment() {
     private fun initData() {
 //        vm.getSessionList() // 第一次刷新，为了初始化页面
         val listener = EchoWebSocketListener()
-//        webSocket = vm.getWebSocketAndConnect(listener)
+        webSocket = vm.getWebSocketAndConnect(listener)
     }
 
     inner class EchoWebSocketListener : WebSocketListener() {

@@ -44,7 +44,7 @@ public class ChatViewModel extends ViewModel {
     private final static int LIST_TOP = 0;
     private final static String TAG = "ChatViewModel";
     private final MutableLiveData<LinkedList<MessageVO>> messages;
-    private final WebSocket webSocket = null;
+    private WebSocket webSocket = null;
     private final int sessionId;
     private final ChatListAdapter adapter;
     private final Repository re = Repository.INSTANCE;
@@ -52,9 +52,9 @@ public class ChatViewModel extends ViewModel {
 
     ChatViewModel(int sessionId) {
         this.sessionId = sessionId;
-//        SocketListener listener = new SocketListener();
+        SocketListener listener = new SocketListener();
 //        //初始化webSocket
-//        webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
+        webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
         LinkedList<MessageVO> list = new LinkedList<>();
         adapter = new ChatListAdapter(list);
         messages = new MutableLiveData<>();
@@ -171,8 +171,14 @@ public class ChatViewModel extends ViewModel {
      */
     private MessageVO ws2Message(WebSocketSendChatMsg ws, boolean self) {
         //填充User
-        UserVO user = new UserVO(re.getUserId(), re.getUserName(),
-                re.getUsernickName(), re.getUserAvatar(), true);
+        UserVO user = new UserVO(
+                re.getUserId(),
+                re.getUserName(),
+                re.getUserSex(),
+                re.getUsernickName(),
+                re.getUserEmail(),
+                re.getUserAvatar(),
+                true);
         SessionVO session = new SessionVO(sessionId, 0, "1", "a",
                 0, 0, 0);
         WSsendContent c = ws.getWsContent();

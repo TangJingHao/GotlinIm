@@ -47,12 +47,12 @@ object MyNetWork {
         groupService.getGroupMemberList(groupId).await()
 
 
-//    // 测试用websocket方法
-//    fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {
-//        val webSocket = ServiceCreator.WebSocketClient.newWebSocket(request, listener)
-//        ServiceCreator.WebSocketClient.dispatcher.executorService.shutdown()
-//        return webSocket
-//    }
+    // 测试用websocket方法
+    fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {
+        val webSocket = ServiceCreator.WebSocketClient.newWebSocket(request, listener)
+        ServiceCreator.WebSocketClient.dispatcher().executorService().shutdown()
+        return webSocket
+    }
 
     /**
      *  定义一个Call的扩展函数，Call的上下文是retrofit2,泛型T为interface内部定义好的方法

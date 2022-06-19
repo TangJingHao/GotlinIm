@@ -13,8 +13,14 @@ data class UserVO(
     /** 用户名 */
     val userName: String,
 
+    /** 用户性别 */
+    val sex: String,
+
     /** 用户昵称 */
     val nickName: String,
+
+    /** 用户邮箱 */
+    val email: String,
 
     /** 用户头像 */
     val avatar: String? = null,

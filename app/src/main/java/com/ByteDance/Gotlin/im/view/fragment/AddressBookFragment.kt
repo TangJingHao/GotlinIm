@@ -84,10 +84,10 @@ class AddressBookFragment : Fragment() {
                 val sortFriendList = DSortUtils.sort(friendList, titleList)
                 // 假数据充当功能区按键
                 var systemList = ArrayList<UserVO>()
-                val u0 = UserVO(1024, "查找新好友", "查找新好友", null, false)
-                val u1 = UserVO(1024, "查找新群聊", "查找新群聊", null, false)
-                val u2 = UserVO(1024, "我的群聊", "我的群聊", null, false)
-                val u3 = UserVO(1024, "申请通知", "申请通知", null, false)
+                val u0 = UserVO(1024, "查找新好友", "女", "查找新好友", "system", null, false)
+                val u1 = UserVO(1024, "查找新群聊", "女", "查找新群聊", "system", null, false)
+                val u2 = UserVO(1024, "我的群聊", "女", "我的群聊", "system", null, false)
+                val u3 = UserVO(1024, "申请通知", "女", "申请通知", "system", null, false)
                 systemList.add(u0)
                 systemList.add(u1)
                 systemList.add(u2)
@@ -144,7 +144,7 @@ class AddressBookFragment : Fragment() {
                                 )
                             }
                         }
-                    }else{
+                    } else {
                         // 跳转到好友信息页面
                         val intent = Intent(this.context, FriendInfoActivity::class.java)
                         intent.putExtra(Constants.FRIEND_TYPE, Constants.FRIEND_IS)

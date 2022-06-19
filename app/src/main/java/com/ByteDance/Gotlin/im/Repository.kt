@@ -36,6 +36,8 @@ object Repository {
     private const val MMKV_USER_NICKNAME = "user_nickName"
     private const val MMKV_USER_AVATAR = "Avatar"
     private const val MMKV_USER_NAME = "user_name"
+    private const val MMKV_USER_SEX = "user_name"
+    private const val MMKV_USER_EMAIL = "user_name"
 
     fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
     fun saveUserStatus(userId: Int) = mmkv.encode(MMKV_USER_MODE, userId)
@@ -66,6 +68,10 @@ object Repository {
     fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, Constants.USER_DEFAULT_AVATAR)
 
     fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
+
+    fun getUserSex() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
+
+    fun getUserEmail() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
 
     /*
     * 数据库=========================================================================================
@@ -209,15 +215,15 @@ object Repository {
         emit(myId)
     }
 
-//    /**
-//     * websocket使用
-//     */
-//    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
-//        val request = Request.Builder()
-//            .url(Constants.BASE_WS_URL + getUserId())
-//            .build()
-//        return MyNetWork.getWebSocketAndConnect(request, listener)
-//    }
+    /**
+     * websocket使用
+     */
+    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
+        val request = Request.Builder()
+            .url(Constants.BASE_WS_URL + getUserId())
+            .build()
+        return MyNetWork.getWebSocketAndConnect(request, listener)
+    }
 
     /**
      * 获取群聊信息

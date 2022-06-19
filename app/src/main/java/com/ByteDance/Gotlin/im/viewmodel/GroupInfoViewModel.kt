@@ -12,43 +12,41 @@ import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
  * @Author：Suzy.Mo
  * @Date：2022/6/14 15:01
  */
-class GroupInfoViewModel:ViewModel() {
+class GroupInfoViewModel : ViewModel() {
 
     private val groupIdLivaData = MutableLiveData<String>()
 
-    val groupInfoLiveData = Transformations.switchMap(groupIdLivaData){ groupId->
-<<<<<<< HEAD
-        MLogUtil.i(Constants.TAG_FRIEND_INFO, "")
-=======
+    val groupInfoLiveData = Transformations.switchMap(groupIdLivaData) { groupId ->
+
         MLogUtil.i(Constants.TAG_GROUP_INFO, "")
->>>>>>> origin/suzy_dev
+
         Repository.getGroupInfo(groupId)
     }
 
-    fun getGroupInfo(groupId:String) {
+    fun getGroupInfo(groupId: String) {
         MLogUtil.i(Constants.TAG_GROUP_INFO, "---获群聊信息---")
         groupIdLivaData.postValue(groupId)
     }
 
     private val groupMembersLiveData = MutableLiveData<Int>()
 
-    val groupMemberListLiveData = Transformations.switchMap(groupMembersLiveData){id->
+    val groupMemberListLiveData = Transformations.switchMap(groupMembersLiveData) { id ->
         MLogUtil.i(Constants.TAG_GROUP_INFO, "---获群聊信息---")
         Repository.getGroupMembersList(id)
     }
 
-    fun getGroupMembers(groupId:Int) {
+    fun getGroupMembers(groupId: Int) {
         MLogUtil.i(Constants.TAG_GROUP_INFO, "---获群聊成员列表---")
         groupMembersLiveData.postValue(groupId)
     }
 
-    private val getGroupInviteLivaData= MutableLiveData<Int>()
+    private val getGroupInviteLivaData = MutableLiveData<Int>()
 
-    val  groupInviteLiveData = Transformations.switchMap(getGroupInviteLivaData){id->
+    val groupInviteLiveData = Transformations.switchMap(getGroupInviteLivaData) { id ->
         Repository.getFriendList(id)
     }
 
-    fun getInviteMembers(groupId:Int){
+    fun getInviteMembers(groupId: Int) {
         MLogUtil.i(Constants.TAG_GROUP_INFO, "---邀请群聊成员---")
         getGroupInviteLivaData.postValue(groupId)
     }

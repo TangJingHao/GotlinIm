@@ -1,6 +1,5 @@
 package com.ByteDance.Gotlin.im.network.base
 
-import android.util.Log
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
@@ -88,8 +87,8 @@ class CustomLogInterceptor : Interceptor {
         return "Response Time-->：${
             TimeUtils.getDateToString(System.currentTimeMillis())
         } \r\n Response Result ${
-            if (response.code != 200)
-                response.code
+            if (response.code() != 200)
+                response.code()
             else
                 ""
         } -->：${
@@ -105,7 +104,7 @@ class CustomLogInterceptor : Interceptor {
         val needPrintRequestParams = requestParams.contains("IsFile").not()
         return "自定义日志打印 \r\n Request Time-->：${
             TimeUtils.getDateToString(System.currentTimeMillis())
-        } \r\n Request Url-->：${request.method} ${request.url} \r\n Request Header-->：${
+        } \r\n Request Url-->：${request.method()} ${request.url()} \r\n Request Header-->：${
             getRequestHeaders(
                 request
             )
@@ -123,7 +122,7 @@ class CustomLogInterceptor : Interceptor {
             val requestParams = getRequestParams(request)
             val needPrintRequestParams = requestParams.contains("IsFile").not()
             val logInfo =
-                "自定义日志打印 \r\n Request Url-->：${request.method} ${request.url} \r\n Request Header-->：${
+                "自定义日志打印 \r\n Request Url-->：${request.method()} ${request.url()} \r\n Request Header-->：${
                     getRequestHeaders(
                         request
                     )
@@ -133,8 +132,8 @@ class CustomLogInterceptor : Interceptor {
                     else
                         "文件上传，不打印请求参数"
                 } \r\n Response Result ${
-                    if (response.code != 200)
-                        response.code
+                    if (response.code() != 200)
+                        response.code()
                     else
                         ""
                 } -->：${
@@ -150,7 +149,7 @@ class CustomLogInterceptor : Interceptor {
     private fun getRequestParams(request: Request): String {
         var str: String? = null
         try {
-            request.body?.let {
+            request.body()?.let {
                 val buffer = Buffer()
                 it.writeTo(buffer)
                 val charset = it.contentType()?.charset(Charset.forName("UTF-8"))
@@ -165,8 +164,8 @@ class CustomLogInterceptor : Interceptor {
     }
 
     private fun getRequestHeaders(request: Request): String {
-        val headers = request.headers
-        return if (headers.size > 0) {
+        val headers = request.headers()
+        return if (headers.size() > 0) {
             headers.toString()
         } else {
             "Empty!"
@@ -178,7 +177,7 @@ class CustomLogInterceptor : Interceptor {
      */
     private fun getResponseText(response: Response): String {
         try {
-            response.body?.let {
+            response.body()?.let {
                 val source = it.source()
                 source.request(Long.MAX_VALUE)
                 val buffer = source.buffer
