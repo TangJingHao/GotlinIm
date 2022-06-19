@@ -57,7 +57,7 @@ object ServiceCreator {
 
     // 用于webSocket
     var WebSocketClient = OkHttpClient.Builder()
-        .pingInterval(30,TimeUnit.SECONDS)
+        .pingInterval(3, TimeUnit.SECONDS)
         .readTimeout(3, TimeUnit.SECONDS)
         .build()
 

@@ -1,6 +1,5 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
 import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
 
 import android.content.Context;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,25 +21,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
-import com.ByteDance.Gotlin.im.info.WSsendContent;
-import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
-import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
-import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
-import com.google.gson.Gson;
 
 import java.util.LinkedList;
-
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okio.ByteString;
 
 /**
  * @author: Hx
@@ -50,7 +38,7 @@ import okio.ByteString;
 public class ChatActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatActivity";
-    private static int sessionId;
+    private static SessionVO session;
     private HActivityChatBinding view;
     private DIncludeMyToolbarBinding toolbar;
     private EditText input;
@@ -59,17 +47,16 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton back;
     private RecyclerView chatList;
     private SwipeRefreshLayout refresh;
-    private String sessionName;
+    private ImageButton image;
 
-    public static void startChat(Context context, int sessionId, String sessionName) {
+    public static void startChat(Context context, SessionVO session) {
         Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra("sessionId", sessionId);
-        intent.putExtra("sessionName", sessionName);
+        intent.putExtra("session", session);
         context.startActivity(intent);
     }
 
-    public static int getSessionId() {
-        return sessionId;
+    public static SessionVO getSession() {
+        return session;
     }
 
     @Override
@@ -77,8 +64,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         view = HActivityChatBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
-        sessionId = getIntent().getIntExtra("sessionId", 0);
-        sessionName = getIntent().getStringExtra("sessionName");
+        session = (SessionVO) getIntent().getSerializableExtra("session");
 
         bind();
         func();
@@ -89,9 +75,8 @@ public class ChatActivity extends AppCompatActivity {
      * 初始化ui数据
      */
     private void initUi() {
-        toolbar.title.setText(sessionName);
+        toolbar.title.setText(session.getName());
         model.refresh();
-        
     }
 
     /**
@@ -105,6 +90,7 @@ public class ChatActivity extends AppCompatActivity {
         back = toolbar.imgChevronLeft;
         chatList = view.chatList;
         refresh = view.refresh;
+        image = view.image;
         model = new ViewModelProvider(this, new ChatViewModelFactory()).get(ChatViewModel.class);
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -156,9 +142,14 @@ public class ChatActivity extends AppCompatActivity {
             return true;
         });
 
+        //发送消息
         send.setOnClickListener(view -> send());
+        //返回
         back.setOnClickListener(view -> back());
+        //打开图片选择器
+        image.setOnClickListener(view -> {
 
+        });
         //刷新
         refresh.setOnRefreshListener(() -> {
             model.refresh();
@@ -181,7 +172,7 @@ public class ChatActivity extends AppCompatActivity {
      * 发送消息
      */
     private void send() {
-        model.send(input.getText().toString());
+        model.sendText(input.getText().toString());
         //清理输入框
         input.clearFocus();
         input.setText("");

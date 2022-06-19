@@ -35,10 +35,8 @@
     <!--弹窗-->
     <dimen name="pop_window_margin_horizontal">40dp</dimen><!--注册页欢迎大字-->
 
-
     <dimen name="user_item_height">48dp</dimen>
     <dimen name="user_item_detail_height">64dp</dimen>
-
 
     <!--用户项，用于用户列表展现-->
     <dimen name="im_user_item_height">48dp</dimen>
@@ -57,8 +55,11 @@
     <!--圆弧角度-->
     <dimen name="tab_small">2dp</dimen>
 
-
     <!--状态栏高度-->
     <dimen name="im_status_height">30dp</dimen>
-
+    <!--  消息图片大小  -->
+    <dimen name="default_msgImg_width">52dp</dimen>
+    <dimen name="max_msgImg_width">180dp</dimen>
+    <dimen name="default_msgImg_height">56dp</dimen>
+    <dimen name="max_msgImg_height">135dp</dimen>
 </resources>

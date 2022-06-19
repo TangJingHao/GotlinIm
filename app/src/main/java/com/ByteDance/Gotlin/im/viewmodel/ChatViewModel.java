@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.viewmodel;
 
+import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
 import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
 
 import androidx.annotation.NonNull;
@@ -44,20 +45,30 @@ public class ChatViewModel extends ViewModel {
     private final static int LIST_TOP = 0;
     private final static String TAG = "ChatViewModel";
     private final MutableLiveData<LinkedList<MessageVO>> messages;
-    private WebSocket webSocket = null;
-    private final int sessionId;
+    private final SessionVO session;
     private final ChatListAdapter adapter;
     private final Repository re = Repository.INSTANCE;
+    private WebSocket webSocket;
     private int page = 0;
+    private UserVO user;
 
-    ChatViewModel(int sessionId) {
-        this.sessionId = sessionId;
+    ChatViewModel(SessionVO session) {
+        this.session = session;
         SocketListener listener = new SocketListener();
 //        //初始化webSocket
         webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
         LinkedList<MessageVO> list = new LinkedList<>();
         adapter = new ChatListAdapter(list);
         messages = new MutableLiveData<>();
+        //填充User
+        user = new UserVO(
+                re.getUserId(),
+                re.getUserName(),
+                re.getUserSex(),
+                re.getUsernickName(),
+                re.getUserEmail(),
+                re.getUserAvatar() + "",
+                true);
     }
 
     @Override
@@ -88,7 +99,7 @@ public class ChatViewModel extends ViewModel {
      */
     public void refresh() {
         //从数据库加载聊天记录
-        MyNetWork.INSTANCE.getSessionHistoryList(re.getUserId(), sessionId, page++, new Continuation<SessionHistoryDataResponse>() {
+        MyNetWork.INSTANCE.getSessionHistoryList(re.getUserId(), session.getSessionId(), page++, new Continuation<SessionHistoryDataResponse>() {
             @NonNull
             @Override
             public CoroutineContext getContext() {
@@ -103,11 +114,11 @@ public class ChatViewModel extends ViewModel {
                     //将获得的数据转换为MessageVO，并向消息列表Top位置插入
                     MessageVO[] messageVOS = new MessageVO[list.size()];
                     int count = 0;
-                    for (HistoryListBean history : list) {
+                    for (HistoryListBean h : list) {
                         messageVOS[count++] = new MessageVO(
-                                history.getSession(), history.getSender(),
-                                history.getType(), history.getContent(),
-                                history.getSendTime(), history.getSelf());
+                                h.getSession(), h.getSender(),
+                                h.getType(), h.getContent(),
+                                h.getSendTime(), h.getSelf());
                     }
                     addMsg(messageVOS, LIST_TOP);
                 }
@@ -116,9 +127,9 @@ public class ChatViewModel extends ViewModel {
     }
 
     /**
-     * 接收webSocket消息
+     * 接收text消息
      */
-    private void received(WebSocketReceiveChatMsg msg) {
+    private void receivedText(WebSocketReceiveChatMsg msg) {
         WSreceiveContent c = msg.getWsContent();
         MessageVO message = new MessageVO(c.getSession(),
                 c.getSender(), c.getType(), c.getContent(),
@@ -128,15 +139,15 @@ public class ChatViewModel extends ViewModel {
     }
 
     /**
-     * 发送webSocket消息
+     * 发送Text消息
      *
      * @param msg 消息
      */
-    public void send(String msg) {
+    public void sendText(String msg) {
         //打包发送消息
         Gson gson = new Gson();
         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                SEND_MESSAGE, new WSsendContent(sessionId,
+                SEND_MESSAGE, new WSsendContent(session.getSessionId(),
                 re.getUserId(), 0, msg));
         webSocket.send(gson.toJson(sendChatMsg));
         MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
@@ -163,24 +174,14 @@ public class ChatViewModel extends ViewModel {
             }
         }
         //设置新数据
-        messages.setValue(newData);
+        messages.postValue(newData);
     }
 
     /**
      * 将发送的数据转化为MessageVO,用于装进聊天界面
      */
     private MessageVO ws2Message(WebSocketSendChatMsg ws, boolean self) {
-        //填充User
-        UserVO user = new UserVO(
-                re.getUserId(),
-                re.getUserName(),
-                re.getUserSex(),
-                re.getUsernickName(),
-                re.getUserEmail(),
-                re.getUserAvatar(),
-                true);
-        SessionVO session = new SessionVO(sessionId, 0, "1", "a",
-                0, 0, 0);
+
         WSsendContent c = ws.getWsContent();
         return new MessageVO(session, user, c.getType(),
                 c.getContent(), "", self);
@@ -194,8 +195,9 @@ public class ChatViewModel extends ViewModel {
 
         @Override
         public void onOpen(WebSocket webSocket, @NonNull Response response) {
+            DLogUtils.i(TAG,"开启链接");
             WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                    SEND_MESSAGE, new WSsendContent(sessionId, re.getUserId(),
+                    SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
                     0, "开始聊天吧"));
             webSocket.send(gson.toJson(sendChatMsg));
         }
@@ -203,9 +205,18 @@ public class ChatViewModel extends ViewModel {
         // 回调,展示消息
         @Override
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
-            WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
             DLogUtils.i(TAG, "回调" + text);
-            received(msg);
+            WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
+            if (msg.getWsContent().getType() == MESSAGE_TEXT){
+
+            }
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    receivedText(msg);
+                }
+            }).start();
         }
 
         // 回调

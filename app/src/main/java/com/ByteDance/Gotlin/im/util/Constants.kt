@@ -1,5 +1,7 @@
 package com.ByteDance.Gotlin.im.util
 
+import com.ByteDance.Gotlin.im.R
+
 /**
  * @Author 唐靖豪
  * @Date 2022/6/9 21:09
@@ -22,7 +24,11 @@ object Constants {
     const val USER_DEFAULT_NICKNAME = "nickname"
     const val USER_DEFAULT_EMAIL = "email"
     const val USER_DEFAULT_SEX = "sex"
-    const val USER_DEFAULT_AVATAR = "avatar"
+    const val USER_DEFAULT_AVATAR: Int = R.drawable.d_img_useravatar1
+
+    //消息类型
+    const val MESSAGE_TEXT = 0
+    const val MESSAGE_IMG = 1
 
     //用户的状态设置
     const val USER_DEFAULT_MODE = -1

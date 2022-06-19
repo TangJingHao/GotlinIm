@@ -15,7 +15,7 @@ public class ChatViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(ChatViewModel.class)) {
-            return (T) new ChatViewModel(ChatActivity.getSessionId());
+            return (T) new ChatViewModel(ChatActivity.getSession());
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
