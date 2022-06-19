@@ -17,7 +17,7 @@ public class DLogUtils {
     public static final int WARN = 4;
     public static final int ERROR = 5;
     public static final int NOTHING = 6;
-    public static int level = VERBOSE;  //过滤输出等级
+    public static int level = INFO;  //过滤输出等级
 
     public static void v(String TAG, String content) {
         if (level <= VERBOSE) {

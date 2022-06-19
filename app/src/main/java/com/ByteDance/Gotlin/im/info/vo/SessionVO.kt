@@ -1,5 +1,8 @@
 package com.ByteDance.Gotlin.im.info.vo
 
+import android.os.Parcelable
+import java.io.Serializable
+
 /**
  * @Author Zhicong Deng
  * @Date  2022/6/14 20:32
@@ -27,4 +30,4 @@ data class SessionVO(
 
     /** 当前用户在该会话内的未读消息数  */
     val badgeNum: Int
-)
+):Serializable

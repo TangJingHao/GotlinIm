@@ -35,7 +35,6 @@
                 android:textColor="?attr/text_medium"
                 android:textSize="@dimen/im_text_tiny" />
 
-
             <TextView
                 android:id="@+id/msg_left"
                 android:layout_width="wrap_content"
@@ -49,6 +48,15 @@
                 android:text="@string/preview_text"
                 android:textSize="@dimen/im_text_medium" />
 
+            <ImageView
+                android:id="@+id/img_left"
+                android:layout_width="@dimen/default_msgImg_width"
+                android:layout_height="@dimen/default_msgImg_height"
+                android:maxWidth="@dimen/max_msgImg_width"
+                android:maxHeight="@dimen/max_msgImg_height"
+                android:layout_marginStart="@dimen/im_spacing_medium"
+                android:layout_marginTop="4dp"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -60,8 +68,11 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/im_spacing_huge"
         android:paddingVertical="6dp"
+<<<<<<< HEAD
         android:visibility="visible"
 
+=======
+>>>>>>> master
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -104,6 +115,17 @@
                 android:text="@string/preview_text"
                 android:textColor="@color/bg_weak"
                 android:textSize="@dimen/im_text_medium" />
+
+            <ImageView
+                android:id="@+id/img_right"
+                android:layout_width="@dimen/default_msgImg_width"
+                android:layout_height="@dimen/default_msgImg_height"
+                android:maxWidth="@dimen/max_msgImg_width"
+                android:maxHeight="@dimen/max_msgImg_height"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="@dimen/im_spacing_medium"
+                android:layout_marginBottom="2dp"
+                android:visibility="gone"/>
 
             <include
                 android:id="@+id/error"

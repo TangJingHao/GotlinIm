@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.adapter.UserMsgAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
@@ -74,6 +75,7 @@ class MessageFragment : Fragment() {
                 val adapter = UserMsgAdapter(requireActivity(), messageList)
                 adapter.setItemOnClickListener { v, position ->
                     TPhoneUtil.showToast(requireActivity(), "item = " + position)
+<<<<<<< HEAD
                     // TODO 跳转到聊天界面
                     val session = messageList.get(position).session
                     val type = session.type
@@ -83,6 +85,11 @@ class MessageFragment : Fragment() {
                     val SessionName: String = sessionType +  session.name
                     val SessionId: Int = messageList.get(position).session.sessionId
                     startChat(context, SessionId, SessionName);
+=======
+                    //跳转到聊天界面
+                    val session: SessionVO = messageList.get(position).session
+                    startChat(context, session);
+>>>>>>> master
                 }
                 b.rvLayout.layoutManager = LinearLayoutManager(activity)
                 b.rvLayout.adapter = adapter

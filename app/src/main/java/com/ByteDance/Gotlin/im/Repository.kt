@@ -65,7 +65,7 @@ object Repository {
     /**
      * 获取当前用户头像
      */
-    fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, Constants.USER_DEFAULT_AVATAR)
+    fun getUserAvatar() = mmkv.decodeInt(MMKV_USER_AVATAR, Constants.USER_DEFAULT_AVATAR)
 
     fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
 
