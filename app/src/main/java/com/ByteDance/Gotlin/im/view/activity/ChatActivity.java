@@ -1,8 +1,12 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
+import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
+import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
+
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -10,13 +14,34 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
+import com.ByteDance.Gotlin.im.info.WSsendContent;
+import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
+import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
+import com.ByteDance.Gotlin.im.info.vo.MessageVO;
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
+import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
+import com.google.gson.Gson;
+
+import java.util.LinkedList;
+
+import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 
 /**
  * @author: Hx
@@ -24,35 +49,90 @@ import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
  */
 public class ChatActivity extends AppCompatActivity {
 
-    //聊天类型[1单人/2群聊]
-    private static final int TYPE_SINGLE = 1;
-    private static final int TYPE_GROUPS = 2;
-
-    private static final String TAG = "TAG_ChatActivity";
+    private static final String TAG = "ChatActivity";
+    private static int sessionId;
     private HActivityChatBinding view;
     private DIncludeMyToolbarBinding toolbar;
     private EditText input;
     private TextView send;
     private ChatViewModel model;
     private ImageButton back;
+    private RecyclerView chatList;
+    private SwipeRefreshLayout refresh;
+    private String sessionName;
+
+    public static void startChat(Context context, int sessionId, String sessionName) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        intent.putExtra("sessionId", sessionId);
+        intent.putExtra("sessionName", sessionName);
+        context.startActivity(intent);
+    }
+
+    public static int getSessionId() {
+        return sessionId;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         view = HActivityChatBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
-        init();
+        sessionId = getIntent().getIntExtra("sessionId", 0);
+        sessionName = getIntent().getStringExtra("sessionName");
+
+        bind();
+        func();
+        initUi();
     }
 
-    private void init() {
+    /**
+     * 初始化ui数据
+     */
+    private void initUi() {
+        toolbar.title.setText(sessionName);
+        model.refresh();
+        
+    }
+
+    /**
+     * 绑定ui
+     */
+    private void bind() {
         toolbar = view.toolbar;
         toolbar.imgMore.setVisibility(View.VISIBLE);
         input = view.input;
         send = view.send;
         back = toolbar.imgChevronLeft;
-        model = new ViewModelProvider(this).get(ChatViewModel.class);
+        chatList = view.chatList;
+        refresh = view.refresh;
+        model = new ViewModelProvider(this, new ChatViewModelFactory()).get(ChatViewModel.class);
 
-        //文本监测
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(RecyclerView.VERTICAL);
+        manager.setSmoothScrollbarEnabled(true);
+        chatList.setLayoutManager(manager);
+        chatList.setAdapter(model.getAdapter());
+    }
+
+    /**
+     * 初始化功能
+     */
+    private void func() {
+        //消息更新监听
+        model.updateMsgList().observe(this, messages -> {
+
+            LinkedList<MessageVO> old = model.getAdapter().getData();
+            model.getAdapter().setList(messages);
+            //刷新消息列表
+            DiffUtil.DiffResult diffResult
+                    = DiffUtil.calculateDiff(new DifferCallback(old, messages));
+            diffResult.dispatchUpdatesTo(model.getAdapter());
+
+            if (refresh.isRefreshing())
+                refresh.setRefreshing(false);
+        });
+
+        //输入文本监测
         input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -69,7 +149,8 @@ public class ChatActivity extends AppCompatActivity {
                 send.setEnabled(isMsgValid(s.toString()));
             }
         });
-        //回车监测
+
+        //回车键监测
         input.setOnEditorActionListener((v, actionId, event) -> {
             send();
             return true;
@@ -78,6 +159,11 @@ public class ChatActivity extends AppCompatActivity {
         send.setOnClickListener(view -> send());
         back.setOnClickListener(view -> back());
 
+        //刷新
+        refresh.setOnRefreshListener(() -> {
+            model.refresh();
+            refresh.setRefreshing(false);
+        });
     }
 
     /**
@@ -92,20 +178,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /**
-     * 检查输入是否合法
-     *
-     * @param msg 消息
-     * @return true/false
-     */
-    private boolean isMsgValid(String msg) {
-        return null != msg && !TextUtils.isEmpty(msg) && msg.trim().length() > 0;
-    }
-
-    /**
      * 发送消息
      */
     private void send() {
         model.send(input.getText().toString());
+        //清理输入框
         input.clearFocus();
         input.setText("");
         hideKeyboard();
@@ -115,6 +192,13 @@ public class ChatActivity extends AppCompatActivity {
      * 返回
      */
     private void back() {
-        //TODO:back
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
+
+

@@ -27,16 +27,16 @@ class FriendInfoViewModel : ViewModel() {
     private val modifyNicknameLiveData = MutableLiveData<String>()
 
     //申请修改后的数据
-    val nickNameLiveData =Transformations.switchMap(modifyNicknameLiveData){ newNickname->
-        i(TAG_FRIEND_INFO,"===中转：向仓库层申请修改===")
-        Repository.getFriendInfo(newNickname)
-    }
+//    val nickNameLiveData =Transformations.switchMap(modifyNicknameLiveData){ newNickname->
+//        i(TAG_FRIEND_INFO,"===中转：向仓库层申请修改===")
+//        Repository.getFriendInfo(newNickname)
+//    }
 
     //修改分组 参数还有变
-    var modifyGroupingLiveData = Transformations.switchMap(friendAccountLivaData){account->
-        i(TAG_FRIEND_INFO,"")
-        Repository.getFriendInfo(account)
-    }
+//    var modifyGroupingLiveData = Transformations.switchMap(friendAccountLivaData){account->
+//        i(TAG_FRIEND_INFO,"")
+//        Repository.getFriendInfo(account)
+//    }
 
     fun getFriendInfo(friendAccount:String) {
         i(TAG_FRIEND_INFO,"---获取好友信息---")

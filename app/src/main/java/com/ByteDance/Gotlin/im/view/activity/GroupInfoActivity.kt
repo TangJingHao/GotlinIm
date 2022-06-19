@@ -45,7 +45,7 @@ class GroupInfoActivity : AppCompatActivity() {
 
         initView()
         setListener()
-        setGroupData()
+//        setGroupData()
     }
 
     private fun initView() {
@@ -99,21 +99,21 @@ class GroupInfoActivity : AppCompatActivity() {
         }
     }
 
-    private fun setGroupData() {
-        mViewModel.groupInfoLiveData.observe(this, Observer {
-            mBinding.tvGroupId.text = intent.getIntExtra(Constants.GROUP_ID,0).toString()
-            mBinding.tvName.text =intent.getStringExtra(Constants.GROUP_NAME).toString()
-            mBinding.tabGroupName.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_NAME).toString()
-            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text =intent.getStringExtra(Constants.GROUP_NUM).toString()
-            mBinding.tvBuilder.text =intent.getStringExtra(Constants.GROUP_OWNER).toString()
-            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_MY_NAME).toString()
-//            mBinding.tvGroupId.text = it
-//            mBinding.tvName.text = "编译原理群"
-//            mBinding.tabGroupName.tvItemAuxiliaryText.text = "编译原理群"
-//            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text = "50人"
-//            mBinding.tvBuilder.text ="李老师"
-//            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = "20软卓副班长"
-        })
-    }
+//    private fun setGroupData() {
+//        mViewModel.groupInfoLiveData.observe(this, Observer {
+//            mBinding.tvGroupId.text = intent.getIntExtra(Constants.GROUP_ID,0).toString()
+//            mBinding.tvName.text =intent.getStringExtra(Constants.GROUP_NAME).toString()
+//            mBinding.tabGroupName.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_NAME).toString()
+//            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text =intent.getStringExtra(Constants.GROUP_NUM).toString()
+//            mBinding.tvBuilder.text =intent.getStringExtra(Constants.GROUP_OWNER).toString()
+//            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_MY_NAME).toString()
+////            mBinding.tvGroupId.text = it
+////            mBinding.tvName.text = "编译原理群"
+////            mBinding.tabGroupName.tvItemAuxiliaryText.text = "编译原理群"
+////            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text = "50人"
+////            mBinding.tvBuilder.text ="李老师"
+////            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = "20软卓副班长"
+//        })
+//    }
 
 }

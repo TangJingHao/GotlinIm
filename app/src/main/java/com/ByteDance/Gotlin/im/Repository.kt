@@ -33,6 +33,9 @@ object Repository {
 
     private const val MMKV_USER_ID = "userId"
     private const val MMKV_USER_MODE = "user_mode"
+    private const val MMKV_USER_NICKNAME = "user_nickName"
+    private const val MMKV_USER_AVATAR = "Avatar"
+    private const val MMKV_USER_NAME = "user_name"
 
     //模式
     fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
@@ -42,6 +45,18 @@ object Repository {
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
     fun deleteUserId() = mmkv.removeValueForKey(MMKV_USER_ID)
+
+    /**
+     * 获取当前用户nickName
+     */
+    fun getUsernickName() = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
+
+    /**
+     * 获取当前用户头像
+     */
+    fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, Constants.USER_DEFAULT_AVATAR)
+
+    fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
 
     /*
     * 数据库=========================================================================================

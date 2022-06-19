@@ -2,6 +2,7 @@ package com.ByteDance.Gotlin.im.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -12,9 +13,11 @@ import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
 import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
+import com.ByteDance.Gotlin.im.util.Constants;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow;
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow;
+import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener;
 import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.google.gson.Gson;
@@ -117,6 +120,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         b.btnPopConfirm.setOnClickListener(this);
         b.btnPopInput.setOnClickListener(this);
         b.btnPopSelect.setOnClickListener(this);
+        b.btnMain.setOnClickListener(this);
     }
 
     @Override
@@ -127,46 +131,41 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             inputPopupWindow.show();
         } else if (view.equals(b.btnPopSelect)) {
             singleSelectPopupWindow.show();
+        } else if (view.equals(b.btnMain)) {
+            startActivity(new Intent(this, MainActivity.class));
         }
-
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
     }
 
     private void initPopupWindow() {
+        PopupWindowListener popupWindowListener = new PopupWindowListener() {
+            @Override
+            public void onConfirm(String input) {
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "onConfirm:" +input);
+            }
+
+            @Override
+            public void onCancel() {
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "onCancel:取消");
+            }
+
+            @Override
+            public void onDismiss() {
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "onDismiss:关闭弹窗");
+            }
+        };
+
         // 新建弹窗
-        confirmPopupWindow = new ConfirmPopupWindow(this, "测试");
-        // 设置确认回调
-        confirmPopupWindow.setOnConfirmListener(() ->
-                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "点击确认"));
+        confirmPopupWindow = new ConfirmPopupWindow(this, "测试", popupWindowListener);
         // （可选）设置按钮文本
         confirmPopupWindow.setConfirmText("确认文本");
         confirmPopupWindow.setCancelText("取消测试文本");
         // （可选）设置警告类型颜色模式
         confirmPopupWindow.setWarnTextColorType();
 
-        inputPopupWindow = new InputPopupWindow(mContext, "输入弹窗测试");
-        inputPopupWindow.setOnConfirmListener(new InputPopupWindow.OnConfirmListener() {
-            @Override
-            public void onConfirm(String inputText) {
-                TPhoneUtil.INSTANCE.showToast(TestActivity.this, inputText);
-            }
-        });
+        inputPopupWindow = new InputPopupWindow(mContext, "输入弹窗测试", popupWindowListener);
 
-        singleSelectPopupWindow = new SingleSelectPopupWindow(mContext,
-                "单选弹窗测试", "选项一", "选项二");
-
-        singleSelectPopupWindow.setOnConfirmListener(new SingleSelectPopupWindow.OnConfirmListener() {
-            @Override
-            public void onConfirm(int index) {
-                TPhoneUtil.INSTANCE.showToast(mContext, "选择" + index);
-            }
-        });
+        singleSelectPopupWindow = new SingleSelectPopupWindow(mContext, "单选弹窗测试",
+                "选项一", "选项二", popupWindowListener);
     }
 
     /**
@@ -222,7 +221,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            WebSocket webSocket1 = webSocket;
             DLogUtils.i(TAG, "链接失败/发送失败");
         }
     }
