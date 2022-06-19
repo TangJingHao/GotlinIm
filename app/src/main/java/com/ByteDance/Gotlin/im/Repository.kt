@@ -120,7 +120,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = MyNetWork.getGroupMembersList(userId)
+        val groupMemberListDataResponse = MyNetWork.getGroupMemberList(userId)
         if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(groupMemberListDataResponse)
         } else {
@@ -197,15 +197,15 @@ object Repository {
         emit(myId)
     }
 
-    /**
-     * websocket使用
-     */
-    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
-        val request = Request.Builder()
-            .url(Constants.BASE_WS_URL + getUserId())
-            .build()
-        return MyNetWork.getWebSocketAndConnect(request, listener)
-    }
+//    /**
+//     * websocket使用
+//     */
+//    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
+//        val request = Request.Builder()
+//            .url(Constants.BASE_WS_URL + getUserId())
+//            .build()
+//        return MyNetWork.getWebSocketAndConnect(request, listener)
+//    }
 
     /**
      * 获取群聊信息

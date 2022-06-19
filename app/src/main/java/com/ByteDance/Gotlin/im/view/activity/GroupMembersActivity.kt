@@ -61,7 +61,7 @@ class GroupMembersActivity : AppCompatActivity() {
                 DLogUtils.i(TAG_GROUP_INFO, "群聊成员列表返回值为NULL")
                 TPhoneUtil.showToast(mContext, "群聊成员列表返回值为NULL")
             } else {
-                val groupMemberList = responseData.data.groupList
+                val groupMemberList = responseData.data.groupUserList
                 // TODO (字母顺序)排序
                 val dataList: ArrayList<List<UserVO>> = ArrayList()
                 dataList.add(groupMemberList)

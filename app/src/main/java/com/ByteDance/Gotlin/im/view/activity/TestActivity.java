@@ -102,7 +102,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
 //                connect();
                 EchoWebSocketListener listener = new EchoWebSocketListener();
-                webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
+//                webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
             }
         });
 

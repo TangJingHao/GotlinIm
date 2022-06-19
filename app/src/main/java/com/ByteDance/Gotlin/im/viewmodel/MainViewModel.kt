@@ -37,5 +37,5 @@ class MainViewModel : ViewModel() {
 
     fun getUserId() = Repository.getUserId()
 
-    fun getWebSocketAndConnect(listener: WebSocketListener) = Repository.getWebSocketAndConnect(listener)
+    //fun getWebSocketAndConnect(listener: WebSocketListener) = Repository.getWebSocketAndConnect(listener)
 }
