@@ -80,6 +80,7 @@ class LoginActivity : AppCompatActivity() {
                 if (responseData.msg == "登录成功") {
                     Repository.saveUserId(responseData.data.user.userId)
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    finish()
                 }
             }
         }

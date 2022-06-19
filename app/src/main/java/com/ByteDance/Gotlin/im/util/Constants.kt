@@ -19,7 +19,7 @@ object Constants {
     const val USER_DEFAULT_ID=-1
 
     //用户的状态设置
-    const val USER_DEFAULT_MODE=-1
+    const val USER_DEFAULT_MODE=2//默认状态则不做处理
     const val USER_DARK_MODE=1
     const val USER_LIGHT_MODE = 2
 

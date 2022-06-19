@@ -20,17 +20,11 @@ import com.xuexiang.xui.XUI
  * 直接改这里的文件，不用重复修改manifest
  */
 
-class BaseActivity:AppCompatActivity() {
+class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //判断用户是否登录过，后期可以写在闪屏页面
-        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
-            startActivity(Intent(this,MainActivity::class.java))
-            finish()
-        }else{
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 }

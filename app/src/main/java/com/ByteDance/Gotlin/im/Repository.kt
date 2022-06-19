@@ -34,22 +34,13 @@ object Repository {
     private const val MMKV_USER_ID = "userId"
     private const val MMKV_USER_MODE = "user_mode"
 
+    //模式
     fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
     fun saveUserStatus(userId: Int) = mmkv.encode(MMKV_USER_MODE, userId)
-
-    /**
-     * 添加/更新当前用户id
-     */
+    fun deleteUserStatus()= mmkv.removeValueForKey(MMKV_USER_MODE)
+    //用户id
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
-
-    /**
-     * 获取当前用户id
-     */
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
-
-    /**
-     * 删除当前用户id
-     */
     fun deleteUserId() = mmkv.removeValueForKey(MMKV_USER_ID)
 
     /*

@@ -33,14 +33,14 @@ class BaseApp : Application() {
         initTheme()
     }
 
+
+
     /**
      * 初始化主题
      */
     private fun initTheme() {
         val userStatus = Repository.getUserStatus()
-        if (userStatus == Constants.USER_LIGHT_MODE) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        } else if (userStatus == Constants.USER_DARK_MODE) {
+        if(userStatus == Constants.USER_DARK_MODE){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }

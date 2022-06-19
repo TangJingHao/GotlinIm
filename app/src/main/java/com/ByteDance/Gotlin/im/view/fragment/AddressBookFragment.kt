@@ -48,11 +48,9 @@ class AddressBookFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         initListener()
         initData()
         initView()
-
         return b.root
     }
 
@@ -75,8 +73,7 @@ class AddressBookFragment : Fragment() {
                     titleList,
                     TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
                 )
-
-
+                //子项点击事件
                 adapter.setItemOnClickListener { v, groupPosition, relativePosition ->
                     // TODO 跳转事件
                     TPhoneUtil.showToast(
@@ -103,10 +100,9 @@ class AddressBookFragment : Fragment() {
                 b.memberRv.adapter = adapter
                 if (sortFriendList.size != 0 && titleList.size != 0)
                     adapter.notifyDataSetChanged()
-
-
             }
         }
+        //功能区界面
         b.configSettingTv.setOnClickListener {
             if(b.configSettingTv.text=="关闭功能区"){
                 b.topRl.visibility=View.GONE
