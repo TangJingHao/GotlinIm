@@ -48,6 +48,8 @@
     <string name="title_info_friend">好友信息</string>
     <string name="title_info_group">群聊信息</string>
     <string name="title_info_friend_setting">设置备注和分组</string>
+    <string name="title_info_group_members">群聊成员</string>
+    <string name="title_info_group_invite">邀请新成员</string>
     <!--选项卡文本-->
     <string name="tab_text_care">特别关注</string>
     <string name="tab_text_care_not">未加好友不能设置特别关注</string>

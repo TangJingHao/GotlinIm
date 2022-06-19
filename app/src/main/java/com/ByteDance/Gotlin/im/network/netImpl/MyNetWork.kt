@@ -2,6 +2,7 @@ package com.ByteDance.Gotlin.im.network.netImpl
 
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netInterfaces.AddressBookService
+import com.ByteDance.Gotlin.im.network.netInterfaces.GroupService
 import com.ByteDance.Gotlin.im.network.netInterfaces.LoginService
 import com.ByteDance.Gotlin.im.network.netInterfaces.MsgService
 import okhttp3.Request
@@ -25,6 +26,7 @@ object MyNetWork {
     private val loginService = ServiceCreator.create<LoginService>()
     private val addressBookService = ServiceCreator.create<AddressBookService>()
     private val msgService = ServiceCreator.create<MsgService>()
+    private val groupService = ServiceCreator.create<GroupService>()
 
     suspend fun login(userName: String, userPass: String) =
         loginService.login(userName, userPass).await()
@@ -41,13 +43,16 @@ object MyNetWork {
     suspend fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) =
         msgService.getSessionHistoryList(userId, sessionId, page).await()
 
+    suspend fun getGroupMemberList(groupId: Int)=
+        groupService.getGroupMemberList(groupId).await()
 
-    // 测试用websocket方法
-    fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {
-        val webSocket = ServiceCreator.WebSocketClient.newWebSocket(request, listener)
-        ServiceCreator.WebSocketClient.dispatcher.executorService.shutdown()
-        return webSocket
-    }
+
+//    // 测试用websocket方法
+//    fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {
+//        val webSocket = ServiceCreator.WebSocketClient.newWebSocket(request, listener)
+//        ServiceCreator.WebSocketClient.dispatcher.executorService.shutdown()
+//        return webSocket
+//    }
 
     /**
      *  定义一个Call的扩展函数，Call的上下文是retrofit2,泛型T为interface内部定义好的方法

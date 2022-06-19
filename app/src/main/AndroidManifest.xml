@@ -63,6 +63,9 @@
             android:name=".view.activity.GroupInfoActivity"
             android:exported="false" />
         <activity
+            android:name=".view.activity.GroupMembersActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activity.FriendInfoActivity"
             android:exported="false" />
         <activity

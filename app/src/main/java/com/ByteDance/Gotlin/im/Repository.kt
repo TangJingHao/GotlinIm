@@ -117,6 +117,30 @@ object Repository {
     }
 
     /**
+     * 获取群聊成员列表
+     */
+    fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
+        val groupMemberListDataResponse = MyNetWork.getGroupMemberList(userId)
+        if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(groupMemberListDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${groupMemberListDataResponse.status}"))
+        }
+    }
+
+    /**
+     * 获取邀请的群聊成员列表
+     */
+    fun getGroupInviteList(userId: Int) = fire(Dispatchers.IO) {
+        val friendListDataResponse = MyNetWork.getFriendList(userId)
+        if (friendListDataResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(friendListDataResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${friendListDataResponse.status}"))
+        }
+    }
+
+    /**
      * 获取好友列表
      */
     fun getFriendList(userId: Int) = fire(Dispatchers.IO) {
@@ -185,15 +209,15 @@ object Repository {
         emit(myId)
     }
 
-    /**
-     * websocket使用
-     */
-    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
-        val request = Request.Builder()
-            .url(Constants.BASE_WS_URL + getUserId())
-            .build()
-        return MyNetWork.getWebSocketAndConnect(request, listener)
-    }
+//    /**
+//     * websocket使用
+//     */
+//    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
+//        val request = Request.Builder()
+//            .url(Constants.BASE_WS_URL + getUserId())
+//            .build()
+//        return MyNetWork.getWebSocketAndConnect(request, listener)
+//    }
 
     /**
      * 获取群聊信息
