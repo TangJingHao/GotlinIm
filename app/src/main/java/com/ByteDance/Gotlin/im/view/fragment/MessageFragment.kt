@@ -75,7 +75,12 @@ class MessageFragment : Fragment() {
                 adapter.setItemOnClickListener { v, position ->
                     TPhoneUtil.showToast(requireActivity(), "item = " + position)
                     // TODO 跳转到聊天界面
-                    val SessionName: String = messageList.get(position).session.name
+                    val session = messageList.get(position).session
+                    val type = session.type
+                    val sessionType: String;
+                    if (type == 1) sessionType = "[群聊] "
+                    else  sessionType = "[好友] "
+                    val SessionName: String = sessionType +  session.name
                     val SessionId: Int = messageList.get(position).session.sessionId
                     startChat(context, SessionId, SessionName);
                 }
@@ -106,8 +111,8 @@ class MessageFragment : Fragment() {
 
         // 回调,展示消息
         override fun onMessage(webSocket: WebSocket, text: String) {
-//            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
-//            DLogUtils.i(TAG, "回调$text")
+            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
+            DLogUtils.i(TAG, "回调$text")
         }
 
         // 回调

@@ -47,7 +47,7 @@ object MyNetWork {
         groupService.getGroupMemberList(groupId).await()
 
 
-    // 测试用websocket方法
+    // 获取websocket并链接
     fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {
         val webSocket = ServiceCreator.WebSocketClient.newWebSocket(request, listener)
         ServiceCreator.WebSocketClient.dispatcher().executorService().shutdown()

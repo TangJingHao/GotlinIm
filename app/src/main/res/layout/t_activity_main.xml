@@ -18,11 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="0dp"
-        android:background="?attr/bg_weak"
+        android:background="?attr/bg_default"
         app:labelVisibilityMode="labeled"
         android:theme="@style/navigation_button_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vp2_main"
-        app:itemIconSize="30dp"
+        android:paddingHorizontal="@dimen/im_common_horizontal"
+        app:itemIconSize="@dimen/im_icon_large"
         app:menu="@menu/main_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

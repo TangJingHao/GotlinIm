@@ -2,6 +2,8 @@ package com.ByteDance.Gotlin.im.viewmodel;
 
 import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
 
+import android.os.Message;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
+import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.info.HistoryListBean;
 import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse;
 import com.ByteDance.Gotlin.im.info.WSreceiveContent;
@@ -20,6 +23,7 @@ import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.network.netImpl.MyNetWork;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.view.activity.ChatActivity;
 import com.google.gson.Gson;
 
 import java.util.Collections;
@@ -53,9 +57,10 @@ public class ChatViewModel extends ViewModel {
     ChatViewModel(int sessionId) {
         this.sessionId = sessionId;
         SocketListener listener = new SocketListener();
-//        //初始化webSocket
+//        初始化webSocket
         webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
         LinkedList<MessageVO> list = new LinkedList<>();
+
         adapter = new ChatListAdapter(list);
         messages = new MutableLiveData<>();
     }
@@ -136,11 +141,14 @@ public class ChatViewModel extends ViewModel {
         //打包发送消息
         Gson gson = new Gson();
         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                SEND_MESSAGE, new WSsendContent(sessionId,
-                re.getUserId(), 0, msg));
-        webSocket.send(gson.toJson(sendChatMsg));
-        MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
-        addMsg(messageVOS, LIST_BOTTOM);
+                SEND_MESSAGE, new WSsendContent(sessionId, re.getUserId(), 0, msg));
+
+        boolean send = webSocket.send(gson.toJson(sendChatMsg));
+        if (send) { // 发送成功
+            MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
+            addMsg(messageVOS, LIST_BOTTOM);
+        }
+
     }
 
     /**
@@ -194,18 +202,19 @@ public class ChatViewModel extends ViewModel {
 
         @Override
         public void onOpen(WebSocket webSocket, @NonNull Response response) {
-            WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                    SEND_MESSAGE, new WSsendContent(sessionId, re.getUserId(),
-                    0, "开始聊天吧"));
-            webSocket.send(gson.toJson(sendChatMsg));
+            DLogUtils.i(TAG + Thread.currentThread(), "连接成功");
+//            DLogUtils.i(TAG + Thread.currentThread(), "连接消息测试");
+//            WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
+//                    SEND_MESSAGE, new WSsendContent(sessionId, re.getUserId(), 0, "6/19晚测试"));
+
         }
 
         // 回调,展示消息
         @Override
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
-            WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
             DLogUtils.i(TAG, "回调" + text);
-            received(msg);
+//            WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
+//            received(msg);
         }
 
         // 回调

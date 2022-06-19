@@ -1,11 +1,13 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
 import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,25 +25,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
-import com.ByteDance.Gotlin.im.info.WSsendContent;
-import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
-import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
-import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
-import com.google.gson.Gson;
 
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okio.ByteString;
 
 /**
  * @author: Hx
@@ -51,15 +44,17 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatActivity";
     private static int sessionId;
-    private HActivityChatBinding view;
+    private HActivityChatBinding viewBinding;
     private DIncludeMyToolbarBinding toolbar;
     private EditText input;
     private TextView send;
-    private ChatViewModel model;
+    private ChatViewModel viewModel;
     private ImageButton back;
-    private RecyclerView chatList;
+    private RecyclerView rvChatList;
     private SwipeRefreshLayout refresh;
     private String sessionName;
+
+    private MyHandler myHandler;
 
     public static void startChat(Context context, int sessionId, String sessionName) {
         Intent intent = new Intent(context, ChatActivity.class);
@@ -75,10 +70,15 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        view = HActivityChatBinding.inflate(getLayoutInflater());
-        setContentView(view.getRoot());
+        viewBinding = HActivityChatBinding.inflate(getLayoutInflater());
+        setContentView(viewBinding.getRoot());
+
         sessionId = getIntent().getIntExtra("sessionId", 0);
         sessionName = getIntent().getStringExtra("sessionName");
+
+        if (myHandler == null) {
+            myHandler = new MyHandler(ChatActivity.this);
+        }
 
         bind();
         func();
@@ -86,32 +86,24 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /**
-     * 初始化ui数据
-     */
-    private void initUi() {
-        toolbar.title.setText(sessionName);
-        model.refresh();
-        
-    }
-
-    /**
      * 绑定ui
      */
     private void bind() {
-        toolbar = view.toolbar;
+        toolbar = viewBinding.toolbar;
         toolbar.imgMore.setVisibility(View.VISIBLE);
-        input = view.input;
-        send = view.send;
+        input = viewBinding.input;
+        send = viewBinding.send;
         back = toolbar.imgChevronLeft;
-        chatList = view.chatList;
-        refresh = view.refresh;
-        model = new ViewModelProvider(this, new ChatViewModelFactory()).get(ChatViewModel.class);
+        rvChatList = viewBinding.chatList;
+        refresh = viewBinding.refresh;
+        viewModel = new ViewModelProvider(this, new ChatViewModelFactory()).get(ChatViewModel.class);
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(RecyclerView.VERTICAL);
         manager.setSmoothScrollbarEnabled(true);
-        chatList.setLayoutManager(manager);
-        chatList.setAdapter(model.getAdapter());
+
+        rvChatList.setLayoutManager(manager);
+        rvChatList.setAdapter(viewModel.getAdapter());
     }
 
     /**
@@ -119,14 +111,14 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void func() {
         //消息更新监听
-        model.updateMsgList().observe(this, messages -> {
+        viewModel.updateMsgList().observe(this, messages -> {
 
-            LinkedList<MessageVO> old = model.getAdapter().getData();
-            model.getAdapter().setList(messages);
+            LinkedList<MessageVO> old = viewModel.getAdapter().getData();
+            viewModel.getAdapter().setList(messages);
             //刷新消息列表
             DiffUtil.DiffResult diffResult
                     = DiffUtil.calculateDiff(new DifferCallback(old, messages));
-            diffResult.dispatchUpdatesTo(model.getAdapter());
+            diffResult.dispatchUpdatesTo(viewModel.getAdapter());
 
             if (refresh.isRefreshing())
                 refresh.setRefreshing(false);
@@ -161,9 +153,17 @@ public class ChatActivity extends AppCompatActivity {
 
         //刷新
         refresh.setOnRefreshListener(() -> {
-            model.refresh();
+            viewModel.refresh();
             refresh.setRefreshing(false);
         });
+    }
+
+    /**
+     * 初始化ui数据
+     */
+    private void initUi() {
+        toolbar.title.setText(sessionName);
+        viewModel.refresh();
     }
 
     /**
@@ -181,7 +181,7 @@ public class ChatActivity extends AppCompatActivity {
      * 发送消息
      */
     private void send() {
-        model.send(input.getText().toString());
+        viewModel.send(input.getText().toString());
         //清理输入框
         input.clearFocus();
         input.setText("");
@@ -198,6 +198,27 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    public static class MyHandler extends Handler {
+        private final WeakReference<ChatActivity> content;
+
+        public MyHandler(ChatActivity activity) {
+            super(Looper.getMainLooper());
+            this.content = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            ChatActivity chatActivity = content.get();
+            if (chatActivity != null) {
+                switch (msg.what) {
+                    // 主线程更新UI
+
+                }
+            }
+        }
     }
 }
 

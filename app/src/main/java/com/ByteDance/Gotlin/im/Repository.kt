@@ -222,7 +222,9 @@ object Repository {
         val request = Request.Builder()
             .url(Constants.BASE_WS_URL + getUserId())
             .build()
-        return MyNetWork.getWebSocketAndConnect(request, listener)
+
+        val webSocket = MyNetWork.getWebSocketAndConnect(request, listener)
+        return webSocket
     }
 
     /**

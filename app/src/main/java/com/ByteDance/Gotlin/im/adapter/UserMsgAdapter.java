@@ -11,9 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.R;
+import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.info.MessageList;
+import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.info.vo.TestUser;
+import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.util.DUtils.RedPointHelper;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.bumptech.glide.Glide;
@@ -38,7 +41,7 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
 
     RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
     RequestOptions options = new RequestOptions()
-            .transforms(new CenterCrop(),roundedCorners)
+            .transforms(new CenterCrop(), roundedCorners)
             .diskCacheStrategy(DiskCacheStrategy.NONE)//不做磁盘缓存
             .skipMemoryCache(true);//不做内存缓存
 
@@ -71,16 +74,30 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
 
     @Override
     public void onBindViewHolder(@NonNull UserMsgHolder holder, int position) {
-        Integer sessionId = mDataList.get(position).getSession().getSessionId();
-        String SessionName = mDataList.get(position).getSession().getName();
-        String senderNickName = mDataList.get(position).getSender().getNickName();
-        String senderAvatar = mDataList.get(position).getSender().getAvatar();
+        SessionVO session = mDataList.get(position).getSession();
+        UserVO sender = mDataList.get(position).getSender();
+        String content = mDataList.get(position).getContent();
+
+        String type = session.getType() == 1 ? "群聊会话" : "好友会话";
+
+        Integer sessionId = session.getSessionId();
+        String SessionName = session.getName();
+        String sessionAvatar = session.getAvatar();
+        String senderNickName = sender.getNickName();
+
+
+        if (sender.getUserId() == Repository.INSTANCE.getUserId()) {
+            senderNickName = "我";
+        }
+
         Glide.with(mContext)
-                .load(senderAvatar == null ? DEFAULT_IMG : BASE_URL + senderAvatar)
+                .load(sessionAvatar == null ? DEFAULT_IMG : BASE_URL + sessionAvatar)
                 .apply(options)
                 .into(holder.b.imgUserPic);
-        holder.b.tvUserName.setText(SessionName + sessionId);
-        holder.b.tvUserMsg.setText(senderNickName + ": " + mDataList.get(position).getContent());
+
+        holder.b.tvUserName.setText("[" + type + sessionId + "] " + SessionName);
+        holder.b.tvUserMsg.setText(senderNickName + ": " + content);
+
         holder.b.tvTime.setText(mDataList.get(position).getSendTime());
         int i = position;
         if (mItemOnClickListener != null)
