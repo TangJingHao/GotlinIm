@@ -11,7 +11,7 @@
         android:id="@+id/img"
         android:layout_width="@dimen/im_icon_huge"
         android:layout_height="@dimen/im_icon_huge"
-        android:background="@drawable/d_img_useravatar1"
+        android:background="@drawable/ic_img_default"
         android:scaleType="centerCrop" />
 
 </androidx.cardview.widget.CardView>

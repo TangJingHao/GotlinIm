@@ -46,7 +46,7 @@
         android:layout_marginEnd="@dimen/im_spacing_medium"
         android:layout_marginBottom="@dimen/im_spacing_medium"
         android:scaleType="centerCrop"
-        android:src="@drawable/d_img_useravatar1" />
+        android:src="@drawable/ic_img_default" />
 
     <TextView
         android:id="@+id/tv_statue"

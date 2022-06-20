@@ -1,6 +1,11 @@
 package com.ByteDance.Gotlin.im
 
 import androidx.lifecycle.liveData
+import com.ByteDance.Gotlin.im.application.BaseApp
+import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
+import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionEntity
+import com.ByteDance.Gotlin.im.entity.UserEntity
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
@@ -11,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import java.sql.Date
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -69,22 +75,52 @@ object Repository {
     * 数据库=========================================================================================
     */
 
-    // 数据库名
-    private const val DB_NAME = "im_chat_db"
-
     // room数据库，其中im_chat_db为数据库名
-//    private val db = Room.databaseBuilder(
-//        BaseApp.getContext(),
-//        SQLDatabase::class.java, DB_NAME
-//    ).build()
+    private val db = SQLDatabase.getDatabase(BaseApp.getContext())
+
+    // 会话数据表
+    fun queryAllSessions() = db.sessionDao().queryAllSession()
+    fun querySessionById(sessionId: Int) = db.sessionDao().querySessionById(sessionId)
+    fun insertSession(session: SessionEntity) = db.sessionDao().insertSession(session)
+    fun updateSession(session: SessionEntity) = db.sessionDao().updateSession(session)
+    fun deleteSession(session: SessionEntity) = db.sessionDao().deleteSession(session)
+
+    // 用户数据表
+    fun queryAllUsers() = db.userDao().queryAllUsers()
+    fun queryUserById(userId: Int) = db.userDao().queryUserById(userId)
+    fun insertUser(user: UserEntity) = db.userDao().insertUser(user)
+    fun upDataUser(user: UserEntity) = db.userDao().upDataUser(user)
+    fun deleteUser(user: UserEntity) = db.userDao().deleteUser(user)
+
+    // 消息数据表
+    fun queryAllMessages() = db.messageDao().queryAllMessages()
 
     /**
-     * 演示用，请勿运行
+     * 根据会话id，发送者id查找
      */
-//    fun getBooks() = {
-//        db.book().qeuryAll()
-//    }
+    fun queryMsgBySidAndUid(sid: Int, uid: Int) = db.messageDao().queryMsgBySidAndUid(sid, uid)
 
+    /**
+     * 根据会话id，发送者id以及时间范围查找
+     */
+    fun queryMsgByTime(sid: Int, uid: Int, from: Date, to: Date) =
+        db.messageDao().queryMsgByTime(sid, uid, from, to)
+
+    /**
+     * 根据会话id，发送者id以及消息模糊查找
+     */
+    fun queryMsgByContext(sid: Int, uid: Int, content: String) =
+        db.messageDao().queryMsgByContext(sid, uid, content)
+
+    /**
+     * 根据会话id，发送者id,时间范围以及消息模糊查找
+     */
+    fun queryMsgByContext(sid: Int, uid: Int, from: Date, to: Date, content: String) =
+        db.messageDao().queryMessage(sid, uid, from, to, content)
+
+    fun insertMessage(msg: MessageEntity) = db.messageDao().insertMessage(msg)
+    fun upDataMessage(msg: MessageEntity) = db.messageDao().upDataMessage(msg)
+    fun deleteMessage(msg: MessageEntity) = db.messageDao().deleteMessage(msg)
 
     /*
     * 网络请求=======================================================================================
@@ -247,4 +283,5 @@ object Repository {
             //发射包装结果
             emit(result)
         }
+
 }

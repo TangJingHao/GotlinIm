@@ -87,7 +87,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     // 当前状态（只能是1/2/3）
     public int mTabType;
 
-    private static int DEFAULT_IMG = R.drawable.d_img_useravatar1;
+    private static int DEFAULT_IMG = R.drawable.ic_img_default;
 
     RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
     RequestOptions options = new RequestOptions()

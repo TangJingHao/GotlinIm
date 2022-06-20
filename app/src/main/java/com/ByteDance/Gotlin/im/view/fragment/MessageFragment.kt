@@ -149,7 +149,7 @@ class MessageFragment : Fragment() {
 
         // 回调
         override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-//            DLogUtils.i(TAG, "回调$bytes")
+            DLogUtils.i(TAG, "回调$bytes")
         }
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {

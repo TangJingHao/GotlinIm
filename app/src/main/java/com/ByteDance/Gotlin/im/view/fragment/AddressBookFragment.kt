@@ -202,7 +202,7 @@ class AddressBookFragment : Fragment() {
         }
         b.sideBar.apply {
             setScaleSize(1)
-            setScaleItemCount(2)
+            setScaleItemCount(8)
             setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
                 override fun onSelectStr(index: Int, selectStr: String) {
                     manager.scrollToPositionWithOffset(mAdapter.getmTitleIndexList().get(index), 0)

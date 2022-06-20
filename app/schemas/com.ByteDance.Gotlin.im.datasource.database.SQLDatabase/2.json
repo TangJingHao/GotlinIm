@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "70922275dabf1f0391853cd28c8e56fc",
+    "version": 2,
+    "identityHash": "234a27f75fb60b7e9f89c2cbce5c8d39",
     "entities": [
       {
         "tableName": "UserTable",
@@ -118,17 +118,23 @@
       },
       {
         "tableName": "MessageTable",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` INTEGER NOT NULL, `senderId` INTEGER NOT NULL, `msg_type` INTEGER NOT NULL, `content` TEXT NOT NULL, `sendTime` INTEGER NOT NULL, `self` INTEGER NOT NULL, PRIMARY KEY(`sessionId`, `senderId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`messageId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `session` INTEGER NOT NULL, `sender` INTEGER NOT NULL, `msg_type` INTEGER NOT NULL, `content` TEXT NOT NULL, `sendTime` TEXT NOT NULL, `self` INTEGER NOT NULL)",
         "fields": [
           {
-            "fieldPath": "sessionId",
-            "columnName": "sessionId",
+            "fieldPath": "messageId",
+            "columnName": "messageId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "senderId",
-            "columnName": "senderId",
+            "fieldPath": "session",
+            "columnName": "session",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sender",
+            "columnName": "sender",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -147,7 +153,7 @@
           {
             "fieldPath": "sendTime",
             "columnName": "sendTime",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -159,10 +165,9 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "sessionId",
-            "senderId"
+            "messageId"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -171,7 +176,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '70922275dabf1f0391853cd28c8e56fc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '234a27f75fb60b7e9f89c2cbce5c8d39')"
     ]
   }
 }

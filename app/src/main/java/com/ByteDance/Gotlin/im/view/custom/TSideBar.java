@@ -160,7 +160,6 @@ public class TSideBar extends AppCompatTextView {
 
     private void DrawView(float y) {
         int currentSelectIndex = -1;
-        DLogUtils.i("侧边栏", "y=" + y);
         if (y != 0) {
             for (int i = 0; i < letters.length; i++) { // 遍历标题
                 float currentItemY = itemH * i;

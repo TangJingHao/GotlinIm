@@ -48,10 +48,10 @@ public class UserMsgBGAAdapter extends BGARecyclerViewAdapter<MessageList> {
     RoundedCorners roundedCorners = new RoundedCorners(8);// 数字为圆角度数
     RequestOptions options = new RequestOptions()
             .transforms(new CenterCrop(), roundedCorners)
-            .diskCacheStrategy(DiskCacheStrategy.NONE);// 不做磁盘缓存
-//            .skipMemoryCache(true);// 不做内存缓存
+            .diskCacheStrategy(DiskCacheStrategy.NONE)// 不做磁盘缓存
+            .skipMemoryCache(true);// 不做内存缓存
 
-    private static int DEFAULT_IMG = R.drawable.d_img_useravatar1;
+    private static int DEFAULT_IMG = R.drawable.ic_img_default;
 
     @Override
     protected void fillData(BGAViewHolderHelper helper, int position, MessageList model) {
@@ -67,7 +67,7 @@ public class UserMsgBGAAdapter extends BGARecyclerViewAdapter<MessageList> {
         String senderNickName = sender.getNickName();
         int badgeNum = session.getBadgeNum();
 
-        if (sender.getUserId() == Repository.INSTANCE.getUserId()) {
+        if (model.getSelf()) {
             senderNickName = "我";
         }
 

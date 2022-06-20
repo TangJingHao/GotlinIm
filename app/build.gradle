@@ -120,6 +120,9 @@ dependencies {
     // room
     def room_version = "2.2.0-rc01"
 
+    // 内存泄漏检测
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0'
+
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 //    annotationProcessor "androidx.room:room-compiler:$room_version"
