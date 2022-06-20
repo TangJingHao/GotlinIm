@@ -15,10 +15,8 @@ import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.info.MessageList;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
-import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.util.DUtils.RedPointHelper;
-import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -32,8 +30,9 @@ import java.util.List;
  * @Author Zhicong Deng
  * @Date 2022/6/14 15:34
  * @Email 1520483847@qq.com
- * @Description 消息列表界面适配器
+ * @Description 消息列表界面适配器(已废弃)
  */
+@Deprecated
 public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgHolder> {
 
     private final Context mContext;
@@ -93,15 +92,15 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
         Glide.with(mContext)
                 .load(sessionAvatar == null ? DEFAULT_IMG : BASE_URL + sessionAvatar)
                 .apply(options)
-                .into(holder.b.imgUserPic);
+                .into(holder.b.bgaImgUserPic);
 
-        holder.b.tvUserName.setText("[" + type + sessionId + "] " + SessionName);
-        holder.b.tvUserMsg.setText(senderNickName + ": " + content);
+        holder.b.bgaTvSessionName.setText("[" + type + sessionId + "] " + SessionName);
+        holder.b.bgaTvUserMsg.setText(senderNickName + ": " + content);
 
-        holder.b.tvTime.setText(mDataList.get(position).getSendTime());
+        holder.b.bgaTvTime.setText(mDataList.get(position).getSendTime());
         int i = position;
         if (mItemOnClickListener != null)
-            holder.b.rLayout.setOnClickListener(new View.OnClickListener() {
+            holder.b.bgaRLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mItemOnClickListener.onItemClick(view, i);
@@ -124,6 +123,5 @@ public class UserMsgAdapter extends RecyclerView.Adapter<UserMsgAdapter.UserMsgH
             this.redPoint = redPoint;
         }
     }
-
 
 }

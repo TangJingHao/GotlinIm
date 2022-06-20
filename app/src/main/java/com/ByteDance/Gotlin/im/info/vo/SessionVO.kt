@@ -29,5 +29,7 @@ data class SessionVO(
     val online: Int,
 
     /** 当前用户在该会话内的未读消息数  */
-    val badgeNum: Int
-):Serializable
+    val badgeNum: Int,
+
+
+) : Serializable

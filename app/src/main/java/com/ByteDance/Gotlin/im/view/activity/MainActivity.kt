@@ -24,29 +24,32 @@ import com.xuexiang.xui.XUI
  * @Description
  */
 
-class MainActivity:AppCompatActivity() {
-    private lateinit var mBinding:TActivityMainBinding
+class MainActivity : AppCompatActivity() {
+    private lateinit var mBinding: TActivityMainBinding
+
     //项目Fragment集合
     private val mFragments = mapOf<Int, Fragment>(
         INDEX_MESSAGE to MessageFragment(),
         INDEX_ADDRESS_BOOK to AddressBookFragment(),
         INDEX_MY_INFORMATION to MyInformationFragment(),
     )
-    companion object{
+
+    companion object {
         const val INDEX_MESSAGE = 0
         const val INDEX_ADDRESS_BOOK = 1
         const val INDEX_MY_INFORMATION = 2
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding=TActivityMainBinding.inflate(layoutInflater)
+        mBinding = TActivityMainBinding.inflate(layoutInflater)
         initConfig()
         initView()
         setContentView(mBinding.root)
         mBinding.apply {
             vp2Main.adapter = MainViewPagerAdapter(this@MainActivity, mFragments)
-            MainBnvVp2Mediator(bnvMain,vp2Main){ bnv, vp2 ->
-                bnv.itemIconTintList=null
+            MainBnvVp2Mediator(bnvMain, vp2Main) { bnv, vp2 ->
+                bnv.itemIconTintList = null
                 vp2.isUserInputEnabled = true//设置是否响应用户滑动
             }.attach()
         }

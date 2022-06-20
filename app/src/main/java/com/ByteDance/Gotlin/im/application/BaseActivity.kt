@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.DUtils.BGABadgeInit
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.*
@@ -25,7 +26,6 @@ class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //判断用户是否登录过，后期可以写在闪屏页面
-        Repository.saveUserId(1)
 
         startActivity(Intent(this,MainActivity::class.java))
         finish()

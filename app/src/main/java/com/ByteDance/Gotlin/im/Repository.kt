@@ -36,8 +36,8 @@ object Repository {
     private const val MMKV_USER_NICKNAME = "user_nickName"
     private const val MMKV_USER_AVATAR = "Avatar"
     private const val MMKV_USER_NAME = "user_name"
-    private const val MMKV_USER_SEX = "user_name"
-    private const val MMKV_USER_EMAIL = "user_name"
+    private const val MMKV_USER_SEX = "user_sex"
+    private const val MMKV_USER_EMAIL = "user_email"
 
     //模式
     fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)

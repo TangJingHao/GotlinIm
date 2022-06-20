@@ -7,16 +7,15 @@
 
     <include
         android:id="@+id/toolbar_rl"
-        layout="@layout/d_include_my_toolbar"/>
+        layout="@layout/d_include_my_toolbar" />
 
     <RelativeLayout
         android:id="@+id/top_slice_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar_rl"
-        android:layout_marginLeft="@dimen/im_common_horizontal"
-        android:layout_marginTop="@dimen/im_common_horizontal"
-        android:layout_marginRight="@dimen/im_common_horizontal"
+        android:layout_marginHorizontal="@dimen/im_common_horizontal"
+        android:layout_marginTop="@dimen/im_spacing_large"
         android:background="@drawable/t_view_slice_bg"
         android:paddingHorizontal="@dimen/im_spacing_large"
         android:paddingVertical="@dimen/im_spacing_large">
@@ -26,13 +25,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
-            android:src="@mipmap/default_icon"
-            app:riv_border_color="@color/xui_config_color_gray_6"
-            app:riv_border_width="10px"
-            app:riv_is_circle="true"
-            app:riv_selected_border_color="@color/xui_config_color_gray_4"
-            app:riv_selected_border_width="1px"
-            app:riv_selected_mask_color="@color/xui_config_color_gray_8" />
+            android:src="@mipmap/default_icon" />
 
         <LinearLayout
             android:id="@+id/info_ll"
@@ -84,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/top_slice_rl"
         android:layout_marginLeft="@dimen/im_common_horizontal"
-        android:layout_marginTop="@dimen/im_common_horizontal"
+        android:layout_marginTop="@dimen/im_spacing_medium"
         android:layout_marginRight="@dimen/im_common_horizontal"
         android:background="@drawable/t_view_slice_bg"
         android:paddingHorizontal="@dimen/im_spacing_large"
@@ -144,6 +137,7 @@
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/ic_24_chevron_right" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/online_status_config_rl"
                 android:layout_width="match_parent"
@@ -173,7 +167,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/mid_slice_rl"
         android:layout_marginLeft="@dimen/im_common_horizontal"
-        android:layout_marginTop="@dimen/im_common_horizontal"
+        android:layout_marginTop="@dimen/im_spacing_medium"
         android:layout_marginRight="@dimen/im_common_horizontal"
         android:background="@drawable/t_view_slice_bg"
         android:paddingHorizontal="@dimen/im_spacing_large"

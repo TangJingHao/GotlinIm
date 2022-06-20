@@ -8,10 +8,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ByteDance.Gotlin.im.adapter.UserMsgAdapter
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import cn.bingoogolapple.badgeview.BGABadgeView
+import cn.bingoogolapple.badgeview.BGABadgeable
+import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.adapter.RedPointListener
+import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
@@ -72,24 +78,31 @@ class MessageFragment : Fragment() {
                 TPhoneUtil.showToast(BaseApp.getContext(), "我的消息列表返回值为NULL")
             } else {
                 val messageList = responseData.data.messageList
-                val adapter = UserMsgAdapter(requireActivity(), messageList)
-                adapter.setItemOnClickListener { v, position ->
-                    TPhoneUtil.showToast(requireActivity(), "item = " + position)
-                    // TODO 跳转到聊天界面
-//                    val session = messageList.get(position).session
-//                    val type = session.type
-//                    val sessionType: String;
-//                    if (type == 1) sessionType = "[群聊] "
-//                    else sessionType = "[好友] "
-//                    val SessionName: String = sessionType + session.name
-//                    val SessionId: Int = messageList.get(position).session.sessionId
-//                    startChat(context, SessionId, SessionName);
-                    //跳转到聊天界面
-                    val session: SessionVO = messageList.get(position).session
-                    startChat(context, session);
-                }
                 b.rvLayout.layoutManager = LinearLayoutManager(activity)
+                val adapter = UserMsgBGAAdapter(b.rvLayout)
+                val redPointListener: RedPointListener = object : RedPointListener {
+                    override fun onDragDismiss(badgeable: BGABadgeable, position: Int) {
+                        TPhoneUtil.showToast(BaseApp.getContext(), "item " + position + "的徽章消失")
+                    }
+
+                    override fun onClick(view: View, position: Int, badge: BGABadgeView) {
+//                    //跳转到聊天界面
+                        val session: SessionVO = messageList.get(position).session
+                        badge.hiddenBadge()
+//                        TPhoneUtil.showToast(BaseApp.getContext(), "点击了" + session.name)
+                        startChat(context, session)
+                    }
+                }
+
+                adapter.apply {
+                    setOnRVItemClickListener { parent, itemView, position ->
+
+                    }
+                    setRedPonitInterface(redPointListener)
+                }
                 b.rvLayout.adapter = adapter
+                adapter.data = messageList
+
                 if (messageList.size != 0)
                     adapter.notifyDataSetChanged()
             }
@@ -99,18 +112,33 @@ class MessageFragment : Fragment() {
     private fun initView() {
         b.myToolbar.imgChevronLeft.visibility = View.GONE;
         b.myToolbar.title.text = "消息列表"
+        b.refreshLayout.apply {
+            setColorSchemeColors(
+                AttrColorUtils
+                    .getValueOfColorAttr(activity, R.attr.accent_default)
+            )
+            setProgressBackgroundColorSchemeColor(
+                AttrColorUtils
+                    .getValueOfColorAttr(activity, R.attr.bg_weak)
+            )
+            setOnRefreshListener(OnRefreshListener {
+                initData()
+                b.refreshLayout.isRefreshing = false
+            })
+        }
     }
 
     private fun initData() {
-//        vm.getSessionList() // 第一次刷新，为了初始化页面
-        val listener = EchoWebSocketListener()
-        webSocket = vm.getWebSocketAndConnect(listener)
+        if(webSocket == null){
+            webSocket = vm.getWebSocketAndConnect(EchoWebSocketListener())
+        }
+        vm.getSessionList()
     }
 
     inner class EchoWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             DLogUtils.i(TAG, "链接开启")
-            runOnUiThread(Runnable { vm.getSessionList() }) // 加载数据
+            runOnUiThread(Runnable { initData() }) // 加载数据
         }
 
         // 回调,展示消息

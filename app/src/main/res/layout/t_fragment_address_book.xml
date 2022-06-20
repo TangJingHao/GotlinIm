@@ -8,11 +8,20 @@
         android:id="@+id/toolbar_rl"
         layout="@layout/d_include_my_toolbar"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/member_rv"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_rl" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar_rl">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/member_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
     <com.ByteDance.Gotlin.im.view.custom.TSideBar
         android:id="@+id/side_bar"

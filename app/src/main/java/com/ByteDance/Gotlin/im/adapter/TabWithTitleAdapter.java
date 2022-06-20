@@ -91,7 +91,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
 
     RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
     RequestOptions options = new RequestOptions()
-            .transforms(new CenterCrop(),roundedCorners)
+            .transforms(new CenterCrop(), roundedCorners)
             .diskCacheStrategy(DiskCacheStrategy.NONE)//不做磁盘缓存
             .skipMemoryCache(true);//不做内存缓存
 
@@ -235,13 +235,17 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         if (group == GROUP_TITLE) { // 是标题类型，此时relativePosition表示第几组
             TitleViewHolder titleHolder = (TitleViewHolder) holder;
             if (relativePosition < mTitleList.size()) {
-                titleHolder.b.tvListTitle.setText(mTitleList.get(relativePosition));
+                String title = mTitleList.get(relativePosition);
+                if (title == "-") {
+                    titleHolder.b.tvListTitle.setText("功能区");
+                    titleHolder.b.fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.bg_default));
+                } else
+                    titleHolder.b.tvListTitle.setText(mTitleList.get(relativePosition));
             } else {
                 titleHolder.b.tvListTitle.setText("未知分组");
             }
         } else {
             E data = mDataInfoList.get(group).get(relativePosition);
-
             // TODO 泛型适配不同的User类，需要修改的靓仔请找到自己的case修改
             switch (mTabType) {
                 case TYPE_USER_INFO_STATUE: {
