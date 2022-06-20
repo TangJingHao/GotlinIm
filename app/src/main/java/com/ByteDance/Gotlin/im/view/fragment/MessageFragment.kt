@@ -75,21 +75,18 @@ class MessageFragment : Fragment() {
                 val adapter = UserMsgAdapter(requireActivity(), messageList)
                 adapter.setItemOnClickListener { v, position ->
                     TPhoneUtil.showToast(requireActivity(), "item = " + position)
-<<<<<<< HEAD
                     // TODO 跳转到聊天界面
-                    val session = messageList.get(position).session
-                    val type = session.type
-                    val sessionType: String;
-                    if (type == 1) sessionType = "[群聊] "
-                    else  sessionType = "[好友] "
-                    val SessionName: String = sessionType +  session.name
-                    val SessionId: Int = messageList.get(position).session.sessionId
-                    startChat(context, SessionId, SessionName);
-=======
+//                    val session = messageList.get(position).session
+//                    val type = session.type
+//                    val sessionType: String;
+//                    if (type == 1) sessionType = "[群聊] "
+//                    else sessionType = "[好友] "
+//                    val SessionName: String = sessionType + session.name
+//                    val SessionId: Int = messageList.get(position).session.sessionId
+//                    startChat(context, SessionId, SessionName);
                     //跳转到聊天界面
                     val session: SessionVO = messageList.get(position).session
                     startChat(context, session);
->>>>>>> master
                 }
                 b.rvLayout.layoutManager = LinearLayoutManager(activity)
                 b.rvLayout.adapter = adapter

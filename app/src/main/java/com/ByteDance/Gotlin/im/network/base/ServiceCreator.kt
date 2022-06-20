@@ -57,13 +57,8 @@ object ServiceCreator {
 
     // 用于webSocket
     var WebSocketClient = OkHttpClient.Builder()
-<<<<<<< HEAD
         .pingInterval(30,TimeUnit.SECONDS)
         .connectTimeout(10, TimeUnit.SECONDS)
-=======
-        .pingInterval(3, TimeUnit.SECONDS)
-        .readTimeout(3, TimeUnit.SECONDS)
->>>>>>> master
         .build()
 
     fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)

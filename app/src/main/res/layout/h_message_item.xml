@@ -68,11 +68,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/im_spacing_huge"
         android:paddingVertical="6dp"
-<<<<<<< HEAD
-        android:visibility="visible"
-
-=======
->>>>>>> master
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
