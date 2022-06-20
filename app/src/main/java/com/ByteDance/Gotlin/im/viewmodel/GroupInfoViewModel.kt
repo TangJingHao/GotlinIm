@@ -14,7 +14,7 @@ import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
  */
 class GroupInfoViewModel : ViewModel() {
 
-    private val groupIdLivaData = MutableLiveData<String>()
+    private val groupIdLivaData = MutableLiveData<Int>()
 
     val groupInfoLiveData = Transformations.switchMap(groupIdLivaData) { groupId ->
 
@@ -23,7 +23,7 @@ class GroupInfoViewModel : ViewModel() {
         Repository.getGroupInfo(groupId)
     }
 
-    fun getGroupInfo(groupId: String) {
+    fun getGroupInfo(groupId: Int) {
         MLogUtil.i(Constants.TAG_GROUP_INFO, "---获群聊信息---")
         groupIdLivaData.postValue(groupId)
     }

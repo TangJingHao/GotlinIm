@@ -47,28 +47,28 @@ class FriendInfoActivity : AppCompatActivity() {
 
         initView()
         setListener()
-//        setFriendData()
+        setFriendData()
     }
 
     /**
      * 设置界面的数据
      */
     private fun setFriendData() {
-//        mViewModel.friendInfoLiveData.observe(this, Observer { result->
-//            if(result!=null){
-//                tvNickname.text = result
-//                //设置好友信息
-//                //mBinding.tvFriendName.text =
-//                //mBinding.tvSex.text =
-//                //mBinding.tvNickname.text=
-//                //mBinding.tvAccount.text =
-//                //mBinding.tvGrouping.text =
-//                mBinding.tvFriendName.text = intent.getStringExtra(Constants.FRIEND_NAME)
-//                mBinding.tvNickname.text= intent.getStringExtra(Constants.FRIEND_NICKNAME)
-//                mBinding.tvAccount.text = intent.getStringExtra(FRIEND_ACCOUNT)
-//                mBinding.tvGrouping.text = intent.getStringExtra(Constants.FRIEND_GROUPING)
-//            }
-//        })
+        mViewModel.friendInfoLiveData.observe(this, Observer { result->
+            if(result!=null){
+                tvNickname.text = result
+                //设置好友信息
+                //mBinding.tvFriendName.text =
+                //mBinding.tvSex.text =
+                //mBinding.tvNickname.text=
+                //mBinding.tvAccount.text =
+                //mBinding.tvGrouping.text =
+                mBinding.tvFriendName.text = intent.getStringExtra(Constants.FRIEND_NAME)
+                mBinding.tvNickname.text= intent.getStringExtra(Constants.FRIEND_NICKNAME)
+                mBinding.tvAccount.text = intent.getStringExtra(FRIEND_ACCOUNT)
+                mBinding.tvGrouping.text = intent.getStringExtra(Constants.FRIEND_GROUPING)
+            }
+        })
     }
 
     /**
@@ -89,6 +89,10 @@ class FriendInfoActivity : AppCompatActivity() {
         mBinding.tabAddOrStart.root.onClick {
             if (mFriendType == FRIEND_IS){
                 MLogUtil.v(TAG_FRIEND_INFO,"--开始聊天--")
+                //TODO:跳转到聊天页面
+
+
+
             }else if (mFriendType == FRIEND_NO){
                 MLogUtil.v(TAG_FRIEND_INFO,"--添加好友--")
             } }
