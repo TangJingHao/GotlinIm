@@ -21,6 +21,7 @@ import com.ByteDance.Gotlin.im.view.activity.ApplicationInfoActivity
 import com.ByteDance.Gotlin.im.view.activity.FriendInfoActivity
 import com.ByteDance.Gotlin.im.view.activity.MyGroupActivity
 import com.ByteDance.Gotlin.im.view.activity.SearchActivity
+import com.ByteDance.Gotlin.im.view.custom.TSideBar
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 
 /**
@@ -32,6 +33,11 @@ import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
  */
 
 class AddressBookFragment : Fragment() {
+    private lateinit var mFriendList: List<UserVO>
+    private lateinit var mAdapter: TabWithTitleAdapter<UserVO>
+    private lateinit var mSortFriendList: List<List<UserVO>>
+    private lateinit var manager: LinearLayoutManager
+    private var mTitleList = ArrayList<String>()
     companion object {
         private const val TAG = "AddressBookFragment"
 
@@ -79,9 +85,9 @@ class AddressBookFragment : Fragment() {
                 TPhoneUtil.showToast(BaseApp.getContext(), "我的好友列表返回值为NULL")
             } else {
                 // 获取好友列表排序后放入适配器
-                val friendList = responseData.data.friendList
-                val titleList = ArrayList<String>();
-                val sortFriendList = DSortUtils.sort(friendList, titleList)
+                mFriendList = responseData.data.friendList
+                val titleList = ArrayList<String>()
+                val sortFriendList = DSortUtils.sort(mFriendList, titleList)
                 // 假数据充当功能区按键
                 var systemList = ArrayList<UserVO>()
                 val u0 = UserVO(1024, "查找新好友", "女", "查找新好友", "system", null, false)
@@ -94,21 +100,22 @@ class AddressBookFragment : Fragment() {
                 systemList.add(u3)
                 sortFriendList.add(0, systemList)
                 titleList.add(0, "功能区")
+                mSortFriendList = sortFriendList
+                mTitleList=titleList
                 // 适配器
-                val adapter = TabWithTitleAdapter(
+                mAdapter = TabWithTitleAdapter(
                     requireActivity(),
                     sortFriendList,
                     titleList,
                     TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
                 )
                 // 跳转事件
-                adapter.setItemOnClickListener { v, groupPosition, relativePosition ->
+                mAdapter.setItemOnClickListener { v, groupPosition, relativePosition ->
                     TPhoneUtil.showToast(
                         requireActivity(),
                         "group:" + groupPosition + " " +
-                                "   postion:" + relativePosition +
-                                "   name: " + sortFriendList.get(groupPosition)
-                            .get(relativePosition).nickName
+                                "   position:" + relativePosition +
+                                "   name: " + sortFriendList[groupPosition][relativePosition].nickName
                     )
                     // 功能区跳转
                     if (groupPosition == 0) {
@@ -168,12 +175,15 @@ class AddressBookFragment : Fragment() {
                     }
 
                 }
-                b.memberRv.layoutManager = LinearLayoutManager(requireActivity())
-                b.memberRv.adapter = adapter
+                manager=LinearLayoutManager(requireContext())
+                manager.orientation=LinearLayoutManager.VERTICAL
+                b.memberRv.layoutManager = manager
+                b.memberRv.adapter = mAdapter
                 if (sortFriendList.size != 0 && titleList.size != 0)
-                    adapter.notifyDataSetChanged()
+                    mAdapter.notifyDataSetChanged()
             }
         }
+
     }
 
     private fun initData() {
@@ -183,6 +193,33 @@ class AddressBookFragment : Fragment() {
     private fun initView() {
         b.toolbarRl.title.text = "通讯录"
         b.toolbarRl.imgChevronLeft.visibility = View.GONE
+        b.sideBar.setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
+            override fun onSelectStr(index: Int, selectStr: String) {
+                if(mAdapter.getmTitleList().contains(selectStr)){
+                    var i = mAdapter.getmTitleList().indexOf(selectStr)
+                    var position = mAdapter.getmTitleIndexList()[i]
+                    manager.scrollToPositionWithOffset(position,0)
+                }
+
+//                TLogUtil.d("$index")
+//                var position=0
+//                for (i in mSortFriendList.indices) {
+//                    if (i == 0) {
+//                        //四个功能区
+//                        position+=4
+//                        continue
+//                    }else{
+//                       if(mSortFriendList[i][0].nickName.first().toString()==selectStr){
+//                           var index = mTitleList.indexOf(selectStr)
+//                           TLogUtil.d("${"position:${position+index}"}")
+//                           manager.scrollToPositionWithOffset(position+index,0)
+//                       }else{
+//                           position+=mSortFriendList[i].size
+//                       }
+//                    }
+//                }
+            }
+        })
     }
 
 

@@ -44,6 +44,15 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     private final static String TAG = "TabWithTitleAdapter";
 
     private final Context mContext;
+
+    public List<String> getmTitleList() {
+        return mTitleList;
+    }
+
+    public List<Integer> getmTitleIndexList() {
+        return mTitleIndexList;
+    }
+
     // 要展示的信息
     private final List<List<E>> mDataInfoList;
     // 各组组名

@@ -81,6 +81,7 @@ class LoginActivity : AppCompatActivity() {
                     Repository.saveUserId(responseData.data.user.userId)
 
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    finish()
                 }
             }
         }

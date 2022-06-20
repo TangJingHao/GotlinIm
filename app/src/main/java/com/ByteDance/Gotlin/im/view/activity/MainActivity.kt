@@ -46,6 +46,7 @@ class MainActivity:AppCompatActivity() {
         mBinding.apply {
             vp2Main.adapter = MainViewPagerAdapter(this@MainActivity, mFragments)
             MainBnvVp2Mediator(bnvMain,vp2Main){ bnv, vp2 ->
+                bnv.itemIconTintList=null
                 vp2.isUserInputEnabled = true//设置是否响应用户滑动
             }.attach()
         }

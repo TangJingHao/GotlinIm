@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
  * @Description
  */
 
-class StatusViewModel : ViewModel() {
+class MyInformationViewModel : ViewModel() {
     public val mStatus=MutableLiveData<Int>()
-
 }

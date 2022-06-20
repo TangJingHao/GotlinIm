@@ -24,6 +24,7 @@ class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //判断用户是否登录过，后期可以写在闪屏页面
+<<<<<<< HEAD
         startActivity(Intent(this,TestActivity::class.java))
         finish()
 //        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){

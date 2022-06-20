@@ -51,9 +51,7 @@
         <activity
             android:name=".application.BaseActivity"
             android:theme="@style/SplashActivityTheme"
-            android:launchMode="standard"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -70,17 +68,19 @@
             android:exported="false" />
         <activity
             android:name=".view.activity.MainActivity"
-            android:launchMode="standard"
+            android:launchMode="singleInstance"
             android:exported="true" />
         <activity
             android:name=".view.activity.ChatActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.LoginActivity"
-            android:exported="false" />
+            android:launchMode="singleInstance"
+            android:exported="true" />
         <activity
             android:name=".view.activity.RegisterActivity"
-            android:exported="false" />
+            android:launchMode="singleInstance"
+            android:exported="true" />
         <activity
             android:name=".view.activity.SearchActivity"
             android:exported="false" />

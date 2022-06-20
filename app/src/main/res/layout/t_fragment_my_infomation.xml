@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/top_slice_rl"
         android:layout_marginLeft="@dimen/im_common_horizontal"
-        android:layout_marginTop="@dimen/im_spacing_large"
+        android:layout_marginTop="@dimen/im_common_horizontal"
         android:layout_marginRight="@dimen/im_common_horizontal"
         android:background="@drawable/t_view_slice_bg"
         android:paddingHorizontal="@dimen/im_spacing_large"
@@ -144,6 +144,26 @@
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/ic_24_chevron_right" />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/online_status_config_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/im_spacing_huge">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="修改在线状态"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium" />
+
+                <ImageView
+                    android:id="@+id/online_status_config_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_24_chevron_right" />
+            </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
 
@@ -153,7 +173,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/mid_slice_rl"
         android:layout_marginLeft="@dimen/im_common_horizontal"
-        android:layout_marginTop="@dimen/im_spacing_large"
+        android:layout_marginTop="@dimen/im_common_horizontal"
         android:layout_marginRight="@dimen/im_common_horizontal"
         android:background="@drawable/t_view_slice_bg"
         android:paddingHorizontal="@dimen/im_spacing_large"
@@ -176,6 +196,22 @@
                     android:textColor="?attr/text_ultrastrong"
                     android:textSize="@dimen/im_text_medium"
                     android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/config_setting_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/im_spacing_huge">
+
+                <TextView
+                    android:id="@+id/config_setting_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="暗黑模式"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium" />
 
                 <com.xuexiang.xui.widget.button.switchbutton.SwitchButton
                     android:id="@+id/sb_ios_btn"
@@ -212,6 +248,27 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/ic_24_sun" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/login_config_rl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/im_spacing_huge">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="退出登录"
+                    android:textColor="?attr/text_ultrastrong"
+                    android:textSize="@dimen/im_text_medium" />
+
+                <ImageView
+                    android:id="@+id/login_config_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_24_chevron_right" />
             </RelativeLayout>
 
         </LinearLayout>
