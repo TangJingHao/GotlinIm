@@ -10,19 +10,19 @@ import android.view.MotionEvent;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.ByteDance.Gotlin.im.R;
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+
+import java.util.List;
 
 /**
  * @Author 唐靖豪
  * @Date 2022/6/16 21:33
  * @Email 762795632@qq.com
- * @Description
- * 通讯录侧滑栏
+ * @Description 通讯录侧滑栏
  */
 
 public class TSideBar extends AppCompatTextView {
-    private String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I",
-            "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-            "W", "X", "Y", "Z", "#"};
+    private String[] letters = new String[]{"#"};
     private Paint textPaint;
     private Paint bigTextPaint;
     private Paint scaleTextPaint;
@@ -88,8 +88,8 @@ public class TSideBar extends AppCompatTextView {
         scaleTextPaint.setTextAlign(Paint.Align.CENTER);
     }
 
-    public void setDataResource(String[] data) {
-        letters = data;
+    public void setDataResource(List<String> dataResource) {
+        letters = dataResource.toArray(new String[dataResource.size()]);
         invalidate();
     }
 
@@ -160,8 +160,9 @@ public class TSideBar extends AppCompatTextView {
 
     private void DrawView(float y) {
         int currentSelectIndex = -1;
+        DLogUtils.i("侧边栏", "y=" + y);
         if (y != 0) {
-            for (int i = 0; i < letters.length; i++) {
+            for (int i = 0; i < letters.length; i++) { // 遍历标题
                 float currentItemY = itemH * i;
                 float nextItemY = itemH * (i + 1);
                 if (y >= currentItemY && y < nextItemY) {

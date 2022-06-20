@@ -23,9 +23,11 @@ import com.xuexiang.xui.XUI
 class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         //判断用户是否登录过，后期可以写在闪屏页面
-<<<<<<< HEAD
-        startActivity(Intent(this,TestActivity::class.java))
+        Repository.saveUserId(1)
+
+        startActivity(Intent(this,MainActivity::class.java))
         finish()
 //        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
 //            startActivity(Intent(this,GroupMembersActivity::class.java).putExtra(Constants.GROUP_ID,1))

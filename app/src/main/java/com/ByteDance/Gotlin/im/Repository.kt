@@ -42,7 +42,8 @@ object Repository {
     //模式
     fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
     fun saveUserStatus(userId: Int) = mmkv.encode(MMKV_USER_MODE, userId)
-    fun deleteUserStatus()= mmkv.removeValueForKey(MMKV_USER_MODE)
+    fun deleteUserStatus() = mmkv.removeValueForKey(MMKV_USER_MODE)
+
     //用户id
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
@@ -117,7 +118,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = MyNetWork.getGroupMemberList(userId)
+        val groupMemberListDataResponse = NetWork.getGroupMemberList(userId)
         if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(groupMemberListDataResponse)
         } else {
@@ -129,7 +130,7 @@ object Repository {
      * 获取邀请的群聊成员列表
      */
     fun getGroupInviteList(userId: Int) = fire(Dispatchers.IO) {
-        val friendListDataResponse = MyNetWork.getFriendList(userId)
+        val friendListDataResponse = NetWork.getFriendList(userId)
         if (friendListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(friendListDataResponse)
         } else {
@@ -213,13 +214,8 @@ object Repository {
         val request = Request.Builder()
             .url(Constants.BASE_WS_URL + getUserId())
             .build()
-<<<<<<< HEAD
-
-        val webSocket = MyNetWork.getWebSocketAndConnect(request, listener)
+        val webSocket = NetWork.getWebSocketAndConnect(request, listener)
         return webSocket
-=======
-        return NetWork.getWebSocketAndConnect(request, listener)
->>>>>>> tjh
     }
 
     /**

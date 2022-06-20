@@ -38,6 +38,7 @@ class AddressBookFragment : Fragment() {
     private lateinit var mSortFriendList: List<List<UserVO>>
     private lateinit var manager: LinearLayoutManager
     private var mTitleList = ArrayList<String>()
+
     companion object {
         private const val TAG = "AddressBookFragment"
 
@@ -99,9 +100,9 @@ class AddressBookFragment : Fragment() {
                 systemList.add(u2)
                 systemList.add(u3)
                 sortFriendList.add(0, systemList)
-                titleList.add(0, "功能区")
+                titleList.add(0, "-")
                 mSortFriendList = sortFriendList
-                mTitleList=titleList
+                mTitleList = titleList
                 // 适配器
                 mAdapter = TabWithTitleAdapter(
                     requireActivity(),
@@ -109,6 +110,8 @@ class AddressBookFragment : Fragment() {
                     titleList,
                     TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
                 )
+                // 侧边栏
+                b.sideBar.setDataResource(mTitleList)
                 // 跳转事件
                 mAdapter.setItemOnClickListener { v, groupPosition, relativePosition ->
                     TPhoneUtil.showToast(
@@ -175,8 +178,8 @@ class AddressBookFragment : Fragment() {
                     }
 
                 }
-                manager=LinearLayoutManager(requireContext())
-                manager.orientation=LinearLayoutManager.VERTICAL
+                manager = LinearLayoutManager(requireContext())
+                manager.orientation = LinearLayoutManager.VERTICAL
                 b.memberRv.layoutManager = manager
                 b.memberRv.adapter = mAdapter
                 if (sortFriendList.size != 0 && titleList.size != 0)
@@ -191,15 +194,31 @@ class AddressBookFragment : Fragment() {
     }
 
     private fun initView() {
-        b.toolbarRl.title.text = "通讯录"
-        b.toolbarRl.imgChevronLeft.visibility = View.GONE
-        b.sideBar.setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
-            override fun onSelectStr(index: Int, selectStr: String) {
-                if(mAdapter.getmTitleList().contains(selectStr)){
-                    var i = mAdapter.getmTitleList().indexOf(selectStr)
-                    var position = mAdapter.getmTitleIndexList()[i]
-                    manager.scrollToPositionWithOffset(position,0)
+        b.toolbarRl.apply {
+            title.text = "通讯录"
+            imgChevronLeft.visibility = View.GONE
+        }
+        b.sideBar.apply {
+            setScaleSize(1)
+            setScaleItemCount(2)
+            setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
+                override fun onSelectStr(index: Int, selectStr: String) {
+                    manager.scrollToPositionWithOffset(mAdapter.getmTitleIndexList().get(index), 0)
                 }
+            })
+        }
+
+//        b.sideBar.setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
+//            override fun onSelectStr(index: Int, selectStr: String) {
+//                manager.scrollToPositionWithOffset(mAdapter.getmTitleIndexList().get(index), 0)
+
+//                DLogUtils.i(TAG + "侧边栏", "index: " + index + "\tselectStr: " + selectStr)
+//                if (mAdapter.getmTitleList().contains(selectStr)) {
+//                    var i = mAdapter.getmTitleList().indexOf(selectStr)
+//                    var position = mAdapter.getmTitleIndexList()[i]
+////                    DLogUtils.i(TAG + "title位置", "title坐标: " + position + "\t名: " + selectStr)
+//                    manager.scrollToPositionWithOffset(position, 0)
+//                }
 
 //                TLogUtil.d("$index")
 //                var position=0
@@ -218,8 +237,8 @@ class AddressBookFragment : Fragment() {
 //                       }
 //                    }
 //                }
-            }
-        })
+
+
     }
 
 

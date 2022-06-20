@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_rl"
         android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/im_common_horizontal_large"
         android:layout_marginBottom="@dimen/im_common_horizontal_large"
         android:paddingRight="@dimen/im_spacing_large"
