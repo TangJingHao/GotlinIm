@@ -20,13 +20,13 @@ import com.ByteDance.Gotlin.im.R;
  */
 
 public class TSideBar extends AppCompatTextView {
-    private String[] letters = new String[]{"A", "B", "C", "D", "E", "F",
-            "G", "H", "I", "J", "K", "L",
-            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+    private String[] letters = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I",
+            "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
             "W", "X", "Y", "Z", "#"};
     private Paint textPaint;
     private Paint bigTextPaint;
     private Paint scaleTextPaint;
+
     private Canvas canvas;
     private int itemH;
     private int w;
@@ -98,7 +98,9 @@ public class TSideBar extends AppCompatTextView {
     }
 
     /**
-     * 设置字体缩放比例     *     * @param scale
+     * 设置字体缩放比例
+     *
+     * @param scale
      */
     public void setScaleSize(int scale) {
         scaleSize = scale;
@@ -106,7 +108,9 @@ public class TSideBar extends AppCompatTextView {
     }
 
     /**
-     * 设置缩放字体的个数，即开口大小     *     * @param scaleItemCount
+     * 设置缩放字体的个数，即开口大小
+     *
+     * @param scaleItemCount
      */
     public void setScaleItemCount(int scaleItemCount) {
         this.scaleItemCount = scaleItemCount;
@@ -147,6 +151,7 @@ public class TSideBar extends AppCompatTextView {
         return super.onTouchEvent(event);
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         this.canvas = canvas;
@@ -163,18 +168,19 @@ public class TSideBar extends AppCompatTextView {
                     currentSelectIndex = i;
                     if (callBack != null) {
                         callBack.onSelectStr(currentSelectIndex, letters[i]);
-                    }                    //画大的字母
+                    }
+                    //画大的字母
                     Paint.FontMetrics fontMetrics = bigTextPaint.getFontMetrics();
                     float bigTextSize = fontMetrics.descent - fontMetrics.ascent;
-                    canvas.drawText(letters[i], w - getPaddingRight() - scaleWidth - bigTextSize,
-                            singleTextH + itemH * i, bigTextPaint);
+                    canvas.drawText(letters[i], w - getPaddingRight() - scaleWidth - bigTextSize, singleTextH + itemH * i, bigTextPaint);
                 }
             }
         }
         drawLetters(y, currentSelectIndex);
     }
 
-    private void drawLetters(float y, int index) {        //第一次进来没有缩放情况，默认画原图
+    private void drawLetters(float y, int index) {
+        //第一次进来没有缩放情况，默认画原图
         if (index == -1) {
             w = getMeasuredWidth();
             h = getMeasuredHeight();
@@ -183,9 +189,12 @@ public class TSideBar extends AppCompatTextView {
             singleTextH = fontMetrics.descent - fontMetrics.ascent;
             for (int i = 0; i < letters.length; i++) {
                 canvas.drawText(letters[i], w - getPaddingRight(), singleTextH + itemH * i, textPaint);
-            }            //触摸的时候画缩放图
-        } else {            //遍历所有字母
-            for (int i = 0; i < letters.length; i++) {                //要画的字母的起始Y坐标
+            }
+            //触摸的时候画缩放图
+        } else {
+            //遍历所有字母
+            for (int i = 0; i < letters.length; i++) {
+                //要画的字母的起始Y坐标
                 float currentItemToDrawY = singleTextH + itemH * i;
                 float centerItemToDrawY;
                 if (index < i)
@@ -193,9 +202,11 @@ public class TSideBar extends AppCompatTextView {
                 else
                     centerItemToDrawY = singleTextH + itemH * (index - scaleItemCount);
                 float delta = 1 - Math.abs((y - currentItemToDrawY) / (centerItemToDrawY - currentItemToDrawY));
-                float maxRightX = w - getPaddingRight();                //如果大于0，表明在y坐标上方
+                float maxRightX = w - getPaddingRight();
+                //如果大于0，表明在y坐标上方
                 scaleTextPaint.setTextSize(getTextSize() + getTextSize() * delta);
-                float drawX = maxRightX - scaleWidth * delta;                //超出边界直接花在边界上
+                float drawX = maxRightX - scaleWidth * delta;
+                //超出边界直接花在边界上
                 if (drawX > maxRightX)
                     canvas.drawText(letters[i], maxRightX, singleTextH + itemH * i, textPaint);
                 else
@@ -207,5 +218,6 @@ public class TSideBar extends AppCompatTextView {
     public interface ISideBarSelectCallBack {
         void onSelectStr(int index, String selectStr);
     }
+
 
 }

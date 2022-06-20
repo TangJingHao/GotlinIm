@@ -57,8 +57,8 @@ class MyInformationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mViewModel=ViewModelProvider(requireActivity()).get(StatusViewModel::class.java)
-        mViewModel.mStatus.value=Repository.getUserStatus()
+//        mViewModel=ViewModelProvider(requireActivity()).get(StatusViewModel::class.java)
+//        mViewModel.mStatus.value=Repository.getUserStatus()
         initConfig()
     }
 
@@ -74,17 +74,7 @@ class MyInformationFragment : Fragment() {
     private fun initView() {
         mBinding.toolbarRl.title.text = "我的"
         mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
-        if(mViewModel.mStatus.value==Constants.USER_LIGHT_MODE){
-            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_sun)
-            mBinding.statusChangeIv.background = drawable
-            mBinding.sbIosBtn.isChecked=false
-            QMUIStatusBarHelper.setStatusBarLightMode(requireActivity())
-        }else if(mViewModel.mStatus.value==Constants.USER_DARK_MODE){
-            val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_24_moon)
-            mBinding.statusChangeIv.background = drawable
-            mBinding.sbIosBtn.isChecked=true
-            QMUIStatusBarHelper.setStatusBarDarkMode(requireActivity())
-        }
+
     }
 
     private fun initListener() {
@@ -100,21 +90,7 @@ class MyInformationFragment : Fragment() {
         }
         //模式切换监听
         mBinding.sbIosBtn.setOnClickListener {
-            if(mViewModel.mStatus.value==Constants.USER_LIGHT_MODE){
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                Repository.saveUserStatus(Constants.USER_DARK_MODE)
-                requireActivity().apply {
-                    overridePendingTransition(R.anim.t_activity_in,R.anim.t_activity_out)
-                    recreate()
-                }
-            }else if(mViewModel.mStatus.value==Constants.USER_DARK_MODE){
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                Repository.saveUserStatus(Constants.USER_LIGHT_MODE)
-                requireActivity().apply {
-                    overridePendingTransition(R.anim.t_activity_in,R.anim.t_activity_out)
-                    recreate()
-                }
-            }
+
         }
     }
 

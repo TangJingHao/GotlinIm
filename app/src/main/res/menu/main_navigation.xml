@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/navigation_message_item"
-        android:icon="@drawable/ic_36_xiaoxi"
-        android:title="消息" />
+        android:icon="@drawable/t_message_selector"
+        android:title="消息"
+        app:showAsAction="always" />
     <item
         android:id="@+id/navigation_address_book_item"
-        android:icon="@drawable/ic_36_tongxunlu"
-        android:title="通讯录"/>
+        android:icon="@drawable/t_address_selector"
+        android:title="通讯录"
+        app:showAsAction="always" />
     <item
         android:id="@+id/navigation_my_information_item"
-        android:icon="@drawable/ic_36_wode"
-        android:title="我的"/>
+        android:icon="@drawable/t_my_selector"
+        android:title="我的"
+        app:showAsAction="always" />
 </menu>
