@@ -228,7 +228,7 @@ object Repository {
     /**
      * 获取群聊信息
      */
-    fun getGroupInfo(groupId: String) = liveData<String> {
+    fun getGroupInfo(groupId: Int) = liveData<Int> {
         i(TAG_FRIEND_INFO, "---$groupId---")
         emit(groupId)
     }
