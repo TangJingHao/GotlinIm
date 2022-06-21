@@ -18,7 +18,10 @@
         android:textSize="@dimen/im_text_medium"
         android:lines="1"
         android:textColor="@color/text_ultrastrong"
-        android:hint="@string/preview_text">
+        android:hint="@string/preview_text"
+        android:imeOptions="actionSearch"
+        android:singleLine="true"
+        >
     </EditText>
 
 </FrameLayout>

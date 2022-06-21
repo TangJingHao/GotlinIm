@@ -45,12 +45,6 @@ class AddressBookFragment : Fragment() {
     companion object {
         private const val TAG = "AddressBookFragment"
 
-        // 搜索类型（好友群聊）
-        private const val SEARCH_TYPE = "search_type"
-        private const val SEARCH_TYPE_FRIEND = 0
-        private const val SEARCH_TYPE_GROUP_CHAT = 1
-        private const val SEARCH_TYPE_MESSAGE = 2
-
         // 功能区对应
         private const val SYSTEM_NEW_FRIEND = 0
         private const val SYSTEM_NEW_GROUP_CHAT = 1
@@ -129,32 +123,22 @@ class AddressBookFragment : Fragment() {
                         when (relativePosition) {
                             SYSTEM_NEW_FRIEND -> {
                                 // 查找新好友
-                                val intent = Intent(requireActivity(), SearchActivity::class.java)
-                                intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_FRIEND)
-                                startActivity(intent)
+                                SearchActivity.startSearchNewFriendSearch(requireActivity())
                             }
                             SYSTEM_NEW_GROUP_CHAT -> {
                                 // 查找新群聊
-                                val intent = Intent(requireActivity(), SearchActivity::class.java)
-                                intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_GROUP_CHAT)
-                                startActivity(intent)
+                                SearchActivity.startSearchNewGroupSearch(requireActivity())
                             }
                             SYSTEM_APPLICATION_INFO -> {
                                 // 好友申请
                                 startActivity(
-                                    Intent(
-                                        requireActivity(),
-                                        ApplicationInfoActivity::class.java
-                                    )
+                                    Intent(requireActivity(), ApplicationInfoActivity::class.java)
                                 )
                             }
                             SYSTEM_MY_GROUP_CHAT -> {
                                 // 我的群聊
                                 startActivity(
-                                    Intent(
-                                        requireActivity(),
-                                        MyGroupActivity::class.java
-                                    )
+                                    Intent(requireActivity(), MyGroupActivity::class.java)
                                 )
                             }
                         }

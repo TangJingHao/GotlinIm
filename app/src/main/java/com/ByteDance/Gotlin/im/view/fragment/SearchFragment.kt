@@ -1,14 +1,20 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding
 import com.ByteDance.Gotlin.im.entity.MessageEntity
@@ -16,7 +22,6 @@ import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel
 import java.sql.Date
-import java.util.*
 
 class SearchFragment : Fragment() {
 
@@ -143,11 +148,13 @@ class SearchFragment : Fragment() {
         b.timeBar.apply {
             lLayout.visibility = View.VISIBLE
             tvTimeFrom.setOnClickListener { view: View? ->
-                // TODO 时间选择器,将结果存入 mMsgSearchData.from
+                // TODO 时间选择器
+                //  将结果存入 mMsgSearchData.from
 
             }
             tvTimeTo.setOnClickListener { view: View? ->
-                // TODO 时间选择器,将结果存入 mMsgSearchData.to
+                // TODO 时间选择器
+                //  将结果存入 mMsgSearchData.to
 
             }
         }
@@ -168,36 +175,6 @@ class SearchFragment : Fragment() {
                 adapter = mAdapter
                 layoutManager = mLinearLayoutManager
                 itemAnimator = DefaultItemAnimator()
-//                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                        super.onScrollStateChanged(recyclerView, newState)
-//                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                            // 如果没有隐藏footView，那么最后一个条目的位置就比我们的getItemCount少1，自己可以算一下
-//                            if (mAdapter.isFadeTips() === false && lastVisibleItem + 1 === mAdapter.getItemCount()) {
-//                                mHandler.postDelayed(Runnable { // 然后调用updateRecyclerview方法更新RecyclerView
-//                                    updateRecyclerView(
-//                                        mAdapter.getRealLastPosition(),
-//                                        mAdapter.getRealLastPosition() + PAGE_COUNT
-//                                    )
-//                                }, 500)
-//                            }
-//
-//                            // 如果隐藏了提示条，我们又上拉加载时，那么最后一个条目就要比getItemCount要少2
-//                            if (mAdapter.isFadeTips() === true && lastVisibleItem + 2 === mAdapter.getItemCount()) {
-//                                mHandler.postDelayed(Runnable { // 然后调用updateRecyclerview方法更新RecyclerView
-//                                    updateRecyclerView(
-//                                        mAdapter.getRealLastPosition(),
-//                                        mAdapter.getRealLastPosition() + PAGE_COUNT
-//                                    )
-//                                }, 500)
-//                            }
-//                        }
-//                    }
-//                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                        super.onScrolled(recyclerView, dx, dy)
-//                        lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
-//                    }
-//                })
             }
             if (it.size != 0) mAdapter.notifyDataSetChanged()
         }
@@ -208,11 +185,23 @@ class SearchFragment : Fragment() {
             b.searchRefreshLayout.isRefreshing = false
         }
         //回车键监测,获取文字后模糊搜索
-        b.searchBar.etInput.setOnEditorActionListener { view, actionId, event ->
-            val inputText = b.searchBar.etInput.text.toString()
-            mMsgSearchData?.content = inputText
-            refreshSearchMsgData()
-            true
+        b.searchBar.etInput.apply {
+            setOnKeyListener(object : View.OnKeyListener {
+                override fun onKey(view: View, keycode: Int, event: KeyEvent): Boolean {
+                    if (keycode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+                        DLogUtils.i(TAG,"按下回车")
+                        val inputText = b.searchBar.etInput.text.toString()
+                        mMsgSearchData?.content = inputText
+                        b.searchBar.etInput.clearFocus()
+                        hideKeyboard()
+                        refreshSearchMsgData()
+                        return true
+                    }
+                    DLogUtils.i(TAG,"没按下回车")
+                    return false
+                }
+            })
+            hint = ""
         }
     }
 
@@ -223,4 +212,16 @@ class SearchFragment : Fragment() {
         vm.searchSessionMsg(mMsgSearchData!!)
     }
 
+
+    /**
+     * 关闭软键盘
+     */
+    private fun hideKeyboard() {
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val v: View = requireActivity().getWindow().peekDecorView()
+        if (null != v) {
+            imm.hideSoftInputFromWindow(v.windowToken, 0)
+        }
+    }
 }

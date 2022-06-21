@@ -99,10 +99,8 @@ class FriendInfoActivity : AppCompatActivity() {
         mBinding.tabDeleteFriend.root.onClick { MLogUtil.v(TAG_FRIEND_INFO,"--删除好友--") }
         mBinding.tabItemInfoSearch.root.onClick {
             MLogUtil.v(TAG_FRIEND_INFO,"--消息搜索--")
-            //TODO:跳转到消息搜索界面
-            startActivity<SearchActivity>(this){
-                putExtra(Constants.SEARCH_FROM_INFO_TYPE,Constants.SEARCH_TYPE_FROM_FRIEND)
-            }
+            //TODO:跳转到搜索聊天消息,需要会话id
+            //  SearchActivity.startMsgSearch(this,sessionId )
         }
     }
 
