@@ -19,14 +19,18 @@ import java.sql.Date
  */
 class SearchViewModel : ViewModel() {
 
-    // 外部通过修改该对象进行不同查询
-    private val mDBMsgLiveDate = MutableLiveData<MsgSearchLiveData>()
+    private var sid: Int = 0 // 默认值，无意义
+    private var from: Date = Date(0)
+    private var to: Date = Date(System.currentTimeMillis())
+    private var content: String = ""
 
-//    // 外部对此进行修改
-//    private val mSearchHistoryMsgLiveDate = MutableLiveData<MsgSearchLiveData>()
+
+    // 外部通过修改该对象进行不同查询
+    private val mMsgSearchLiveDate = MutableLiveData<MsgSearchLiveData>()
+
 
     // 网络请求
-    private val searchResultData = Transformations.switchMap(mDBMsgLiveDate) {
+    private val searchResultData = Transformations.switchMap(mMsgSearchLiveDate) {
         Repository.getSessionHistoryList(getUserId(), it.sid, it.page)
     }
 
@@ -34,8 +38,13 @@ class SearchViewModel : ViewModel() {
      * 外部搜索用
      */
     fun searchSessionMsg(msgSearchLiveData: MsgSearchLiveData) {
+        // 更新后搜索
+        this.sid = msgSearchLiveData.sid
+        this.from = msgSearchLiveData.from
+        this.to = msgSearchLiveData.to
+        this.content = msgSearchLiveData.content
         // TODO 可以在此处做搜索类型判断
-        mDBMsgLiveDate.value = msgSearchLiveData
+        mMsgSearchLiveDate.value = msgSearchLiveData
     }
 
     fun getUserId() = Repository.getUserId()
@@ -55,8 +64,7 @@ class SearchViewModel : ViewModel() {
                     // 先插入数据
                     insertMessageList(historyList)
                     // 从数据库中获取，作为返回值
-                    // TODO 传入值
-                    Repository.queryMessage(6, Date(0), Date(System.currentTimeMillis()), "聊天")
+                    Repository.queryMessage(sid, from, to, content)
                 }.await()
                 // 阻塞等待返回结果
                 return@runBlocking res

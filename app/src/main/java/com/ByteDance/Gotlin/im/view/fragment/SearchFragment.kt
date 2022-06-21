@@ -85,7 +85,7 @@ class SearchFragment : Fragment() {
                 // 初始化默认搜索参数
                 mMsgSearchData = MsgSearchLiveData(
                     sessionIdParam, Date(0),
-                    Date(System.currentTimeMillis()), null, 0
+                    Date(System.currentTimeMillis()), "", 0
                 )
             }
         }

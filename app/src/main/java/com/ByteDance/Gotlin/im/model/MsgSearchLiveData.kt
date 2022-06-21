@@ -9,9 +9,9 @@ import java.sql.Date
  * @Description
  */
 data class MsgSearchLiveData(
-    var sid: Int,
-    var from: Date? = null,
-    var to: Date? = null,
-    var content: String? = null,
+    var sid: Int = 0,
+    var from: Date = Date(0),
+    var to: Date = Date(System.currentTimeMillis()),
+    var content: String = "",
     var page: Int // 网络搜索用
 )
