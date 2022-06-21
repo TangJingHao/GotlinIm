@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "35969b37bcdee4dbadbc61afce41daf1",
+    "version": 3,
+    "identityHash": "317798961abe5217bf274d6961bdaa08",
     "entities": [
       {
         "tableName": "UserTable",
@@ -118,7 +118,7 @@
       },
       {
         "tableName": "MessageTable",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` INTEGER NOT NULL, `senderId` INTEGER NOT NULL, `msg_type` INTEGER NOT NULL, `content` TEXT NOT NULL, `sendTime` INTEGER NOT NULL, `self` INTEGER NOT NULL, PRIMARY KEY(`sendTime`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` INTEGER NOT NULL, `senderId` INTEGER NOT NULL, `senderName` TEXT NOT NULL, `senderAvatar` TEXT, `msg_type` INTEGER NOT NULL, `content` TEXT NOT NULL, `sendTime` INTEGER NOT NULL, `self` INTEGER NOT NULL, PRIMARY KEY(`sendTime`))",
         "fields": [
           {
             "fieldPath": "sessionId",
@@ -131,6 +131,18 @@
             "columnName": "senderId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "senderName",
+            "columnName": "senderName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "senderAvatar",
+            "columnName": "senderAvatar",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "type",
@@ -170,7 +182,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '35969b37bcdee4dbadbc61afce41daf1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '317798961abe5217bf274d6961bdaa08')"
     ]
   }
 }

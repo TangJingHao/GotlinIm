@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
-import com.ByteDance.Gotlin.im.info.HistoryListBean;
 import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse;
 import com.ByteDance.Gotlin.im.info.WSreceiveContent;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
@@ -110,11 +109,11 @@ public class ChatViewModel extends ViewModel {
             public void resumeWith(@NonNull Object o) {
                 if (o instanceof SessionHistoryDataResponse) {
                     SessionHistoryDataResponse his = (SessionHistoryDataResponse) o;
-                    List<HistoryListBean> list = his.getData().getHistoryList();
+                    List<MessageVO> list = his.getData().getHistoryList();
                     //将获得的数据转换为MessageVO，并向消息列表Top位置插入
                     MessageVO[] messageVOS = new MessageVO[list.size()];
                     int count = 0;
-                    for (HistoryListBean h : list) {
+                    for (MessageVO h : list) {
                         messageVOS[count++] = new MessageVO(
                                 h.getSession(), h.getSender(),
                                 h.getType(), h.getContent(),

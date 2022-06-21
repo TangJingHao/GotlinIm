@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.info
 
+import com.ByteDance.Gotlin.im.info.vo.MessageVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.google.gson.annotations.SerializedName
@@ -22,20 +23,5 @@ data class SessionHistoryDataResponse (
 
 data class SessionHistoryData (
     @SerializedName("historyList")
-    val historyList: List<HistoryListBean>
-)
-
-data class HistoryListBean (
-    @SerializedName("session")
-    val session: SessionVO,
-    @SerializedName("sender")
-    val sender: UserVO,
-    @SerializedName("type")
-    val type: Int,
-    @SerializedName("content")
-    val content: String,
-    @SerializedName("sendTime")
-    val sendTime: String,
-    @SerializedName("self")
-    val self: Boolean
+    val historyList: List<MessageVO>
 )

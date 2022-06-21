@@ -17,7 +17,7 @@
         layout="@layout/d_include_time_select_bar"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/sr_layout"
+        android:id="@+id/search_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/search_bar">

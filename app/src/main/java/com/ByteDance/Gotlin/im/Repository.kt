@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
@@ -12,7 +13,13 @@ import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -26,6 +33,7 @@ import kotlin.coroutines.CoroutineContext
  * @Description
  */
 
+@OptIn(DelicateCoroutinesApi::class)
 object Repository {
 
     private const val TAG = "Repository"
@@ -93,31 +101,18 @@ object Repository {
     fun deleteUser(user: UserEntity) = db.userDao().deleteUser(user)
 
     // 消息数据表
-    fun queryAllMessages() = db.messageDao().queryAllMessages()
-
     /**
-     * 根据会话id，发送者id查找
+     * 根据会话id查找
      */
-    fun queryMsgBySidAndUid(sid: Int, uid: Int) = db.messageDao().queryMsgBySidAndUid(sid, uid)
-
-    /**
-     * 根据会话id，发送者id以及时间范围查找
-     */
-    fun queryMsgByTime(sid: Int, uid: Int, from: Date, to: Date) =
-        db.messageDao().queryMsgByTime(sid, uid, from, to)
-
-    /**
-     * 根据会话id，发送者id以及消息模糊查找
-     */
-    fun queryMsgByContext(sid: Int, uid: Int, content: String) =
-        db.messageDao().queryMsgByContext(sid, uid, content)
+    fun queryMsgBySid(sid: Int) = db.messageDao().queryMsgBySid(sid)
 
     /**
      * 根据会话id，发送者id,时间范围以及消息模糊查找
      */
-    fun queryMsgByContext(sid: Int, uid: Int, from: Date, to: Date, content: String) =
-        db.messageDao().queryMessage(sid, uid, from, to, content)
+    fun queryMessage(sid: Int, from: Date, to: Date, content: String) =
+        db.messageDao().queryMessage(sid, from, to, content)
 
+    fun queryAllMessages() = db.messageDao().queryAllMessages()
     fun insertMessage(msg: MessageEntity) = db.messageDao().insertMessage(msg)
     fun upDataMessage(msg: MessageEntity) = db.messageDao().upDataMessage(msg)
     fun deleteMessage(msg: MessageEntity) = db.messageDao().deleteMessage(msg)

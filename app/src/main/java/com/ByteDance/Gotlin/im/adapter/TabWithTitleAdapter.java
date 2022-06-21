@@ -3,6 +3,7 @@ package com.ByteDance.Gotlin.im.adapter;
 import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,14 @@ import com.ByteDance.Gotlin.im.databinding.DItemLittleTitleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoSimpleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoStatueBinding;
+import com.ByteDance.Gotlin.im.entity.MessageEntity;
 import com.ByteDance.Gotlin.im.info.vo.GroupVO;
 import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
+import com.ByteDance.Gotlin.im.util.Constants;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.util.DUtils.TimeUtils;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,6 +31,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -310,20 +315,20 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                 }
                 case TYPE_USER_MESSAGE: {
 //                    // TODO 在此处处理泛型类的转换
-//                    UserVO item = (UserVO) mDataInfoList.get(group).get(relativePosition);
-//                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
-//
-//                    // TODO 网络头像加载，目前仅加载默认头像
-//                    Glide.with(mContext)
-//                            .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-//                            .into(MessageHolder.b.imgUserPic);
-//                    MessageHolder.b.tvUserName.setText(item.getUserName());
-//                    MessageHolder.b.tvUserMsg.setText(item.getMsg());
-//                    MessageHolder.b.tvTime.setText("当前时间");
-//                    if (mItemOnClickListener != null)
-//                        MessageHolder.b.rLayout.setOnClickListener(view ->
-//                                mItemOnClickListener.onItemClick(view, group, relativePosition));
-//                    break;
+                    MessageEntity item = (MessageEntity) mDataInfoList.get(group).get(relativePosition);
+                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
+
+                    // TODO 网络头像加载，目前仅加载默认头像
+                    Glide.with(mContext)
+                            .load(item.getSenderAvatar() == null ?
+                                    Constants.USER_DEFAULT_AVATAR :
+                                    BASE_URL + item.getSenderAvatar())
+                            .into(MessageHolder.b.bgaImgUserPic);
+                    MessageHolder.b.bgaTvSessionName.setText(item.getSenderName());
+                    MessageHolder.b.bgaTvUserMsg.setText(item.getContent());
+                    Date sendTime = item.getSendTime();
+                    MessageHolder.b.bgaTvTime.setText(TimeUtils.getDateToString(sendTime.getTime()));
+                    break;
                 }
                 default:
                     break;

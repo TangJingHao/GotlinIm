@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
+import com.ByteDance.Gotlin.im.entity.MessageEntity;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
 import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
@@ -23,6 +26,8 @@ import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.google.gson.Gson;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -38,6 +43,7 @@ import okio.ByteString;
  * @Email 1520483847@qq.com
  * @Description 测试用Activity
  */
+@Deprecated
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DActivityTestBinding b;
@@ -60,7 +66,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private static final int SEARCH_TYPE_GROUP_CHAT = 1;
     private static final int SEARCH_TYPE_MESSAGE = 2;
 
-    WebSocket webSocket;
+    private WebSocket webSocket;
+    private List<MessageEntity> messageEntities;
+
 
     Gson gson = new Gson();
 
@@ -89,7 +97,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 ThreadManager.getDefFixThreadPool().execute(new Runnable() {
                     @Override
                     public void run() {
-                        DLogUtils.i("线程名" + Thread.currentThread().getName(),"onClick");
+                        DLogUtils.i("线程名" + Thread.currentThread().getName(), "onClick");
                         b.tvMe.setText("发送测试信息" + count);
                         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
                                 SEND_MESSAGE, new WSsendContent(6, 1, 0,
@@ -118,6 +126,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         initPopupWindow();
 
+
+
         b.btnPopConfirm.setOnClickListener(this);
         b.btnPopInput.setOnClickListener(this);
         b.btnPopSelect.setOnClickListener(this);
@@ -126,6 +136,12 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        int sid = 6;
+        int uid = 1;
+        Date from = new Date(1654012800); // 6.1
+        Date to = new Date(1655654400); // 6.20
+        String content = "测试";
+
         if (view.equals(b.btnPopConfirm)) {
             confirmPopupWindow.show();
         } else if (view.equals(b.btnPopInput)) {
@@ -134,7 +150,21 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             singleSelectPopupWindow.show();
         } else if (view.equals(b.btnMain)) {
             startActivity(new Intent(this, MainActivity.class));
+        } else if (view.equals(b.btnNetHistory)) {
+
+        } else if (view.equals(b.btnDbHistory)) {
+
+        } else if (view.equals(b.btnDbHistoryTime)) {
+
+        } else if (view.equals(b.btnDbHistoryContent)) {
+
+        } else if (view.equals(b.btnDbHistorySearch)) {
+
         }
+    }
+
+    public void refreshTextView() {
+//        b.tvRes.setText();
     }
 
     private void initPopupWindow() {

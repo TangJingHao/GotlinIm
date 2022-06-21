@@ -11,41 +11,47 @@
         android:id="@+id/test_bar"
         layout="@layout/d_include_my_toolbar" />
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_new_friend"
+            android:id="@+id/btn_net_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="查找新好友" />
+            android:text="获取历史信息" />
 
         <Button
-            android:id="@+id/btn_new_group_chat"
+            android:id="@+id/btn_db_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="查找新群聊" />
+            android:text="展示所有历史记录" />
 
         <Button
-            android:id="@+id/btn_history_message"
+            android:id="@+id/btn_db_history_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="查找历史记录" />
+            android:text="按时间搜索" />
 
         <Button
-            android:id="@+id/btn_friend_application"
+            android:id="@+id/btn_db_history_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="好友申请" />
+            android:text="按内容搜索" />
 
         <Button
-            android:id="@+id/btn_my_group"
+            android:id="@+id/btn_db_history_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="我的群聊" />
+            android:text="高级搜索" />
+
+        <TextView
+            android:id="@+id/tv_res"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

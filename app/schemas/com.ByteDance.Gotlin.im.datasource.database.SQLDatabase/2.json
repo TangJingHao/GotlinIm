@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "234a27f75fb60b7e9f89c2cbce5c8d39",
+    "identityHash": "317798961abe5217bf274d6961bdaa08",
     "entities": [
       {
         "tableName": "UserTable",
@@ -118,25 +118,31 @@
       },
       {
         "tableName": "MessageTable",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`messageId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `session` INTEGER NOT NULL, `sender` INTEGER NOT NULL, `msg_type` INTEGER NOT NULL, `content` TEXT NOT NULL, `sendTime` TEXT NOT NULL, `self` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` INTEGER NOT NULL, `senderId` INTEGER NOT NULL, `senderName` TEXT NOT NULL, `senderAvatar` TEXT, `msg_type` INTEGER NOT NULL, `content` TEXT NOT NULL, `sendTime` INTEGER NOT NULL, `self` INTEGER NOT NULL, PRIMARY KEY(`sendTime`))",
         "fields": [
           {
-            "fieldPath": "messageId",
-            "columnName": "messageId",
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "session",
-            "columnName": "session",
+            "fieldPath": "senderId",
+            "columnName": "senderId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sender",
-            "columnName": "sender",
-            "affinity": "INTEGER",
+            "fieldPath": "senderName",
+            "columnName": "senderName",
+            "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "senderAvatar",
+            "columnName": "senderAvatar",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "type",
@@ -153,7 +159,7 @@
           {
             "fieldPath": "sendTime",
             "columnName": "sendTime",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -165,9 +171,9 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "messageId"
+            "sendTime"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -176,7 +182,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '234a27f75fb60b7e9f89c2cbce5c8d39')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '317798961abe5217bf274d6961bdaa08')"
     ]
   }
 }

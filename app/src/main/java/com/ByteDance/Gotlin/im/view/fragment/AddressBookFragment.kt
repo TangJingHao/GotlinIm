@@ -162,20 +162,26 @@ class AddressBookFragment : Fragment() {
                         // 跳转到好友信息页面
                         val intent = Intent(this.context, FriendInfoActivity::class.java)
                         intent.apply {
-                            putExtra(Constants.FRIEND_TYPE,
-                                Constants.FRIEND_IS)
+                            putExtra(
+                                Constants.FRIEND_TYPE,
+                                Constants.FRIEND_IS
+                            )
                             putExtra(
                                 Constants.FRIEND_ACCOUNT,
-                                sortFriendList[groupPosition][relativePosition].userId)
+                                sortFriendList[groupPosition][relativePosition].userId
+                            )
                             putExtra(
                                 Constants.FRIEND_NAME,
-                                sortFriendList[groupPosition][relativePosition].userName)
+                                sortFriendList[groupPosition][relativePosition].userName
+                            )
                             putExtra(
                                 Constants.FRIEND_NICKNAME,
-                                sortFriendList[groupPosition][relativePosition].nickName)
+                                sortFriendList[groupPosition][relativePosition].nickName
+                            )
                             putExtra(
                                 Constants.FRIEND_GROUPING,
-                                "大学同学")
+                                "大学同学"
+                            )
                         }
                         startActivity(intent)
                     }

@@ -15,12 +15,16 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
+import com.ByteDance.Gotlin.im.application.ThreadManager
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
+import com.ByteDance.Gotlin.im.info.WSsendContent
+import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
+import com.ByteDance.Gotlin.im.view.activity.TestActivity
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.gson.Gson
 import com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread
@@ -60,7 +64,7 @@ class MessageFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         initListener()
         initData()
@@ -129,16 +133,17 @@ class MessageFragment : Fragment() {
     }
 
     private fun initData() {
-        if(webSocket == null){
+        if (webSocket == null) {
             webSocket = vm.getWebSocketAndConnect(EchoWebSocketListener())
         }
         vm.getSessionList()
+
     }
 
     inner class EchoWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             DLogUtils.i(TAG, "链接开启")
-            runOnUiThread(Runnable { initData() }) // 加载数据
+            initData()
         }
 
         // 回调,展示消息
