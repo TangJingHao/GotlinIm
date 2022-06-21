@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.bingoogolapple.badgeview.BGABadgeRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/r_layout"
+    android:id="@+id/bga_r_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/im_user_item_detail_height"
     android:background="?attr/bg_weak"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/im_common_horizontal">
 
-    <TextView
-        android:id="@+id/tv_user_name"
+    <cn.bingoogolapple.badgeview.BGABadgeTextView
+        android:id="@+id/bga_tv_session_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/im_spacing_medium"
-        android:layout_toEndOf="@+id/img_user_pic"
+        android:layout_toEndOf="@+id/bga_img_user_pic"
         android:ellipsize="end"
         android:lines="1"
         android:maxEms="12"
@@ -21,16 +22,16 @@
         android:textColor="?attr/text_ultrastrong"
         android:textSize="@dimen/im_text_large" />
 
-    <LinearLayout
+    <cn.bingoogolapple.badgeview.BGABadgeLinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_user_name"
+        android:layout_below="@id/bga_tv_session_name"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/im_spacing_small"
-        android:layout_toEndOf="@+id/img_user_pic">
+        android:layout_toEndOf="@+id/bga_img_user_pic">
 
-        <TextView
-            android:id="@+id/tv_user_msg"
+        <cn.bingoogolapple.badgeview.BGABadgeTextView
+            android:id="@+id/bga_tv_user_msg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -40,43 +41,42 @@
             android:textColor="?attr/text_medium"
             android:textSize="@dimen/im_text_small" />
 
-        <TextView
-            android:id="@+id/tv_red_point"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/im_icon_small"
+        <cn.bingoogolapple.badgeview.BGABadgeView
+            android:id="@+id/bga_red_point"
+            android:layout_width="48dp"
+            android:layout_height="16dp"
             android:paddingHorizontal="6dp"
-            android:background="@drawable/d_bg_redpoint"
-            android:text="9"
             android:textSize="@dimen/im_text_small"
             android:textColor="@color/fill_white"
             android:textStyle="bold"
-            android:visibility="invisible"/>
+            android:visibility="visible" />
 
-    </LinearLayout>
+    </cn.bingoogolapple.badgeview.BGABadgeLinearLayout>
 
-    <TextView
-        android:id="@+id/tv_time"
+    <cn.bingoogolapple.badgeview.BGABadgeTextView
+        android:id="@+id/bga_tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="@dimen/im_spacing_medium"
-        android:layout_toEndOf="@+id/tv_user_name"
+        android:layout_toEndOf="@+id/bga_tv_session_name"
         android:gravity="right"
         android:maxLength="10"
         android:text="2022-05-22"
         android:textColor="?attr/text_medium"
         android:textSize="@dimen/im_text_medium" />
 
-    <ImageView
-        android:id="@+id/img_user_pic"
+    <cn.bingoogolapple.badgeview.BGABadgeImageView
+        android:id="@+id/bga_img_user_pic"
         android:layout_width="@dimen/user_pic"
         android:layout_height="@dimen/user_pic"
         android:layout_centerVertical="true"
         android:layout_gravity="left"
         android:layout_marginRight="@dimen/im_spacing_large"
         android:scaleType="centerCrop"
-        android:src="@drawable/d_img_useravatar1" />
+        android:src="@drawable/ic_img_default" />
 
 
-</RelativeLayout>
+
+</cn.bingoogolapple.badgeview.BGABadgeRelativeLayout>

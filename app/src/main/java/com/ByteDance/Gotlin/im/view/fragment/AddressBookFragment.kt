@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
@@ -38,6 +41,7 @@ class AddressBookFragment : Fragment() {
     private lateinit var mSortFriendList: List<List<UserVO>>
     private lateinit var manager: LinearLayoutManager
     private var mTitleList = ArrayList<String>()
+
     companion object {
         private const val TAG = "AddressBookFragment"
 
@@ -52,7 +56,6 @@ class AddressBookFragment : Fragment() {
         private const val SYSTEM_NEW_GROUP_CHAT = 1
         private const val SYSTEM_MY_GROUP_CHAT = 2
         private const val SYSTEM_APPLICATION_INFO = 3
-
     }
 
     private val vm: MainViewModel by lazy {
@@ -94,14 +97,16 @@ class AddressBookFragment : Fragment() {
                 val u1 = UserVO(1024, "查找新群聊", "女", "查找新群聊", "system", null, false)
                 val u2 = UserVO(1024, "我的群聊", "女", "我的群聊", "system", null, false)
                 val u3 = UserVO(1024, "申请通知", "女", "申请通知", "system", null, false)
-                systemList.add(u0)
-                systemList.add(u1)
-                systemList.add(u2)
-                systemList.add(u3)
+                systemList.apply {
+                    add(u0)
+                    add(u1)
+                    add(u2)
+                    add(u3)
+                }
                 sortFriendList.add(0, systemList)
-                titleList.add(0, "功能区")
+                titleList.add(0, "-")
                 mSortFriendList = sortFriendList
-                mTitleList=titleList
+                mTitleList = titleList
                 // 适配器
                 mAdapter = TabWithTitleAdapter(
                     requireActivity(),
@@ -109,6 +114,8 @@ class AddressBookFragment : Fragment() {
                     titleList,
                     TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
                 )
+                // 侧边栏
+                b.sideBar.setDataResource(mTitleList)
                 // 跳转事件
                 mAdapter.setItemOnClickListener { v, groupPosition, relativePosition ->
                     TPhoneUtil.showToast(
@@ -154,29 +161,27 @@ class AddressBookFragment : Fragment() {
                     } else {
                         // 跳转到好友信息页面
                         val intent = Intent(this.context, FriendInfoActivity::class.java)
-                        intent.putExtra(Constants.FRIEND_TYPE, Constants.FRIEND_IS)
-                        intent.putExtra(
-                            Constants.FRIEND_ACCOUNT,
-                            sortFriendList[groupPosition][relativePosition].userId
-                        )
-                        intent.putExtra(
-                            Constants.FRIEND_NAME,
-                            sortFriendList[groupPosition][relativePosition].userName
-                        )
-                        intent.putExtra(
-                            Constants.FRIEND_NICKNAME,
-                            sortFriendList[groupPosition][relativePosition].nickName
-                        )
-                        intent.putExtra(
-                            Constants.FRIEND_GROUPING,
-                            "大学同学"
-                        )
+                        intent.apply {
+                            putExtra(Constants.FRIEND_TYPE,
+                                Constants.FRIEND_IS)
+                            putExtra(
+                                Constants.FRIEND_ACCOUNT,
+                                sortFriendList[groupPosition][relativePosition].userId)
+                            putExtra(
+                                Constants.FRIEND_NAME,
+                                sortFriendList[groupPosition][relativePosition].userName)
+                            putExtra(
+                                Constants.FRIEND_NICKNAME,
+                                sortFriendList[groupPosition][relativePosition].nickName)
+                            putExtra(
+                                Constants.FRIEND_GROUPING,
+                                "大学同学")
+                        }
                         startActivity(intent)
                     }
-
                 }
-                manager=LinearLayoutManager(requireContext())
-                manager.orientation=LinearLayoutManager.VERTICAL
+                manager = LinearLayoutManager(requireContext())
+                manager.orientation = LinearLayoutManager.VERTICAL
                 b.memberRv.layoutManager = manager
                 b.memberRv.adapter = mAdapter
                 if (sortFriendList.size != 0 && titleList.size != 0)
@@ -191,35 +196,34 @@ class AddressBookFragment : Fragment() {
     }
 
     private fun initView() {
-        b.toolbarRl.title.text = "通讯录"
-        b.toolbarRl.imgChevronLeft.visibility = View.GONE
-        b.sideBar.setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
-            override fun onSelectStr(index: Int, selectStr: String) {
-                if(mAdapter.getmTitleList().contains(selectStr)){
-                    var i = mAdapter.getmTitleList().indexOf(selectStr)
-                    var position = mAdapter.getmTitleIndexList()[i]
-                    manager.scrollToPositionWithOffset(position,0)
+        b.toolbarRl.apply {
+            title.text = "通讯录"
+            imgChevronLeft.visibility = View.GONE
+        }
+        b.sideBar.apply {
+            setScaleSize(1)
+            setScaleItemCount(8)
+            setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
+                override fun onSelectStr(index: Int, selectStr: String) {
+                    manager.scrollToPositionWithOffset(mAdapter.getmTitleIndexList().get(index), 0)
                 }
+            })
+        }
+        b.refreshLayout.apply {
+            setColorSchemeColors(
+                AttrColorUtils
+                    .getValueOfColorAttr(activity, R.attr.accent_default)
+            )
+            setProgressBackgroundColorSchemeColor(
+                AttrColorUtils
+                    .getValueOfColorAttr(activity, R.attr.bg_weak)
+            )
+            setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+                initData()
+                b.refreshLayout.isRefreshing = false
+            })
+        }
 
-//                TLogUtil.d("$index")
-//                var position=0
-//                for (i in mSortFriendList.indices) {
-//                    if (i == 0) {
-//                        //四个功能区
-//                        position+=4
-//                        continue
-//                    }else{
-//                       if(mSortFriendList[i][0].nickName.first().toString()==selectStr){
-//                           var index = mTitleList.indexOf(selectStr)
-//                           TLogUtil.d("${"position:${position+index}"}")
-//                           manager.scrollToPositionWithOffset(position+index,0)
-//                       }else{
-//                           position+=mSortFriendList[i].size
-//                       }
-//                    }
-//                }
-            }
-        })
     }
 
 

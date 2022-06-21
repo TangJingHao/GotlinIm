@@ -38,7 +38,7 @@
                     android:layout_height="@dimen/user_pic"
                     android:layout_marginStart="@dimen/im_spacing_large"
                     android:layout_marginTop="@dimen/im_spacing_large"
-                    android:background="@mipmap/ic_launcher"
+                    android:background="@drawable/ic_img_default"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

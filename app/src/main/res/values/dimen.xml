@@ -5,7 +5,7 @@
     <!--登录/注册页距离屏幕左右边距-->
     <dimen name="im_common_horizontal_large">32dp</dimen>
     <!--Toolbar-->
-    <dimen name="im_toolbar_height">72dp</dimen>
+    <dimen name="im_toolbar_height">64dp</dimen>
     <!--底部栏-->
     <dimen name="im_bottom_height">72dp</dimen>
     <!--输入框-->

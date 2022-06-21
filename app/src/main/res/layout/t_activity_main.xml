@@ -16,13 +16,15 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64dp"
         android:elevation="0dp"
-        android:background="?attr/bg_weak"
+        android:background="?attr/bg_default"
+        app:itemBackground="@null"
         app:labelVisibilityMode="labeled"
         android:theme="@style/navigation_button_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vp2_main"
-        app:itemIconSize="30dp"
+        android:paddingHorizontal="@dimen/im_common_horizontal"
+        app:itemIconSize="@dimen/im_icon_huge"
         app:menu="@menu/main_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

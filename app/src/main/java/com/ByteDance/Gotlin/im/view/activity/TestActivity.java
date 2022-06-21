@@ -9,6 +9,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ByteDance.Gotlin.im.Repository;
+import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.databinding.DActivityTestBinding;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
@@ -85,16 +86,17 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 // 注意线程
-                new Thread(new Runnable() {
+                ThreadManager.getDefFixThreadPool().execute(new Runnable() {
                     @Override
                     public void run() {
+                        DLogUtils.i("线程名" + Thread.currentThread().getName(),"onClick");
                         b.tvMe.setText("发送测试信息" + count);
                         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
                                 SEND_MESSAGE, new WSsendContent(6, 1, 0,
                                 "发送测试信息" + count++));
                         webSocket.send(gson.toJson(sendChatMsg));
                     }
-                }).start();
+                });
             }
         });
 
@@ -102,7 +104,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
 
-//                connect();
                 EchoWebSocketListener listener = new EchoWebSocketListener();
                 webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
             }
@@ -140,7 +141,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         PopupWindowListener popupWindowListener = new PopupWindowListener() {
             @Override
             public void onConfirm(String input) {
-                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "onConfirm:" +input);
+                TPhoneUtil.INSTANCE.showToast(TestActivity.this, "onConfirm:" + input);
             }
 
             @Override
