@@ -33,13 +33,15 @@ interface MessageDao {
                 "where (sessionId = :sid) " +
                 "and (sendTime between :from and :to)" +
                 "and (content like '%' || :content || '%') " +
-                "order by sendTime desc"
+                "order by sendTime desc " +
+                "limit :limit"
     )
     fun queryMessage(
         sid: Int,
         from: Date,
         to: Date,
-        content: String
+        content: String,
+        limit: Int // 一次获取的消息数量
     ): LiveData<List<MessageEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

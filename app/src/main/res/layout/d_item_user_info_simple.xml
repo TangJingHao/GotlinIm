@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/im_spacing_large"
-        android:layout_toEndOf="@+id/img_user_pic"
+        android:layout_toEndOf="@+id/img_avatar"
         android:ellipsize="end"
         android:lines="1"
         android:maxEms="12"
@@ -23,7 +23,7 @@
         android:textSize="@dimen/im_text_large" />
 
     <ImageView
-        android:id="@+id/img_user_pic"
+        android:id="@+id/img_avatar"
         android:layout_width="@dimen/user_pic_small"
         android:layout_height="@dimen/user_pic_small"
         android:layout_centerVertical="true"

@@ -126,7 +126,17 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         initPopupWindow();
 
+        b.testRvLayout.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
 
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         b.btnPopConfirm.setOnClickListener(this);
         b.btnPopInput.setOnClickListener(this);

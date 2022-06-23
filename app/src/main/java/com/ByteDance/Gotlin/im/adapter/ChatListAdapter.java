@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.adapter;
 
 import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
+import static com.ByteDance.Gotlin.im.util.Constants.DEFAULT_IMG;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -79,7 +80,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.msgRight.setText(message.getContent());
             binding.nameRight.setText(userVO.getNickName());
             Glide.with(context)
-                    .load(avatar == null ? Constants.USER_DEFAULT_AVATAR : BASE_URL + avatar)
+                    .load(avatar == null ? DEFAULT_IMG : BASE_URL + avatar)
                     .apply(options)
                     .into(binding.headerRight.img);
         } else {
@@ -88,7 +89,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.msgLeft.setText(message.getContent());
             binding.nameLeft.setText(userVO.getNickName());
             Glide.with(context)
-                    .load(avatar == null ? Constants.USER_DEFAULT_AVATAR : BASE_URL + avatar)
+                    .load(avatar == null ? DEFAULT_IMG : BASE_URL + avatar)
                     .apply(options)
                     .into(binding.headerLeft.img);
         }

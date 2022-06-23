@@ -19,7 +19,7 @@ interface UserDao {
     fun queryUserById(userId: Int): UserEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUser(user: UserEntity): Long
+    fun insertUser(user: UserEntity)
 
     @Update
     fun upDataUser(user: UserEntity)

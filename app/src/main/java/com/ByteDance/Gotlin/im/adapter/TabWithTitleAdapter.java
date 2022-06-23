@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.adapter;
 
 import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
+import static com.ByteDance.Gotlin.im.util.Constants.DEFAULT_IMG;
 
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
@@ -91,8 +92,6 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public static final int TYPE_USER_MESSAGE = 3;
     // 当前状态（只能是1/2/3）
     public int mTabType;
-
-    private static int DEFAULT_IMG = R.drawable.ic_img_default;
 
     RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
     RequestOptions options = new RequestOptions()
@@ -259,14 +258,14 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         GroupVO item = (GroupVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-                                .into(userHolder.b.imgUserPic);
+                                .into(userHolder.b.imgAvatar);
                         userHolder.b.tvUserName.setText(item.getGroupName());
                         userHolder.b.tvUserMail.setText("gid：" + item.getGroupId());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-                                .into(userHolder.b.imgUserPic);
+                                .into(userHolder.b.imgAvatar);
                         userHolder.b.tvUserName.setText(item.getUserName());
                         userHolder.b.tvUserMail.setText("uid：" + item.getUserId());
                         userHolder.b.tvStatue.setText(item.getOnline() ? "在线" : "离线");
@@ -293,14 +292,14 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .apply(options)
-                                .into(simpleHolder.b.imgUserPic);
+                                .into(simpleHolder.b.imgAvatar);
                         simpleHolder.b.tvUserName.setText(item.getGroupName());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .apply(options)
-                                .into(simpleHolder.b.imgUserPic);
+                                .into(simpleHolder.b.imgAvatar);
                         simpleHolder.b.tvUserName.setText(item.getUserName());
                     }
                     if (mItemOnClickListener != null) {
@@ -321,7 +320,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     // TODO 网络头像加载，目前仅加载默认头像
                     Glide.with(mContext)
                             .load(item.getSenderAvatar() == null ?
-                                    Constants.USER_DEFAULT_AVATAR :
+                                    Constants.DEFAULT_IMG :
                                     BASE_URL + item.getSenderAvatar())
                             .into(MessageHolder.b.bgaImgUserPic);
                     MessageHolder.b.bgaTvSessionName.setText(item.getSenderName());

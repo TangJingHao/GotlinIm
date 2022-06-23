@@ -71,7 +71,7 @@ object Repository {
     /**
      * 获取当前用户头像
      */
-    fun getUserAvatar() = mmkv.decodeInt(MMKV_USER_AVATAR, Constants.USER_DEFAULT_AVATAR)
+    fun getUserAvatar() = mmkv.decodeInt(MMKV_USER_AVATAR, Constants.DEFAULT_IMG)
 
     fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
 
@@ -109,8 +109,8 @@ object Repository {
     /**
      * 根据会话id，发送者id,时间范围以及消息模糊查找
      */
-    fun queryMessage(sid: Int, from: Date, to: Date, content: String) =
-        db.messageDao().queryMessage(sid, from, to, content)
+    fun queryMessage(sid: Int, from: Date, to: Date, content: String,limit :Int) =
+        db.messageDao().queryMessage(sid, from, to, content,limit)
 
     fun queryAllMessages() = db.messageDao().queryAllMessages()
     fun insertMessage(msg: MessageEntity) = db.messageDao().insertMessage(msg)

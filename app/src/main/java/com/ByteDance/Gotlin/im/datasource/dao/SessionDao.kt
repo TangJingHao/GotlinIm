@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.datasource.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.ByteDance.Gotlin.im.entity.SessionEntity
 
@@ -13,7 +14,7 @@ import com.ByteDance.Gotlin.im.entity.SessionEntity
 interface SessionDao {
 
     @Query("select * from SessionTable")
-    fun queryAllSession(): List<SessionEntity>
+    fun queryAllSession(): LiveData<List<SessionEntity>>
 
 
     @Query("select * from SessionTable " +
@@ -21,7 +22,7 @@ interface SessionDao {
     fun querySessionById(sessionId: Int): SessionEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSession(SessionEntity: SessionEntity): Long
+    fun insertSession(SessionEntity: SessionEntity)
 
     @Delete
     fun deleteSession(SessionEntity: SessionEntity)

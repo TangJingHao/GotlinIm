@@ -8,6 +8,7 @@ import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.entity.MessageEntity
 import com.ByteDance.Gotlin.im.info.vo.MessageVO
 import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import kotlinx.coroutines.*
 import java.sql.Date
 
@@ -19,18 +20,22 @@ import java.sql.Date
  */
 class SearchViewModel : ViewModel() {
 
-    private var sid: Int = 0 // 默认值，无意义
-    private var from: Date = Date(0)
-    private var to: Date = Date(System.currentTimeMillis())
-    private var content: String = ""
+    private val TAG: String = "SearchViewModel"
 
+    private var sid: Int = 0 // 初始化默认值，无意义
+    private var from: Date = Date(0)
+    private var to: Date = Date(Long.MAX_VALUE)
+    private var content: String = ""
+    private var page: Int = 0
 
     // 外部通过修改该对象进行不同查询
     private val mMsgSearchLiveDate = MutableLiveData<MsgSearchLiveData>()
 
-
     // 网络请求
     private val searchResultData = Transformations.switchMap(mMsgSearchLiveDate) {
+        // 判断与上一次搜索内容是否一致
+        this.page = it.page
+        DLogUtils.i(TAG, "搜索内容：" + it.content + "  页数：" + it.page)
         Repository.getSessionHistoryList(getUserId(), it.sid, it.page)
     }
 
@@ -64,7 +69,7 @@ class SearchViewModel : ViewModel() {
                     // 先插入数据
                     insertMessageList(historyList)
                     // 从数据库中获取，作为返回值
-                    Repository.queryMessage(sid, from, to, content)
+                    Repository.queryMessage(sid, from, to, content, page * 10 + 10)
                 }.await()
                 // 阻塞等待返回结果
                 return@runBlocking res
