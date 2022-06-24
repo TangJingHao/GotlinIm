@@ -194,7 +194,7 @@ public class ChatViewModel extends ViewModel {
 
         @Override
         public void onOpen(WebSocket webSocket, @NonNull Response response) {
-            DLogUtils.i(TAG,"开启链接");
+            DLogUtils.i(TAG, "开启链接");
             WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
                     SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
                     0, "开始聊天吧"));
@@ -206,7 +206,7 @@ public class ChatViewModel extends ViewModel {
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
             DLogUtils.i(TAG, "回调" + text);
             WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
-            if (msg.getWsContent().getType() == MESSAGE_TEXT){
+            if (msg.getWsContent().getType() == MESSAGE_TEXT) {
 
             }
 
@@ -236,7 +236,7 @@ public class ChatViewModel extends ViewModel {
 
         @Override
         public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, Response response) {
-            DLogUtils.i(TAG, "链接失败/发送失败");
+            DLogUtils.i(TAG, "链接失败/发送失败" + t);
         }
     }
 }

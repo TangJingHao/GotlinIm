@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ByteDance.Gotlin.im.adapter.UserHistoryMsgAdapter
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding
-import com.ByteDance.Gotlin.im.entity.MessageEntity
 import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel
@@ -75,11 +74,8 @@ class SearchFragment : Fragment() {
     // 消息搜索用到的的会话id
     private var sessionIdParam = 0
 
-    // 交给适配器的标题
-    private var littleTitleArray: Array<String?>? = null
-
     // 搜索数据,消息记录搜索条件请修改这个
-    protected var mMsgSearchData: MsgSearchLiveData? = null
+    private var mMsgSearchData: MsgSearchLiveData? = null
 
     // 上一次搜索数据的条数，用于判断是否更新
     private var lastDataSize = 0
@@ -194,6 +190,7 @@ class SearchFragment : Fragment() {
                             loadMoreMsg()
                         } else {
                             lastDataSize = 0
+                            curDataSize = 0
                             mAdapter?.hasMore(false)
                             mAdapter?.notifyDataSetChanged()
                         }

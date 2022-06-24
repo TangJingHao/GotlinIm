@@ -28,10 +28,10 @@ class SearchViewModel : ViewModel() {
     private var content: String = ""
     private var page: Int = 0
 
-    // 外部通过修改该对象进行不同查询
+    // 外部通过修改该搜索参数进行不同查询
     private val mMsgSearchLiveDate = MutableLiveData<MsgSearchLiveData>()
 
-    // 网络请求
+    // 监听搜索参数
     private val searchResultData = Transformations.switchMap(mMsgSearchLiveDate) {
         // 判断与上一次搜索内容是否一致
         this.page = it.page
@@ -39,22 +39,7 @@ class SearchViewModel : ViewModel() {
         Repository.getSessionHistoryList(getUserId(), it.sid, it.page)
     }
 
-    /**
-     * 外部搜索用
-     */
-    fun searchSessionMsg(msgSearchLiveData: MsgSearchLiveData) {
-        // 更新后搜索
-        this.sid = msgSearchLiveData.sid
-        this.from = msgSearchLiveData.from
-        this.to = msgSearchLiveData.to
-        this.content = msgSearchLiveData.content
-        // TODO 可以在此处做搜索类型判断
-        mMsgSearchLiveDate.value = msgSearchLiveData
-    }
-
-    fun getUserId() = Repository.getUserId()
-
-    //     提供给外部监听，在网络请求变化后更新数据库，返回数据库的LiveData
+    // 监听网络请求结果，在网络请求变化后更新数据库，同时将自身提供给外部监听，，返回数据库的LiveData
     val searchResultObserverData = Transformations.switchMap(searchResultData) {
         val response = it.getOrNull()
         if (response == null) {
@@ -76,6 +61,19 @@ class SearchViewModel : ViewModel() {
             }
         }
     }
+
+    // 外部搜索用,发起搜索
+    fun searchSessionMsg(msgSearchLiveData: MsgSearchLiveData) {
+        // 更新后搜索
+        this.sid = msgSearchLiveData.sid
+        this.from = msgSearchLiveData.from
+        this.to = msgSearchLiveData.to
+        this.content = msgSearchLiveData.content
+        // TODO 可以在此处做搜索类型判断
+        mMsgSearchLiveDate.postValue(msgSearchLiveData)
+    }
+
+    fun getUserId() = Repository.getUserId()
 
     // 数据库插入数据
     private fun insertMessageList(messageList: List<MessageVO>) {
@@ -100,12 +98,5 @@ class SearchViewModel : ViewModel() {
             msg.content, sendTime, msg.self
         )
     }
-
-    data class SidAndPage(
-        val sid: Int,
-        val page: Int
-    )
-
-
 }
 

@@ -13,13 +13,10 @@ import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -109,8 +106,8 @@ object Repository {
     /**
      * 根据会话id，发送者id,时间范围以及消息模糊查找
      */
-    fun queryMessage(sid: Int, from: Date, to: Date, content: String,limit :Int) =
-        db.messageDao().queryMessage(sid, from, to, content,limit)
+    fun queryMessage(sid: Int, from: Date, to: Date, content: String, limit: Int) =
+        db.messageDao().queryMessage(sid, from, to, content, limit)
 
     fun queryAllMessages() = db.messageDao().queryAllMessages()
     fun insertMessage(msg: MessageEntity) = db.messageDao().insertMessage(msg)
@@ -239,14 +236,17 @@ object Repository {
     }
 
     /**
-     * websocket使用
+     * webSocket使用
      */
     fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
-        val request = Request.Builder()
-            .url(Constants.BASE_WS_URL + getUserId())
-            .build()
-        val webSocket = NetWork.getWebSocketAndConnect(request, listener)
-        return webSocket
+        return runBlocking {
+            val websocket = async {
+                NetWork.getWebSocketAndConnect(
+                    Request.Builder().url(Constants.BASE_WS_URL + getUserId()).build(), listener
+                )
+            }.await()
+            return@runBlocking websocket
+        }
     }
 
     /**

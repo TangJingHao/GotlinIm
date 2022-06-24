@@ -15,19 +15,14 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
-import com.ByteDance.Gotlin.im.application.ThreadManager
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
-import com.ByteDance.Gotlin.im.info.WSsendContent
-import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
-import com.ByteDance.Gotlin.im.view.activity.TestActivity
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.gson.Gson
-import com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -82,8 +77,8 @@ class MessageFragment : Fragment() {
                 TPhoneUtil.showToast(BaseApp.getContext(), "我的消息列表返回值为NULL")
             } else {
                 val messageList = responseData.data.messageList
-                b.rvLayout.layoutManager = LinearLayoutManager(activity)
-                val adapter = UserMsgBGAAdapter(b.rvLayout)
+                val mAdapter = UserMsgBGAAdapter(b.rvLayout)
+                // 徽章监听
                 val redPointListener: RedPointListener = object : RedPointListener {
                     override fun onDragDismiss(badgeable: BGABadgeable, position: Int) {
                         TPhoneUtil.showToast(BaseApp.getContext(), "item " + position + "的徽章消失")
@@ -97,18 +92,19 @@ class MessageFragment : Fragment() {
                         startChat(context, session)
                     }
                 }
-
-                adapter.apply {
-                    setOnRVItemClickListener { parent, itemView, position ->
-
-                    }
-                    setRedPonitInterface(redPointListener)
-                }
-                b.rvLayout.adapter = adapter
-                adapter.data = messageList
-
+                mAdapter.data = messageList
+                mAdapter.setRedPonitInterface(redPointListener)
+                b.rvLayout.adapter = mAdapter
+                b.rvLayout.layoutManager = LinearLayoutManager(requireActivity())
                 if (messageList.size != 0)
-                    adapter.notifyDataSetChanged()
+                    mAdapter.notifyDataSetChanged()
+
+                // 小红点数据变化
+                var count = 0
+                for (msg in messageList) {
+                    count += msg.session.badgeNum
+                }
+                vm.setRedPointNum(count)
             }
         }
     }
@@ -137,7 +133,6 @@ class MessageFragment : Fragment() {
             webSocket = vm.getWebSocketAndConnect(EchoWebSocketListener())
         }
         vm.getSessionList()
-
     }
 
     inner class EchoWebSocketListener : WebSocketListener() {
@@ -166,7 +161,8 @@ class MessageFragment : Fragment() {
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            DLogUtils.i(TAG, "链接失败/发送失败")
+            TPhoneUtil.showToast(requireActivity(), "链接异常")
+            DLogUtils.i(TAG, "链接失败/发送失败" + t)
         }
     }
 }

@@ -9,7 +9,7 @@
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/im_common_horizontal">
 
-    <cn.bingoogolapple.badgeview.BGABadgeTextView
+    <TextView
         android:id="@+id/bga_tv_session_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:textColor="?attr/text_ultrastrong"
         android:textSize="@dimen/im_text_large" />
 
-    <cn.bingoogolapple.badgeview.BGABadgeLinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bga_tv_session_name"
@@ -30,7 +30,7 @@
         android:layout_marginTop="@dimen/im_spacing_small"
         android:layout_toEndOf="@+id/bga_img_user_pic">
 
-        <cn.bingoogolapple.badgeview.BGABadgeTextView
+        <TextView
             android:id="@+id/bga_tv_user_msg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -51,9 +51,9 @@
             android:textStyle="bold"
             android:visibility="visible" />
 
-    </cn.bingoogolapple.badgeview.BGABadgeLinearLayout>
+    </LinearLayout>
 
-    <cn.bingoogolapple.badgeview.BGABadgeTextView
+    <TextView
         android:id="@+id/bga_tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
