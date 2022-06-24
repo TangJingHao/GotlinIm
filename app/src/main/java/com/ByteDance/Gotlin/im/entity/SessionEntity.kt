@@ -10,7 +10,7 @@ import java.io.Serializable
  * @Email 1520483847@qq.com
  * @Description
  */
-@Entity(tableName = "SessionTable", primaryKeys = ["sessionId"])
+//@Entity(tableName = "SessionTable", primaryKeys = ["sessionId"])
 data class SessionEntity(
     /** 会话 ID  */
     val sessionId: Int,

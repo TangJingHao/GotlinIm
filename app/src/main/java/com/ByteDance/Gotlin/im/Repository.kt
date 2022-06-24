@@ -7,6 +7,8 @@ import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
 import com.ByteDance.Gotlin.im.entity.SessionEntity
 import com.ByteDance.Gotlin.im.entity.UserEntity
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
@@ -86,16 +88,16 @@ object Repository {
     // 会话数据表
     fun queryAllSessions() = db.sessionDao().queryAllSession()
     fun querySessionById(sessionId: Int) = db.sessionDao().querySessionById(sessionId)
-    fun insertSession(session: SessionEntity) = db.sessionDao().insertSession(session)
-    fun updateSession(session: SessionEntity) = db.sessionDao().updateSession(session)
-    fun deleteSession(session: SessionEntity) = db.sessionDao().deleteSession(session)
+    fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
+    fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
+    fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
     fun queryUserById(userId: Int) = db.userDao().queryUserById(userId)
-    fun insertUser(user: UserEntity) = db.userDao().insertUser(user)
-    fun upDataUser(user: UserEntity) = db.userDao().upDataUser(user)
-    fun deleteUser(user: UserEntity) = db.userDao().deleteUser(user)
+    fun insertUser(user: UserVO) = db.userDao().insertUser(user)
+    fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
+    fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)
 
     // 消息数据表
     /**

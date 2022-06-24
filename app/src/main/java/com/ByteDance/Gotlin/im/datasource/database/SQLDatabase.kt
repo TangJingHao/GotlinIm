@@ -6,11 +6,8 @@ import com.ByteDance.Gotlin.im.datasource.dao.MessageDao
 import com.ByteDance.Gotlin.im.datasource.dao.SessionDao
 import com.ByteDance.Gotlin.im.datasource.dao.UserDao
 import com.ByteDance.Gotlin.im.entity.MessageEntity
-import com.ByteDance.Gotlin.im.entity.SessionEntity
-import com.ByteDance.Gotlin.im.entity.UserEntity
-import com.google.common.reflect.TypeToken
-import com.google.gson.Gson
-import java.lang.reflect.Type
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import java.sql.Date
 
 /**
@@ -19,7 +16,7 @@ import java.sql.Date
  * @Email 1520483847@qq.com
  * @Description 学习测试用数据库
  */
-@Database(entities = [UserEntity::class, SessionEntity::class, MessageEntity::class], version = 3)
+@Database(entities = [UserVO::class, SessionVO::class, MessageEntity::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class SQLDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

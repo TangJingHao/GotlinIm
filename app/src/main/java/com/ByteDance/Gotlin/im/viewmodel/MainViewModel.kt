@@ -30,31 +30,31 @@ class MainViewModel : ViewModel() {
     }
 
     // 交给外部监听,这是数据库获取的好友列表
-//    val friendListObserverDB = Transformations.switchMap(friendListObserverData){
-//        val response = it.getOrNull()
-//        if (response == null) {
-//            // 网络请求失败，直接返回
-//            null
-//        } else {
-//            // 使用协程
-//            val friendList = response.data.friendList
-//            // 协程返回数据的方法
-//            runBlocking {
-//                val res = async {
-//                    // 先插入数据
-//                    insertFriendList(friendList)
-//                    Repository.queryAllUsers()
-//                }.await()
-//                // 阻塞等待返回结果
-//                return@runBlocking res
-//            }
-//        }
-//    }
+    val friendListObserverDB = Transformations.switchMap(friendListObserverData){
+        val response = it.getOrNull()
+        if (response == null) {
+            // 网络请求失败，直接返回
+            null
+        } else {
+            // 使用协程
+            val friendList = response.data.friendList
+            // 协程返回数据的方法
+            runBlocking {
+                val res = async {
+                    // 先插入数据
+                    insertFriendList(friendList)
+                    Repository.queryAllUsers()
+                }.await()
+                // 阻塞等待返回结果
+                return@runBlocking res
+            }
+        }
+    }
 
     private fun insertFriendList(friendList: List<UserVO>) {
         GlobalScope.launch(Dispatchers.IO) {
             for (friend in friendList) {
-                Repository.insertUser(VO2Entity(friend))
+                Repository.insertUser(friend)
             }
         }
     }
@@ -92,16 +92,16 @@ class MainViewModel : ViewModel() {
     }
 
     // VO类型转换为Entity类型存储
-    private fun VO2Entity(user: UserVO): UserEntity {
-        return UserEntity(
-            user.userId,
-            user.userName,
-            user.sex,
-            user.nickName,
-            user.email,
-            user.avatar,
-            user.online
-        )
-    }
+//    private fun VO2Entity(user: UserVO): UserEntity {
+//        return UserEntity(
+//            user.userId,
+//            user.userName,
+//            user.sex,
+//            user.nickName,
+//            user.email,
+//            user.avatar,
+//            user.online
+//        )
+//    }
 
 }

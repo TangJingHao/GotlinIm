@@ -1,14 +1,16 @@
 package com.ByteDance.Gotlin.im.entity
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.Entity
 
 /**
  * @Author Zhicong Deng
  * @Date 2022/6/21 1:17
  * @Email 1520483847@qq.com
- * @Description
+ * @Description //已弃用
  */
-@Entity(tableName = "UserTable", primaryKeys = ["userId"])
+//@Entity(tableName = "UserTable", primaryKeys = ["userId"])
 data class UserEntity(
     /** 用户 ID */
     val userId: Int,
@@ -30,4 +32,6 @@ data class UserEntity(
 
     /** 用户是否在线 */
     val online: Boolean
-)
+) {
+
+}
