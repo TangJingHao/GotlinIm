@@ -17,7 +17,13 @@ import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.ws.WebSocketType
+import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils
+import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils.toAny
+import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils.toJson
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
@@ -75,6 +81,7 @@ class MessageFragment : Fragment() {
                     override fun onDragDismiss(badgeable: BGABadgeable, position: Int) {
                         TPhoneUtil.showToast(BaseApp.getContext(), "item " + position + "的徽章消失")
                     }
+
                     override fun onClick(view: View, position: Int, badge: BGABadgeView) {
                         //跳转到聊天界面
                         val session: SessionVO = messageList.get(position).session
@@ -103,7 +110,15 @@ class MessageFragment : Fragment() {
         }
 
         vm.getWsMessageObserverData().observe(requireActivity()) {
-            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
+            val wsType = it.toAny(WebSocketType::class.java)?.wsType
+            when (wsType) {
+                Constants.WS_USER_ONLINE -> {
+                    TPhoneUtil.showToast(requireActivity(), "好友上线通知")
+                }
+                Constants.WS_SEND_MESSAGE -> {
+                    TPhoneUtil.showToast(requireActivity(), "新消息通知")
+                }
+            }
             // 消息页面更新（小红点之类的）
             loadData()
         }
@@ -112,6 +127,19 @@ class MessageFragment : Fragment() {
             TPhoneUtil.showToast(requireActivity(), "主界面WebSocket断开")
             vm.getWebSocket()
         }
+
+        val s: String = "{\n" +
+                "    \"wsContent\": {\n" +
+                "        \"online\": true,                // 用户最新状态\n" +
+                "        \"sessionIdList\": [3, 5, 6],    // 与用户相关的会话\n" +
+                "        \"userId\": 4                    // 目前用户 ID\n" +
+                "    },\n" +
+                "    \"wsType\": \"USER_ONLINE\"\n" +
+                "}"
+
+        val any = s.toAny(WebSocketType::class.java)
+
+        DLogUtils.i(TAG+ "类型测试",any?.wsType + "  ")
     }
 
     override fun onResume() {
