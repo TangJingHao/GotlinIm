@@ -137,149 +137,147 @@ class SearchFragment : Fragment() {
                 DLogUtils.i(TAG + "群聊申请", "MY_GROUP_CHAR_APPLICATION")
                 b.searchBar.fLayout.visibility = View.GONE
             }
-            else -> {   // 消息搜索
-                DLogUtils.i(TAG + "消息搜索", "SEARCH_HISTORY_MESSAGE")
-                initSearchMsgViewAndEvent()
-                // 展示所有搜索记录
-                loadMsgWithParam("", null, null)
-            }
+//            else -> {   // 消息搜索
+//                DLogUtils.i(TAG + "消息搜索", "SEARCH_HISTORY_MESSAGE")
+////                initSearchMsgViewAndEvent()
+////                // 展示所有搜索记录
+////                loadMsgWithParam("", null, null)
+//            }
         }
     }
 
-    /**
-     * 初始化消息搜索页面事件
-     */
-    private fun initSearchMsgViewAndEvent() {
 
-        mAdapter = UserHistoryMsgAdapter(requireActivity())
-
-        // 时间选择器相关
-        b.timeBar.apply {
-            lLayout.visibility = View.VISIBLE
-            tvTimeFrom.setOnClickListener { view: View? ->
-                // TODO 时间选择器（起始）,传入from中
-//                loadMsgWithParam(null, from, null)
-
-            }
-            tvTimeTo.setOnClickListener { view: View? ->
-                // TODO 时间选择器（结束），传入to中
-//                loadMsgWithParam(null, null, to)
-            }
-        }
-
-        b.rvLayout.apply {
-            layoutManager = LinearLayoutManager(requireActivity())
-            itemAnimator = DefaultItemAnimator()
-            adapter = mAdapter
-            // recycleView滑动监听
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(
-                    recyclerView: RecyclerView,
-                    newState: Int
-                ) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        // 滑倒底了,刷新数据
-                        DLogUtils.i(
-                            TAG,
-                            "滑倒底了,刷新数据============================================================================="
-                        )
-                        DLogUtils.i(TAG, "当前资料大小：" + curDataSize + "\t上次资料大小：" + lastDataSize)
-                        if (curDataSize > lastDataSize) {
-                            lastDataSize = curDataSize
-                            loadMoreMsg()
-                        } else {
-                            lastDataSize = 0
-                            curDataSize = 0
-                            mAdapter?.hasMore(false)
-                            mAdapter?.notifyDataSetChanged()
-                        }
-                    } else {
-                        // 还未滑到底
-                    }
-                }
-            })
-        }
-
-        // 监听返回的livedata,包含了网络请求和存数据库的过程,返回从数据库中的查询结果
-        vm.searchResultObserverData.observe(requireActivity()) {
-            curDataSize = it.size
-            DLogUtils.i(TAG, "数据库查找条数" + it.size)
-            when (refreshMode) {
-                REFRESH_MODE_NEW -> {
-                    if (it.size < 10) {
-                        DLogUtils.i(TAG, "搜索结果少于10条")
-                        mAdapter?.hasMore(false)
-                        mAdapter?.setData(it)
-                        mAdapter?.notifyDataSetChanged()
-                    } else if (it.size > lastDataSize) {
-                        DLogUtils.i(TAG, "发起新搜索")
-                        mAdapter?.hasMore(true)
-                        mAdapter?.setData(it)
-                        // 更新高亮文字
-                        mAdapter?.setHighLightPart(mMsgSearchData?.content)
-                        mAdapter?.notifyDataSetChanged()
-                    } else {
-                        mAdapter?.hasMore(false)
-                        mAdapter?.notifyDataSetChanged()
-                    }
-                }
-                REFRESH_MODE_LOAD_MORE -> {
-                    DLogUtils.i(TAG, "加载更多")
-                    mAdapter?.setData(it)
-                    mAdapter?.notifyDataSetChanged()
-                }
-            }
-            refreshMode = REFRESH_MODE_DEFAULT
-        }
-
-
-        //回车键监测,获取文字后模糊搜索
-        b.searchBar.etInput.apply {
-            setOnKeyListener(object : View.OnKeyListener {
-                override fun onKey(view: View, keycode: Int, event: KeyEvent): Boolean {
-                    if (keycode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-                        val inputText = b.searchBar.etInput.text.toString()
-                        b.searchBar.etInput.clearFocus()
-                        hideKeyboard()
-                        // 搜索
-                        DLogUtils.i(TAG, "输入：" + inputText)
-                        loadMsgWithParam(inputText, null, null)
-                        return true
-                    }
-                    return false
-                }
-            })
-            hint = "请输入搜索关键词"
-        }
-    }
-
-    /**
-     * 传入参数搜索消息记录（用于主动搜索）
-     */
-    private fun loadMsgWithParam(content: String?, from: Date?, to: Date?) {
-        if (refreshMode == REFRESH_MODE_DEFAULT) {
-            if (content != null) mMsgSearchData?.content = content
-            if (from != null) mMsgSearchData?.from = from
-            if (to != null) mMsgSearchData?.to = to
-            mMsgSearchData?.page = 0
-            refreshMode = REFRESH_MODE_NEW
-            curDataSize = 0
-            vm.searchSessionMsg(mMsgSearchData!!)
-        }
-    }
-
-    /**
-     * 加载更多消息记录（一般用于上拉刷新）
-     */
-    private fun loadMoreMsg() {
-        if (refreshMode == REFRESH_MODE_DEFAULT) {
-            refreshMode = REFRESH_MODE_LOAD_MORE
-            mMsgSearchData?.page = mMsgSearchData?.page?.plus(1)!!
-            vm.searchSessionMsg(mMsgSearchData!!)
-        }
-    }
-
+//    /**
+//     * 初始化消息搜索页面事件
+//     */
+//    private fun initSearchMsgViewAndEvent() {
+//
+//        mAdapter = UserHistoryMsgAdapter(requireActivity())
+//
+//        // 时间选择器相关
+//        b.timeBar.apply {
+//            lLayout.visibility = View.VISIBLE
+//            tvTimeFrom.setOnClickListener { view: View? ->
+////                loadMsgWithParam(null, from, null)
+//
+//            }
+//            tvTimeTo.setOnClickListener { view: View? ->
+////                loadMsgWithParam(null, null, to)
+//            }
+//        }
+//
+//        b.rvLayout.apply {
+//            layoutManager = LinearLayoutManager(requireActivity())
+//            itemAnimator = DefaultItemAnimator()
+//            adapter = mAdapter
+//            // recycleView滑动监听
+//            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrollStateChanged(
+//                    recyclerView: RecyclerView,
+//                    newState: Int
+//                ) {
+//                    super.onScrollStateChanged(recyclerView, newState)
+//                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                        // 滑倒底了,刷新数据
+//                        DLogUtils.i(
+//                            TAG,
+//                            "滑倒底了,刷新数据============================================================================="
+//                        )
+//                        DLogUtils.i(TAG, "当前资料大小：" + curDataSize + "\t上次资料大小：" + lastDataSize)
+//                        if (curDataSize > lastDataSize) {
+//                            lastDataSize = curDataSize
+//                            loadMoreMsg()
+//                        } else {
+//                            lastDataSize = 0
+//                            curDataSize = 0
+//                            mAdapter?.hasMore(false)
+//                            mAdapter?.notifyDataSetChanged()
+//                        }
+//                    } else {
+//                        // 还未滑到底
+//                    }
+//                }
+//            })
+//        }
+//
+//        // 监听返回的livedata,包含了网络请求和存数据库的过程,返回从数据库中的查询结果
+//        vm.searchResultObserverData.observe(requireActivity()) {
+//            curDataSize = it.size
+//            DLogUtils.i(TAG, "数据库查找条数" + it.size)
+//            when (refreshMode) {
+//                REFRESH_MODE_NEW -> {
+//                    if (it.size < 10) {
+//                        DLogUtils.i(TAG, "搜索结果少于10条")
+//                        mAdapter?.hasMore(false)
+//                        mAdapter?.setData(it)
+//                        mAdapter?.notifyDataSetChanged()
+//                    } else if (it.size > lastDataSize) {
+//                        DLogUtils.i(TAG, "发起新搜索")
+//                        mAdapter?.hasMore(true)
+//                        mAdapter?.setData(it)
+//                        // 更新高亮文字
+//                        mAdapter?.setHighLightPart(mMsgSearchData?.content)
+//                        mAdapter?.notifyDataSetChanged()
+//                    } else {
+//                        mAdapter?.hasMore(false)
+//                        mAdapter?.notifyDataSetChanged()
+//                    }
+//                }
+//                REFRESH_MODE_LOAD_MORE -> {
+//                    DLogUtils.i(TAG, "加载更多")
+//                    mAdapter?.setData(it)
+//                    mAdapter?.notifyDataSetChanged()
+//                }
+//            }
+//            refreshMode = REFRESH_MODE_DEFAULT
+//        }
+//
+//
+//        //回车键监测,获取文字后模糊搜索
+//        b.searchBar.etInput.apply {
+//            setOnKeyListener(object : View.OnKeyListener {
+//                override fun onKey(view: View, keycode: Int, event: KeyEvent): Boolean {
+//                    if (keycode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
+//                        val inputText = b.searchBar.etInput.text.toString()
+//                        b.searchBar.etInput.clearFocus()
+//                        hideKeyboard()
+//                        // 搜索
+//                        DLogUtils.i(TAG, "输入：" + inputText)
+//                        loadMsgWithParam(inputText, null, null)
+//                        return true
+//                    }
+//                    return false
+//                }
+//            })
+//            hint = "请输入搜索关键词"
+//        }
+//    }
+//
+//    /**
+//     * 传入参数搜索消息记录（用于主动搜索）
+//     */
+//    private fun loadMsgWithParam(content: String?, from: Date?, to: Date?) {
+//        if (refreshMode == REFRESH_MODE_DEFAULT) {
+//            if (content != null) mMsgSearchData?.content = content
+//            if (from != null) mMsgSearchData?.from = from
+//            if (to != null) mMsgSearchData?.to = to
+//            mMsgSearchData?.page = 0
+//            refreshMode = REFRESH_MODE_NEW
+//            curDataSize = 0
+//            vm.searchSessionMsg(mMsgSearchData!!)
+//        }
+//    }
+//
+//    /**
+//     * 加载更多消息记录（一般用于上拉刷新）
+//     */
+//    private fun loadMoreMsg() {
+//        if (refreshMode == REFRESH_MODE_DEFAULT) {
+//            refreshMode = REFRESH_MODE_LOAD_MORE
+//            mMsgSearchData?.page = mMsgSearchData?.page?.plus(1)!!
+//            vm.searchSessionMsg(mMsgSearchData!!)
+//        }
+//    }
 
     /**
      * 关闭软键盘

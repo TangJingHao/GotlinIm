@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ByteDance.Gotlin.im.databinding.DItemFootBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemHistoryMessageBinding;
 import com.ByteDance.Gotlin.im.entity.MessageEntity;
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -30,6 +31,7 @@ import java.util.List;
  * @Description
  */
 public class UserHistoryMsgAdapter extends RecyclerView.Adapter {
+    private static final String TAG = "UserHistoryMsgAdapter";
     private List<MessageEntity> mDataList = new ArrayList<>();
     private Context mContext;
 
@@ -118,20 +120,18 @@ public class UserHistoryMsgAdapter extends RecyclerView.Adapter {
         this.hasMore = hasMore;
     }
 
-    //这里清空数据，避免下拉刷新后，还显示上拉加载的数据
-    public void reData() {
-        mDataList.clear();
-    }
-
     // 设置查找的高亮数据
     public void setHighLightPart(String highLightPart) {
         this.highLightPart = highLightPart;
     }
 
     // 匹配到合适的文字并高光
+    // TODO 高光文字
     public String changeMsgWithHighLight(String content) {
-        content.replaceAll(highLightPart, "<font color='#1e6fff'>" + highLightPart + "</font>");
-        // TODO 高光文字
+        if (!highLightPart.equals("")) {
+            String replace = content.replaceAll(highLightPart, "<font color='#1e6fff'>" + highLightPart + "</font>");
+            return replace;
+        }
         return content;
     }
 

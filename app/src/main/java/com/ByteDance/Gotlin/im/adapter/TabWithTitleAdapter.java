@@ -88,7 +88,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public static final int TYPE_USER_INFO_STATUE = 1;
     // 头像、用户名
     public static final int TYPE_USER_INFO_SIMPLE = 2;
-    // 头像、用户名、信息、发送时间
+    // 头像、用户名、信息、发送时间（已废弃）
     public static final int TYPE_USER_MESSAGE = 3;
     // 当前状态（只能是1/2/3）
     public int mTabType;
@@ -312,23 +312,21 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     }
                     break;
                 }
-                case TYPE_USER_MESSAGE: {
-//                    // TODO 在此处处理泛型类的转换
-                    MessageEntity item = (MessageEntity) mDataInfoList.get(group).get(relativePosition);
-                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
-
-                    // TODO 网络头像加载，目前仅加载默认头像
-                    Glide.with(mContext)
-                            .load(item.getSenderAvatar() == null ?
-                                    Constants.DEFAULT_IMG :
-                                    BASE_URL + item.getSenderAvatar())
-                            .into(MessageHolder.b.bgaImgUserPic);
-                    MessageHolder.b.bgaTvSessionName.setText(item.getSenderName());
-                    MessageHolder.b.bgaTvUserMsg.setText(item.getContent());
-                    Date sendTime = item.getSendTime();
-                    MessageHolder.b.bgaTvTime.setText(TimeUtils.getDateToString(sendTime.getTime()));
-                    break;
-                }
+//                case TYPE_USER_MESSAGE: { // 已废弃
+//                    MessageEntity item = (MessageEntity) mDataInfoList.get(group).get(relativePosition);
+//                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
+//
+//                    Glide.with(mContext)
+//                            .load(item.getSenderAvatar() == null ?
+//                                    Constants.DEFAULT_IMG :
+//                                    BASE_URL + item.getSenderAvatar())
+//                            .into(MessageHolder.b.bgaImgUserPic);
+//                    MessageHolder.b.bgaTvSessionName.setText(item.getSenderName());
+//                    MessageHolder.b.bgaTvUserMsg.setText(item.getContent());
+//                    Date sendTime = item.getSendTime();
+//                    MessageHolder.b.bgaTvTime.setText(TimeUtils.getDateToString(sendTime.getTime()));
+//                    break;
+//                }
                 default:
                     break;
             }

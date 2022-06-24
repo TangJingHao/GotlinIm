@@ -1,10 +1,17 @@
 package com.ByteDance.Gotlin.im.viewmodel
 
+import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.UserEntity
+import com.ByteDance.Gotlin.im.info.vo.MessageVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
+import kotlinx.coroutines.*
 import okhttp3.WebSocketListener
+import java.sql.Date
 
 /**
  * @Author Zhicong Deng
@@ -17,9 +24,39 @@ class MainViewModel : ViewModel() {
     private val mMsgData = MutableLiveData<Int>()
     private val mSessionData = MutableLiveData<Int>()
 
-    // 交给外部监听
+
     val friendListObserverData = Transformations.switchMap(mMsgData) {
         Repository.getFriendList(it)
+    }
+
+    // 交给外部监听,这是数据库获取的好友列表
+//    val friendListObserverDB = Transformations.switchMap(friendListObserverData){
+//        val response = it.getOrNull()
+//        if (response == null) {
+//            // 网络请求失败，直接返回
+//            null
+//        } else {
+//            // 使用协程
+//            val friendList = response.data.friendList
+//            // 协程返回数据的方法
+//            runBlocking {
+//                val res = async {
+//                    // 先插入数据
+//                    insertFriendList(friendList)
+//                    Repository.queryAllUsers()
+//                }.await()
+//                // 阻塞等待返回结果
+//                return@runBlocking res
+//            }
+//        }
+//    }
+
+    private fun insertFriendList(friendList: List<UserVO>) {
+        GlobalScope.launch(Dispatchers.IO) {
+            for (friend in friendList) {
+                Repository.insertUser(VO2Entity(friend))
+            }
+        }
     }
 
     // 交给外部监听，这是消息列表
@@ -52,6 +89,19 @@ class MainViewModel : ViewModel() {
 
     fun setRedPointNum(num: Int) {
         mUnreadMsgLiveDate.postValue(num)
+    }
+
+    // VO类型转换为Entity类型存储
+    private fun VO2Entity(user: UserVO): UserEntity {
+        return UserEntity(
+            user.userId,
+            user.userName,
+            user.sex,
+            user.nickName,
+            user.email,
+            user.avatar,
+            user.online
+        )
     }
 
 }

@@ -53,7 +53,7 @@ class SearchViewModel : ViewModel() {
                 val res = async {
                     // 先插入数据
                     insertMessageList(historyList)
-                    // 从数据库中获取，作为返回值
+                    // 从数据库中获取，作为返回值，注意sql注入
                     Repository.queryMessage(sid, from, to, content, page * 10 + 10)
                 }.await()
                 // 阻塞等待返回结果
@@ -69,7 +69,6 @@ class SearchViewModel : ViewModel() {
         this.from = msgSearchLiveData.from
         this.to = msgSearchLiveData.to
         this.content = msgSearchLiveData.content
-        // TODO 可以在此处做搜索类型判断
         mMsgSearchLiveDate.postValue(msgSearchLiveData)
     }
 
