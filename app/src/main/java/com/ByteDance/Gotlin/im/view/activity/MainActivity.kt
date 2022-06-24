@@ -8,8 +8,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.application.BActivity
 import com.ByteDance.Gotlin.im.databinding.TActivityMainBinding
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.custom.MainBnvVp2Mediator
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                 vp2.isUserInputEnabled = true//设置是否响应用户滑动
             }.attach()
         }
+        // 开启WebSocket
     }
 
     private fun initView() {
