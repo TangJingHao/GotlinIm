@@ -15,6 +15,7 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
+import com.ByteDance.Gotlin.im.application.ThreadManager
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
@@ -23,10 +24,6 @@ import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.gson.Gson
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
-import okio.ByteString
 
 /**
  * @Author 唐靖豪
@@ -44,7 +41,6 @@ class MessageFragment : Fragment() {
         private const val TAG = "MessageFragment"
     }
 
-    var webSocket: WebSocket? = null
     var gson = Gson()
 
     private val vm: MainViewModel by lazy {
@@ -60,17 +56,17 @@ class MessageFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         initListener()
-        initData()
+        loadData()
         initView()
-
+        vm.getWebSocket()
         return b.root
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
         vm.sessionObserverData.observe(requireActivity()) { result ->
+            DLogUtils.i(TAG, "刷新列表")
             val responseData = result.getOrNull()
             if (responseData == null) {
                 DLogUtils.i(TAG, "我的消息列表返回值为NULL")
@@ -85,10 +81,9 @@ class MessageFragment : Fragment() {
                     }
 
                     override fun onClick(view: View, position: Int, badge: BGABadgeView) {
-//                    //跳转到聊天界面
+                        //跳转到聊天界面
                         val session: SessionVO = messageList.get(position).session
                         badge.hiddenBadge()
-//                        TPhoneUtil.showToast(BaseApp.getContext(), "点击了" + session.name)
                         startChat(context, session)
                     }
                 }
@@ -107,11 +102,33 @@ class MessageFragment : Fragment() {
                 vm.setRedPointNum(count)
             }
         }
+
+        vm.getWsOpenObserverData().observe(requireActivity()) {
+            TPhoneUtil.showToast(requireActivity(), "主界面WebSocket开启")
+        }
+
+        vm.getWsMessageObserverData().observe(requireActivity()) {
+            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
+            // 消息页面更新（小红点之类的）
+            loadData()
+        }
+
+        vm.getFailureObserverData().observe(requireActivity()) {
+            TPhoneUtil.showToast(requireActivity(), "主界面WebSocket断开")
+            vm.getWebSocket()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        DLogUtils.w("消息列表Fragment", "onResume")
+        vm.getSessionList()
     }
 
     private fun initView() {
         b.myToolbar.imgChevronLeft.visibility = View.GONE;
         b.myToolbar.title.text = "消息列表"
+        // 下拉刷新
         b.refreshLayout.apply {
             setColorSchemeColors(
                 AttrColorUtils
@@ -122,47 +139,13 @@ class MessageFragment : Fragment() {
                     .getValueOfColorAttr(activity, R.attr.bg_weak)
             )
             setOnRefreshListener(OnRefreshListener {
-                initData()
+                loadData()
                 b.refreshLayout.isRefreshing = false
             })
         }
     }
 
-    private fun initData() {
-        if (webSocket == null) {
-            webSocket = vm.getWebSocketAndConnect(EchoWebSocketListener())
-        }
+    private fun loadData() {
         vm.getSessionList()
-    }
-
-    inner class EchoWebSocketListener : WebSocketListener() {
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-            DLogUtils.i(TAG, "链接开启")
-            initData()
-        }
-
-        // 回调,展示消息
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
-            DLogUtils.i(TAG, "回调$text")
-        }
-
-        // 回调
-        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-            DLogUtils.i(TAG, "回调$bytes")
-        }
-
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            DLogUtils.i(TAG, "链接关闭中")
-        }
-
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            DLogUtils.i(TAG, "链接已关闭")
-        }
-
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            TPhoneUtil.showToast(requireActivity(), "链接异常")
-            DLogUtils.i(TAG, "链接失败/发送失败" + t)
-        }
     }
 }

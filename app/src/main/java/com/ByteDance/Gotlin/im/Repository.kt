@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
@@ -12,12 +13,12 @@ import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import okhttp3.Request
+import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import okio.ByteString
 import java.sql.Date
 import kotlin.coroutines.CoroutineContext
 
@@ -28,6 +29,7 @@ import kotlin.coroutines.CoroutineContext
  * @Description
  */
 
+@OptIn(DelicateCoroutinesApi::class)
 object Repository {
 
     private const val TAG = "Repository"
@@ -60,18 +62,18 @@ object Repository {
     /**
      * 获取当前用户nickName
      */
-    fun getUsernickName(): String = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
+    fun getUsernickName() = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
 
     /**
      * 获取当前用户头像
      */
     fun getUserAvatar() = mmkv.decodeInt(MMKV_USER_AVATAR, Constants.DEFAULT_IMG)
 
-    fun getUserName(): String = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
+    fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
 
-    fun getUserSex(): String = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
+    fun getUserSex() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
 
-    fun getUserEmail(): String = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
+    fun getUserEmail() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
 
     /*
     * 数据库=========================================================================================
@@ -233,20 +235,6 @@ object Repository {
     }
 
     /**
-     * webSocket使用
-     */
-    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
-        return runBlocking {
-            val websocket = async {
-                NetWork.getWebSocketAndConnect(
-                    Request.Builder().url(Constants.BASE_WS_URL + getUserId()).build(), listener
-                )
-            }.await()
-            return@runBlocking websocket
-        }
-    }
-
-    /**
      * 获取群聊信息
      */
     fun getGroupInfo(groupId: Int) = liveData<Int> {
@@ -276,4 +264,76 @@ object Repository {
             emit(result)
         }
 
+    // WebSocket尝试解决方案==========================================================================
+    /**
+     * webSocket使用(即将弃用)
+     */
+    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
+        return runBlocking {
+            val websocket = async {
+                NetWork.getWebSocketAndConnect(
+                    Request.Builder().url(Constants.BASE_WS_URL + getUserId()).build(), listener
+                )
+            }.await()
+            return@runBlocking websocket
+        }
+    }
+
+    // 开局创建WebSocket
+    private fun getWebSocketAndConnect(): WebSocket {
+        return runBlocking {
+            val webSocket = withContext(Dispatchers.Default) {
+                NetWork.getWebSocketAndConnect(
+                    Request.Builder().url(Constants.BASE_WS_URL + getUserId()).build(),
+                    EchoWebSocketListener()
+                )
+            }
+            return@runBlocking webSocket
+        }
+    }
+
+    private var webSocket: WebSocket? = null
+    private val onWsOpenObserverData = MutableLiveData<Response>()
+    private val onWsMessageObserverData = MutableLiveData<String>()
+    private val onWsFailureObserverData = MutableLiveData<Throwable>()
+
+    // 用于WebSocket观察返回数据，自行判断回调
+    fun getWsOpenObserverData() = this.onWsOpenObserverData
+    fun getWsMessageObserverData() = this.onWsMessageObserverData
+    fun getFailureObserverData() = this.onWsFailureObserverData
+    fun getWebSocket(): WebSocket {
+        if (this.webSocket == null) {
+            this.webSocket = getWebSocketAndConnect()
+        }
+        return webSocket!!
+    }
+
+    class EchoWebSocketListener : WebSocketListener() {
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            DLogUtils.i(TAG, "WebSocket链接开启$webSocket\n$response")
+            onWsOpenObserverData.postValue(response)
+        }
+
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            DLogUtils.i(TAG, "回调$webSocket\n$text")
+            onWsMessageObserverData.postValue(text)
+        }
+
+        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+            DLogUtils.i(TAG, "回调$bytes")
+        }
+
+        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+            DLogUtils.i(TAG, "链接关闭中")
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            DLogUtils.i(TAG, "链接已关闭")
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            DLogUtils.i(TAG, "链接失败\t$t\n$response")
+            onWsFailureObserverData.postValue(t)
+        }
+    }
 }

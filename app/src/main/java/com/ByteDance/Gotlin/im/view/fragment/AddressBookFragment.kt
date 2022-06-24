@@ -73,6 +73,11 @@ class AddressBookFragment : Fragment() {
         return b.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        DLogUtils.w("通讯录Fragment","onResume")
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
         vm.friendListObserverDB.observe(requireActivity()) {
