@@ -90,12 +90,8 @@ class GroupInfoActivity : AppCompatActivity() {
         mBinding.tabGroupNickname.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--我的群昵称（弹窗修改）--") }
         mBinding.tabItemInfoSearch.root.onClick {
             MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")
-            //TODO:跳转到搜索聊天消息
-            startActivity<SearchActivity>(this) {
-                putExtra(Constants.SEARCH_FROM_INFO_TYPE, Constants.SEARCH_TYPE_FROM_GROUP)
-            }
-
-
+            //TODO:跳转到搜索聊天消息,需要会话id
+            //  SearchActivity.startMsgSearch(this,sessionId )
         }
         mBinding.tabDeleteGroup.root.onClick {
             MLogUtil.v(Constants.TAG_GROUP_INFO,"--删除群聊--")

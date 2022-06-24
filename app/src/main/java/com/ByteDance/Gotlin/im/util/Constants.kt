@@ -24,15 +24,14 @@ object Constants {
     const val USER_DEFAULT_NICKNAME = "nickname"
     const val USER_DEFAULT_EMAIL = "email"
     const val USER_DEFAULT_SEX = "sex"
-    const val USER_DEFAULT_AVATAR: Int = R.drawable.d_img_useravatar1
 
     //消息类型
     const val MESSAGE_TEXT = 0
     const val MESSAGE_IMG = 1
 
     //用户的状态设置
-    const val USER_DEFAULT_MODE=2//默认状态则不做处理
-    const val USER_DARK_MODE=1
+    const val USER_DEFAULT_MODE = 2//默认状态则不做处理
+    const val USER_DARK_MODE = 1
     const val USER_LIGHT_MODE = 2
 
     // 网络相关
@@ -61,16 +60,19 @@ object Constants {
     const val GROUP_OWNER = "GroupOwner"
 
     //suzy：全局TAG
-    const val TAG_FRIEND_INFO="FriendInfoActivity"
-    const val TAG_GROUP_INFO="GroupInfoActivity"
-    const val TAG_SET_FRIEND_INFO="SetFriendInfoActivity"
+    const val TAG_FRIEND_INFO = "FriendInfoActivity"
+    const val TAG_GROUP_INFO = "GroupInfoActivity"
+    const val TAG_SET_FRIEND_INFO = "SetFriendInfoActivity"
 
-     //suzy：跳转
+    //suzy：跳转
     const val SEARCH_FROM_INFO_TYPE = "search_type"
     const val SEARCH_TYPE_FROM_FRIEND = 2
     const val SEARCH_TYPE_FROM_GROUP = 2
     const val SEARCH_HISTORY = 6
 
+    //默认图片
+    const val DEFAULT_IMG: Int = R.drawable.ic_img_default
+
     //网络类型状态码
-    const val SUCCESS_STATUS=0
+    const val SUCCESS_STATUS = 0
 }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/bg_default"
-    tools:context=".view.fragment.SearchFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".view.fragment.SearchFragment">
 
     <include
         android:id="@+id/search_bar"
@@ -14,20 +13,11 @@
 
     <include
         android:id="@+id/time_bar"
-        layout="@layout/d_include_time_select_bar"/>
+        layout="@layout/d_include_time_select_bar" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/sr_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/search_bar">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

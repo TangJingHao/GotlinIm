@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
-import com.ByteDance.Gotlin.im.info.HistoryListBean;
 import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse;
 import com.ByteDance.Gotlin.im.info.WSreceiveContent;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
@@ -110,11 +109,11 @@ public class ChatViewModel extends ViewModel {
             public void resumeWith(@NonNull Object o) {
                 if (o instanceof SessionHistoryDataResponse) {
                     SessionHistoryDataResponse his = (SessionHistoryDataResponse) o;
-                    List<HistoryListBean> list = his.getData().getHistoryList();
+                    List<MessageVO> list = his.getData().getHistoryList();
                     //将获得的数据转换为MessageVO，并向消息列表Top位置插入
                     MessageVO[] messageVOS = new MessageVO[list.size()];
                     int count = 0;
-                    for (HistoryListBean h : list) {
+                    for (MessageVO h : list) {
                         messageVOS[count++] = new MessageVO(
                                 h.getSession(), h.getSender(),
                                 h.getType(), h.getContent(),
@@ -195,7 +194,7 @@ public class ChatViewModel extends ViewModel {
 
         @Override
         public void onOpen(WebSocket webSocket, @NonNull Response response) {
-            DLogUtils.i(TAG,"开启链接");
+            DLogUtils.i(TAG, "开启链接");
             WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
                     SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
                     0, "开始聊天吧"));
@@ -207,7 +206,7 @@ public class ChatViewModel extends ViewModel {
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
             DLogUtils.i(TAG, "回调" + text);
             WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
-            if (msg.getWsContent().getType() == MESSAGE_TEXT){
+            if (msg.getWsContent().getType() == MESSAGE_TEXT) {
 
             }
 
@@ -237,7 +236,7 @@ public class ChatViewModel extends ViewModel {
 
         @Override
         public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, Response response) {
-            DLogUtils.i(TAG, "链接失败/发送失败");
+            DLogUtils.i(TAG, "链接失败/发送失败" + t);
         }
     }
 }

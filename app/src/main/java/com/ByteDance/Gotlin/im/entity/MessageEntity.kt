@@ -11,7 +11,7 @@ import java.sql.Date
  * @Description
  */
 
-@Entity(tableName = "MessageTable", primaryKeys = ["sessionId", "senderId"])
+@Entity(tableName = "MessageTable", primaryKeys = ["sendTime"])
 data class MessageEntity(
 
     /** 消息所属会话  */
@@ -19,6 +19,12 @@ data class MessageEntity(
 
     /** 消息发送者  */
     val senderId: Int,
+
+    /** 消息发送者名称  */
+    val senderName: String,
+
+    /** 消息发送者头像  */
+    val senderAvatar: String?,
 
     /** 消息类型  */
     @ColumnInfo(name = "msg_type")

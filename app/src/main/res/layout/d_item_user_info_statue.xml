@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/im_spacing_medium"
         android:layout_toStartOf="@id/tv_statue"
-        android:layout_toEndOf="@+id/img_user_pic"
+        android:layout_toEndOf="@+id/img_avatar"
         android:ellipsize="end"
         android:lines="1"
         android:maxEms="12"
@@ -29,7 +29,7 @@
         android:layout_below="@id/tv_user_name"
         android:layout_marginTop="@dimen/im_spacing_small"
         android:layout_toStartOf="@id/tv_statue"
-        android:layout_toEndOf="@+id/img_user_pic"
+        android:layout_toEndOf="@+id/img_avatar"
         android:ellipsize="end"
         android:lines="1"
         android:text="用户信息/邮箱"
@@ -37,7 +37,7 @@
         android:textSize="@dimen/im_text_small" />
 
     <ImageView
-        android:id="@+id/img_user_pic"
+        android:id="@+id/img_avatar"
         android:layout_width="@dimen/user_pic"
         android:layout_height="@dimen/user_pic"
         android:layout_gravity="left"

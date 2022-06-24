@@ -1,7 +1,9 @@
 package com.ByteDance.Gotlin.im.datasource.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.ByteDance.Gotlin.im.entity.SessionEntity
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
 
 /**
  * @Author Zhicong Deng
@@ -13,19 +15,21 @@ import com.ByteDance.Gotlin.im.entity.SessionEntity
 interface SessionDao {
 
     @Query("select * from SessionTable")
-    fun queryAllSession(): List<SessionEntity>
+    fun queryAllSession(): LiveData<List<SessionVO>>
 
 
-    @Query("select * from SessionTable " +
-            "where sessionId = :sessionId")
-    fun querySessionById(sessionId: Int): SessionEntity
+    @Query(
+        "select * from SessionTable " +
+                "where sessionId = :sessionId"
+    )
+    fun querySessionById(sessionId: Int): SessionVO
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSession(SessionEntity: SessionEntity): Long
+    fun insertSession(SessionEntity: SessionVO)
 
     @Delete
-    fun deleteSession(SessionEntity: SessionEntity)
+    fun deleteSession(SessionEntity: SessionVO)
 
     @Update
-    fun updateSession(SessionEntity: SessionEntity)
+    fun updateSession(SessionEntity: SessionVO)
 }

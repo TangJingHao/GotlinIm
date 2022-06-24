@@ -1,8 +1,10 @@
 package com.ByteDance.Gotlin.im.adapter;
 
 import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
+import static com.ByteDance.Gotlin.im.util.Constants.DEFAULT_IMG;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,14 @@ import com.ByteDance.Gotlin.im.databinding.DItemLittleTitleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoSimpleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoStatueBinding;
+import com.ByteDance.Gotlin.im.entity.MessageEntity;
 import com.ByteDance.Gotlin.im.info.vo.GroupVO;
 import com.ByteDance.Gotlin.im.info.vo.TestUser;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
+import com.ByteDance.Gotlin.im.util.Constants;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.util.DUtils.TimeUtils;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -27,6 +32,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,12 +88,10 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public static final int TYPE_USER_INFO_STATUE = 1;
     // 头像、用户名
     public static final int TYPE_USER_INFO_SIMPLE = 2;
-    // 头像、用户名、信息、发送时间
+    // 头像、用户名、信息、发送时间（已废弃）
     public static final int TYPE_USER_MESSAGE = 3;
     // 当前状态（只能是1/2/3）
     public int mTabType;
-
-    private static int DEFAULT_IMG = R.drawable.ic_img_default;
 
     RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
     RequestOptions options = new RequestOptions()
@@ -254,14 +258,14 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         GroupVO item = (GroupVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-                                .into(userHolder.b.imgUserPic);
+                                .into(userHolder.b.imgAvatar);
                         userHolder.b.tvUserName.setText(item.getGroupName());
                         userHolder.b.tvUserMail.setText("gid：" + item.getGroupId());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-                                .into(userHolder.b.imgUserPic);
+                                .into(userHolder.b.imgAvatar);
                         userHolder.b.tvUserName.setText(item.getUserName());
                         userHolder.b.tvUserMail.setText("uid：" + item.getUserId());
                         userHolder.b.tvStatue.setText(item.getOnline() ? "在线" : "离线");
@@ -288,14 +292,14 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .apply(options)
-                                .into(simpleHolder.b.imgUserPic);
+                                .into(simpleHolder.b.imgAvatar);
                         simpleHolder.b.tvUserName.setText(item.getGroupName());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .apply(options)
-                                .into(simpleHolder.b.imgUserPic);
+                                .into(simpleHolder.b.imgAvatar);
                         simpleHolder.b.tvUserName.setText(item.getUserName());
                     }
                     if (mItemOnClickListener != null) {
@@ -308,23 +312,21 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                     }
                     break;
                 }
-                case TYPE_USER_MESSAGE: {
-//                    // TODO 在此处处理泛型类的转换
-//                    UserVO item = (UserVO) mDataInfoList.get(group).get(relativePosition);
+//                case TYPE_USER_MESSAGE: { // 已废弃
+//                    MessageEntity item = (MessageEntity) mDataInfoList.get(group).get(relativePosition);
 //                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
 //
-//                    // TODO 网络头像加载，目前仅加载默认头像
 //                    Glide.with(mContext)
-//                            .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-//                            .into(MessageHolder.b.imgUserPic);
-//                    MessageHolder.b.tvUserName.setText(item.getUserName());
-//                    MessageHolder.b.tvUserMsg.setText(item.getMsg());
-//                    MessageHolder.b.tvTime.setText("当前时间");
-//                    if (mItemOnClickListener != null)
-//                        MessageHolder.b.rLayout.setOnClickListener(view ->
-//                                mItemOnClickListener.onItemClick(view, group, relativePosition));
+//                            .load(item.getSenderAvatar() == null ?
+//                                    Constants.DEFAULT_IMG :
+//                                    BASE_URL + item.getSenderAvatar())
+//                            .into(MessageHolder.b.bgaImgUserPic);
+//                    MessageHolder.b.bgaTvSessionName.setText(item.getSenderName());
+//                    MessageHolder.b.bgaTvUserMsg.setText(item.getContent());
+//                    Date sendTime = item.getSendTime();
+//                    MessageHolder.b.bgaTvTime.setText(TimeUtils.getDateToString(sendTime.getTime()));
 //                    break;
-                }
+//                }
                 default:
                     break;
             }

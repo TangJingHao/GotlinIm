@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.TActivityMainBinding
 import com.ByteDance.Gotlin.im.util.Constants
@@ -14,6 +17,8 @@ import com.ByteDance.Gotlin.im.view.custom.MainViewPagerAdapter
 import com.ByteDance.Gotlin.im.view.fragment.AddressBookFragment
 import com.ByteDance.Gotlin.im.view.fragment.MessageFragment
 import com.ByteDance.Gotlin.im.view.fragment.MyInformationFragment
+import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
+import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
 
@@ -26,6 +31,10 @@ import com.xuexiang.xui.XUI
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: TActivityMainBinding
+
+    private val viewModelMain: MainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
 
     //项目Fragment集合
     private val mFragments = mapOf<Int, Fragment>(
@@ -56,7 +65,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-
+        // 小红点监听
+        viewModelMain.msgRedPointNumObserverData.observe(this) {
+            if (it > 0)
+                mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item).number = it
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,6 +14,7 @@ import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.databinding.DActivitySearchBinding;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.view.fragment.SearchFragment;
+import com.ByteDance.Gotlin.im.view.fragment.SearchHistoryMsgFragment;
 
 import net.lucode.hackware.magicindicator.FragmentContainerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -36,16 +38,21 @@ public class SearchActivity extends AppCompatActivity {
 
     private DActivitySearchBinding b;
 
-    private List<Fragment> mFragments = new ArrayList<>();
-    private FragmentContainerHelper mFragmentContainerHelper = new FragmentContainerHelper();
+    private final List<Fragment> mFragments = new ArrayList<>();
+    private final FragmentContainerHelper mFragmentContainerHelper = new FragmentContainerHelper();
 
     private String[] mTitles;
-    // 搜索类型（好友群聊）
+    // 消息搜索用
+    private int sessionId;
+
+    // 搜索类型（好友群聊）intent用
     private static final String SEARCH_TYPE = "search_type";
+    private static final String SESSION_ID = "session_id";
     private static final int SEARCH_TYPE_FRIEND = 0;
     private static final int SEARCH_TYPE_GROUP_CHAT = 1;
     private static final int SEARCH_TYPE_MESSAGE = 2;
     private int curSearchType;
+
     // 启动fragment的参数
     private static final int SEARCH_MAILBOX = 0;
     private static final int SEARCH_NICKNAME = 1;
@@ -55,7 +62,26 @@ public class SearchActivity extends AppCompatActivity {
     private static final int SEARCH_GROUP_CHAT_NICKNAME = 4;
     private static final int MY_GROUP_CHAR_APPLICATION = 5;
 
-    private static final int SEARCH_HISTORY_MESSAGE = 6;
+    private static final int SEARCH_HISTORY_MESSAGE = 6; // 废弃
+
+    public static void startMsgSearch(Context context, int sessionId) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_MESSAGE);
+        intent.putExtra(SESSION_ID, sessionId);
+        context.startActivity(intent);
+    }
+
+    public static void startSearchNewFriendSearch(Context context) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_FRIEND);
+        context.startActivity(intent);
+    }
+
+    public static void startSearchNewGroupSearch(Context context) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(SEARCH_TYPE, SEARCH_TYPE_GROUP_CHAT);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +94,15 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     protected void initData() {
-        // TODO 从Intent获取搜索类型（好友/群聊）,KEY 为 SEARCH_TYPE
+        // 从Intent获取搜索类型（好友/群聊）,KEY 为 SEARCH_TYPE
         curSearchType = getIntent().getIntExtra(SEARCH_TYPE, 0);
+
         if (curSearchType == SEARCH_TYPE_FRIEND) {
             mTitles = this.getResources().getStringArray(R.array.indicator_search_new_friend_title);
         } else if (curSearchType == SEARCH_TYPE_GROUP_CHAT) {
             mTitles = this.getResources().getStringArray(R.array.indicator_search_new_group_chat_title);
         } else if (curSearchType == SEARCH_TYPE_MESSAGE) {
+            sessionId = getIntent().getIntExtra(SESSION_ID, 0);
             mTitles = this.getResources().getStringArray(R.array.indicator_search_history_message_title);
         }
     }
@@ -92,6 +120,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                finish();
             }
         });
 
@@ -127,41 +156,25 @@ public class SearchActivity extends AppCompatActivity {
         switch (curSearchType) {
             case SEARCH_TYPE_FRIEND: {
                 // 邮箱搜索界面
-                SearchFragment searchNewByMailboxFragment
-                        = SearchFragment.newInstance(SEARCH_MAILBOX);
+                mFragments.add(SearchFragment.newInstance(SEARCH_MAILBOX, 0));
                 // 昵称搜索界面
-                SearchFragment searchNewByNickNameFragment
-                        = SearchFragment.newInstance(SEARCH_NICKNAME);
+                mFragments.add(SearchFragment.newInstance(SEARCH_NICKNAME, 0));
                 // 我的申请界面
-                SearchFragment myApplicationFragment
-                        = SearchFragment.newInstance(MY_APPLICATION);
-
-                mFragments.add(searchNewByMailboxFragment);
-                mFragments.add(searchNewByNickNameFragment);
-                mFragments.add(myApplicationFragment);
+                mFragments.add(SearchFragment.newInstance(MY_APPLICATION, 0));
                 break;
             }
             case SEARCH_TYPE_GROUP_CHAT: {
                 // 群号搜索界面
-                SearchFragment searchNewByGroupIdFragment
-                        = SearchFragment.newInstance(SEARCH_GROUP_CHAT_ID);
+                mFragments.add(SearchFragment.newInstance(SEARCH_GROUP_CHAT_ID, 0));
                 // 群昵称搜索界面
-                SearchFragment searchNewByGroupNickNameFragment
-                        = SearchFragment.newInstance(SEARCH_GROUP_CHAT_NICKNAME);
+                mFragments.add(SearchFragment.newInstance(SEARCH_GROUP_CHAT_NICKNAME, 0));
                 // 我的群聊申请界面
-                SearchFragment myGroupCharApplicationFragment
-                        = SearchFragment.newInstance(MY_GROUP_CHAR_APPLICATION);
-
-                mFragments.add(searchNewByGroupIdFragment);
-                mFragments.add(searchNewByGroupNickNameFragment);
-                mFragments.add(myGroupCharApplicationFragment);
+                mFragments.add(SearchFragment.newInstance(MY_GROUP_CHAR_APPLICATION, 0));
                 break;
             }
             case SEARCH_TYPE_MESSAGE: {
                 // 搜索消息记录界面
-                SearchFragment searchHistoryMessageFragment
-                        = SearchFragment.newInstance(SEARCH_HISTORY_MESSAGE);
-                mFragments.add(searchHistoryMessageFragment);
+                mFragments.add(SearchHistoryMsgFragment.newInstance(sessionId));
                 break;
             }
             default:

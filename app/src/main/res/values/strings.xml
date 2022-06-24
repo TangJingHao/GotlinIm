@@ -67,10 +67,6 @@
     <!--输入框文本-->
     <string name="edit_hint_new_grouping">点击输入新的分组名</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!-- 发送消息 -->
     <string name="chat_send">发送</string>
     <string name="chat_error">发送异常,点击重试</string>

@@ -23,6 +23,6 @@ class LoginViewModel : ViewModel() {
      * 暴露给外部调用
      */
     fun login(loginLiveData: LoginLiveData) {
-        mLoginLiveData.value = loginLiveData
+        mLoginLiveData.postValue(loginLiveData)
     }
 }
