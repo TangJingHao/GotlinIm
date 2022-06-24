@@ -58,24 +58,6 @@ class BaseActivity : AppCompatActivity() {
                 )
             }
 
-<<<<<<< HEAD
-        Repository.saveUserId(3)
-
-        //判断用户是否登录过，后期可以写在闪屏页面
-//        SearchActivity.startMsgSearch(this,6)
-        startActivity(Intent(this,MainActivity::class.java))
-        finish()
-//        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
-//            startActivity(Intent(this,GroupMembersActivity::class.java).putExtra(Constants.GROUP_ID,1))
-//            finish()
-//        }else{
-//            val intent = Intent(this, LoginActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
-=======
         }, 5000) //设置时间，5秒后自动跳转
->>>>>>> tjh
-
     }
 }
