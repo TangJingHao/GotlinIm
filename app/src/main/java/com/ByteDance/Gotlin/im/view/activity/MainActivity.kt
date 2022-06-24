@@ -9,8 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BActivity
+import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TActivityMainBinding
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
@@ -69,9 +71,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         // 小红点监听
+        val badge = mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item)
+        badge.apply {
+            maxCharacterCount = 3
+            verticalOffset = 20
+            horizontalOffset = 20
+        }
         viewModelMain.msgRedPointNumObserverData.observe(this) {
             if (it > 0)
-                mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item).number = it
+                badge.number = it
         }
     }
 

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
+import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse;
 import com.ByteDance.Gotlin.im.info.WSreceiveContent;
 import com.ByteDance.Gotlin.im.info.WSsendContent;

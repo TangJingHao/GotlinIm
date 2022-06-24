@@ -32,7 +32,7 @@ import kotlin.coroutines.CoroutineContext
 @OptIn(DelicateCoroutinesApi::class)
 object Repository {
 
-    private const val TAG = "Repository"
+    private const val TAG = "仓库层"
 
     /*
     * MMKV==========================================================================================

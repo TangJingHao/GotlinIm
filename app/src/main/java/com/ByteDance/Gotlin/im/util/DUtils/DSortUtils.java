@@ -23,7 +23,8 @@ public class DSortUtils {
      * @param dataList
      * @return
      */
-    public static List<List<UserVO>> sort(List<UserVO> dataList, List<String> title){
+    public static List<List<UserVO>>
+    sort(List<UserVO> dataList, List<String> title){
         boolean[] map = new boolean[27];
         Collections.sort(dataList, new Comparator<UserVO>() {
             @Override

@@ -15,11 +15,9 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
-import com.ByteDance.Gotlin.im.application.ThreadManager
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
-import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
@@ -66,11 +64,9 @@ class MessageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
         vm.sessionObserverData.observe(requireActivity()) { result ->
-            DLogUtils.i(TAG, "刷新列表")
             val responseData = result.getOrNull()
             if (responseData == null) {
-                DLogUtils.i(TAG, "我的消息列表返回值为NULL")
-                TPhoneUtil.showToast(BaseApp.getContext(), "我的消息列表返回值为NULL")
+                TPhoneUtil.showToast(BaseApp.getContext(), "消息列表返回值为NULL")
             } else {
                 val messageList = responseData.data.messageList
                 val mAdapter = UserMsgBGAAdapter(b.rvLayout)
@@ -79,7 +75,6 @@ class MessageFragment : Fragment() {
                     override fun onDragDismiss(badgeable: BGABadgeable, position: Int) {
                         TPhoneUtil.showToast(BaseApp.getContext(), "item " + position + "的徽章消失")
                     }
-
                     override fun onClick(view: View, position: Int, badge: BGABadgeView) {
                         //跳转到聊天界面
                         val session: SessionVO = messageList.get(position).session
@@ -121,7 +116,6 @@ class MessageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        DLogUtils.w("消息列表Fragment", "onResume")
         vm.getSessionList()
     }
 

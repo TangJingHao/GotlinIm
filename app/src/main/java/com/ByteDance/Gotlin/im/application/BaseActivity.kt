@@ -25,7 +25,7 @@ class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Repository.saveUserId(2)
+        Repository.saveUserId(3)
 
         //判断用户是否登录过，后期可以写在闪屏页面
 //        SearchActivity.startMsgSearch(this,6)

@@ -21,8 +21,7 @@ interface UserDao {
 
     @Query(
         "select * from UserTable " +
-                "where userId = :userId"
-    )
+                "where userId = :userId and userId")
     fun queryUserById(userId: Int): UserVO
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
