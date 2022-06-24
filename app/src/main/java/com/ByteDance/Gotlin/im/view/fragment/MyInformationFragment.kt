@@ -10,9 +10,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
+import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
+import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine
@@ -36,6 +39,7 @@ class MyInformationFragment : Fragment() {
     private lateinit var mMyEditMediaIListener: TMyEditMediaIListener
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
+    private lateinit var mSingleSelectPopupWindow:SingleSelectPopupWindow
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +52,6 @@ class MyInformationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        mViewModel=ViewModelProvider(requireActivity()).get(StatusViewModel::class.java)
-//        mViewModel.mStatus.value=Repository.getUserStatus()
         initConfig()
     }
 
@@ -65,7 +67,6 @@ class MyInformationFragment : Fragment() {
     private fun initView() {
         mBinding.toolbarRl.title.text = "我的"
         mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
-
     }
 
     private fun initListener() {
@@ -83,6 +84,50 @@ class MyInformationFragment : Fragment() {
         mBinding.sbIosBtn.setOnClickListener {
 
         }
+        //修改昵称
+        mBinding.nicknameIv.setOnClickListener {
+            val nicknamePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
+                override fun onConfirm(input: String) {
+                    mBinding.nicknameTv.text=input
+                }
+
+                override fun onCancel() {
+                    mInputPopupWindow.dismiss()
+                }
+
+                override fun onDismiss() {
+                    mInputPopupWindow.dismiss()
+                }
+            }
+            mInputPopupWindow= InputPopupWindow(requireContext(),"昵称修改",nicknamePopupWindowListener)
+            mInputPopupWindow.mPopupWindow.animationStyle= R.style.t_popup_window_style
+            mInputPopupWindow.show()
+        }
+        //修改性别
+        mBinding.sexIv.setOnClickListener {
+            val sexPopupWindowListener: PopupWindowListener = object : PopupWindowListener {
+                override fun onConfirm(input: String) {
+
+                }
+
+                override fun onCancel() {
+                   mSingleSelectPopupWindow.dismiss()
+                }
+
+                override fun onDismiss() {
+                    mSingleSelectPopupWindow.dismiss()
+                }
+            }
+            mSingleSelectPopupWindow= SingleSelectPopupWindow(requireContext(),"选择性别",
+            "男","女",sexPopupWindowListener)
+            mSingleSelectPopupWindow.selectIndex=0
+            mSingleSelectPopupWindow.mPopupWindow.animationStyle=R.style.t_popup_window_style
+            mSingleSelectPopupWindow.setConfirmText("确认修改")
+            mSingleSelectPopupWindow.setCancelText("取消修改")
+            mSingleSelectPopupWindow.show()
+        }
+        //修改在线状态
+
     }
 
     /**

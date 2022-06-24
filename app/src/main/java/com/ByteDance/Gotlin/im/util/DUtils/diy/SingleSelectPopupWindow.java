@@ -17,6 +17,13 @@ import com.ByteDance.Gotlin.im.databinding.DPopupWindowSingleSelectBinding;
  * @Description 单选类型弹窗, 目前仅支持双选
  */
 public class SingleSelectPopupWindow extends BasePopupWindow {
+    public int getSelectIndex() {
+        return selectIndex;
+    }
+
+    public void setSelectIndex(int selectIndex) {
+        this.selectIndex = selectIndex;
+    }
 
     @SuppressLint("StaticFieldLeak")
     private static DPopupWindowSingleSelectBinding b;
