@@ -2,8 +2,12 @@ package com.ByteDance.Gotlin.im.application
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.databinding.TActivityInitBinding
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.BGABadgeInit
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
@@ -22,21 +26,35 @@ import com.xuexiang.xui.XUI
  */
 
 class BaseActivity : AppCompatActivity() {
+    private lateinit var binding:TActivityInitBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+        binding=TActivityInitBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
+        XUI.initTheme(this)
+        setContentView(binding.root)
+        QMUIStatusBarHelper.translucent(this)
+        QMUIStatusBarHelper.setStatusBarLightMode(this)
+        this.overridePendingTransition(
+            R.anim.t_splash_open,0
+        )
+        Handler(Looper.getMainLooper()).postDelayed({
+            if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
+                val mainIntent = Intent(this,MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
+                startActivity(mainIntent)
+                finish()
+                this.overridePendingTransition(
+                    0,R.anim.t_splash_close
+                )
+            }else{
+                val mainIntent = Intent(this,LoginActivity::class.java) //前者为跳转前页面，后者为跳转后页面
+                startActivity(mainIntent)
+                finish()
+                this.overridePendingTransition(
+                    0,R.anim.t_splash_close
+                )
+            }
 
-        //判断用户是否登录过，后期可以写在闪屏页面
-//        SearchActivity.startMsgSearch(this,6)
-        startActivity(Intent(this,MainActivity::class.java))
-//        finish()
-//        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
-//            startActivity(Intent(this,GroupMembersActivity::class.java).putExtra(Constants.GROUP_ID,1))
-//            finish()
-//        }else{
-//            val intent = Intent(this, LoginActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
+        }, 5000) //设置时间，5秒后自动跳转
 
     }
 }

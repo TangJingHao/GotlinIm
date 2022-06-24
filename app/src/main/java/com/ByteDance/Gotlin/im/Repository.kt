@@ -1,12 +1,9 @@
 package com.ByteDance.Gotlin.im
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
-import com.ByteDance.Gotlin.im.entity.SessionEntity
-import com.ByteDance.Gotlin.im.entity.UserEntity
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
@@ -15,10 +12,9 @@ import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -64,18 +60,18 @@ object Repository {
     /**
      * 获取当前用户nickName
      */
-    fun getUsernickName() = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
+    fun getUsernickName(): String = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
 
     /**
      * 获取当前用户头像
      */
     fun getUserAvatar() = mmkv.decodeInt(MMKV_USER_AVATAR, Constants.DEFAULT_IMG)
 
-    fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
+    fun getUserName(): String = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
 
-    fun getUserSex() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
+    fun getUserSex(): String = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
 
-    fun getUserEmail() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
+    fun getUserEmail(): String = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
 
     /*
     * 数据库=========================================================================================
