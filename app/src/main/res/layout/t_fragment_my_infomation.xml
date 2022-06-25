@@ -241,8 +241,7 @@
                     android:id="@+id/status_change_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:background="@drawable/ic_24_sun" />
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
 
             <RelativeLayout

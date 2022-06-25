@@ -3,6 +3,8 @@ package com.ByteDance.Gotlin.im.view.fragment
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,8 +48,6 @@ class MyInformationFragment : Fragment() {
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
     private lateinit var mSingleSelectPopupWindow:SingleSelectPopupWindow
-    private lateinit var mDarkConfirmPopupWindow: ConfirmPopupWindow
-    private lateinit var mLightConfirmPopupWindow:ConfirmPopupWindow
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,8 +79,22 @@ class MyInformationFragment : Fragment() {
         mBinding.nicknameTv.text=userData.userName
         mBinding.emailTv.text=userData.email
         var avatar = userData.avatar
+        //判断用户是否有修改模式
         var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
         mBinding.sbIosBtn.isChecked = flag
+        if(flag){
+            if(Repository.getUserMode()==Constants.USER_LIGHT_MODE){
+                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
+            }else{
+                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
+            }
+        }else{
+            if(TPhoneUtil.getPhoneMode(requireContext())==Constants.USER_LIGHT_MODE){
+                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
+            }else{
+                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
+            }
+        }
         //头像字符串拼接
         if(avatar!=null){
             var index = avatar.indexOf(".")
@@ -92,6 +106,9 @@ class MyInformationFragment : Fragment() {
         }
     }
 
+    /**
+     * 初始化监听
+     */
     private fun initListener() {
         //头像监听
         mBinding.iconIv.setOnClickListener {
@@ -102,10 +119,6 @@ class MyInformationFragment : Fragment() {
                 .setSelectionMode(SelectModeConfig.SINGLE)
                 .setEditMediaInterceptListener(mMyEditMediaIListener)
                 .forResult(mLauncherResult)
-        }
-        //模式切换监听
-        mBinding.sbIosBtn.setOnClickListener {
-
         }
         //修改昵称
         mBinding.nicknameIv.setOnClickListener {
@@ -153,51 +166,24 @@ class MyInformationFragment : Fragment() {
         mBinding.sbIosBtn.setOnCheckedChangeListener { compoundButton, isChecked ->
             if(isChecked){
                 TLogUtil.d("选中")
-                val modePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
-                    override fun onConfirm(input: String) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                        Repository.saveUserMode(Constants.DARK_MODE)
-                        Repository.setUserChangeAction(Constants.USER_CHANGE_MODE)
-                        activity?.finish()
-                    }
-
-                    override fun onCancel() {
-                        mDarkConfirmPopupWindow.dismiss()
-                    }
-
-                    override fun onDismiss() {
-                        mDarkConfirmPopupWindow.dismiss()
-                    }
-                }
-                mDarkConfirmPopupWindow= ConfirmPopupWindow(activity,"启动夜间模式",modePopupWindowListener)
-                mDarkConfirmPopupWindow.mPopupWindow.animationStyle=R.style.t_popup_window_style
-                mDarkConfirmPopupWindow.setConfirmText("确定启用")
-                mDarkConfirmPopupWindow.setCancelText("我再想想")
-                mDarkConfirmPopupWindow.show()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                Repository.saveUserMode(Constants.DARK_MODE)
+                Repository.setUserChangeAction(Constants.USER_CHANGE_MODE)
+                TPhoneUtil.showToast(requireContext(),"重启切换夜间模式")
             }else{
                 TLogUtil.d("未选中")
-                val modePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
-                    override fun onConfirm(input: String) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        Repository.saveUserMode(Constants.DARK_MODE)
-                        Repository.setUserChangeAction(Constants.USER_DEFAULT_MODE)
-                        activity?.finish()
-                    }
-
-                    override fun onCancel() {
-                        mLightConfirmPopupWindow.dismiss()
-                    }
-
-                    override fun onDismiss() {
-                        mLightConfirmPopupWindow.dismiss()
-                    }
-                }
-                mLightConfirmPopupWindow= ConfirmPopupWindow(activity,"关闭夜间模式",modePopupWindowListener)
-                mLightConfirmPopupWindow.mPopupWindow.animationStyle=R.style.t_popup_window_style
-                mLightConfirmPopupWindow.setConfirmText("确定关闭")
-                mLightConfirmPopupWindow.setCancelText("我再想想")
-                mLightConfirmPopupWindow.show()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                Repository.saveUserMode(Constants.LIGHT_MODE)
+                Repository.setUserChangeAction(Constants.USER_DEFAULT_MODE)
+                TPhoneUtil.showToast(requireContext(),"重启切换正常模式")
             }
+            Handler(Looper.getMainLooper()).postDelayed({
+                requireActivity().startActivity(Intent(requireActivity(),BaseActivity::class.java))
+                requireActivity().finish()
+                requireActivity().overridePendingTransition(
+                    R.anim.t_enter,R.anim.t_close
+                )
+            },1000)
         }
     }
 
@@ -239,6 +225,5 @@ class MyInformationFragment : Fragment() {
             }
         }
     }
-
 
 }

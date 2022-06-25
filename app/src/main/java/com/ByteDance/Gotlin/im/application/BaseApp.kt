@@ -2,10 +2,10 @@ package com.ByteDance.Gotlin.im.application
 
 import android.app.Application
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
-import com.ByteDance.Gotlin.im.Repository
-import com.ByteDance.Gotlin.im.util.Constants
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.tencent.mmkv.MMKV
+import java.util.*
 
 /**
  * @Author 唐靖豪
@@ -14,8 +14,10 @@ import com.tencent.mmkv.MMKV
  * @Description:
  * 用于获取全局的context
  */
-
+@RequiresApi(Build.VERSION_CODES.Q)
 class BaseApp : Application() {
+    private var mode: Int = -1
+
     companion object {
         var mContext: Application? = null
         fun getContext(): Context {
@@ -30,18 +32,17 @@ class BaseApp : Application() {
         val dir = filesDir.absolutePath + "/mmkv"
         // MMKV初始化
         val rootDir = MMKV.initialize(dir)
-        initTheme()
+        initListener()
     }
 
-    /**
-     * 初始化主题
-     * 如果设置了夜间是则不跟随
-     */
-    private fun initTheme() {
-        val userStatus = Repository.getUserMode()
-        if (userStatus == Constants.USER_DARK_MODE) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    private fun initListener() {
+
+    }
+
+
+    private val timerTask: TimerTask = object : TimerTask() {
+        override fun run() {
+
         }
     }
-
 }
