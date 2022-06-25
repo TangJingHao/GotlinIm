@@ -28,8 +28,6 @@ class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding=TActivityInitBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-//        SearchActivity.startSearchNewFriendSearch(this)
-//        finish()
         XUI.initTheme(this)
         setContentView(mBinding.root)
         var phoneMode = TPhoneUtil.getPhoneMode(this)
