@@ -15,11 +15,14 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
-import com.ByteDance.Gotlin.im.application.ThreadManager
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
+import com.ByteDance.Gotlin.im.info.WebSocketReceiveUserOnline
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.ws.WebSocketType
+import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils.toAny
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
@@ -66,11 +69,9 @@ class MessageFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
         vm.sessionObserverData.observe(requireActivity()) { result ->
-            DLogUtils.i(TAG, "刷新列表")
             val responseData = result.getOrNull()
             if (responseData == null) {
-                DLogUtils.i(TAG, "我的消息列表返回值为NULL")
-                TPhoneUtil.showToast(BaseApp.getContext(), "我的消息列表返回值为NULL")
+                TPhoneUtil.showToast(BaseApp.getContext(), "消息列表返回值为NULL")
             } else {
                 val messageList = responseData.data.messageList
                 val mAdapter = UserMsgBGAAdapter(b.rvLayout)
@@ -99,7 +100,7 @@ class MessageFragment : Fragment() {
                 for (msg in messageList) {
                     count += msg.session.badgeNum
                 }
-                vm.setRedPointNum(count)
+                vm.setMsgRedPointNum(count)
             }
         }
 
@@ -107,8 +108,30 @@ class MessageFragment : Fragment() {
             TPhoneUtil.showToast(requireActivity(), "主界面WebSocket开启")
         }
 
+        // 监听Websocket回调的liveData
         vm.getWsMessageObserverData().observe(requireActivity()) {
-            TPhoneUtil.showToast(requireActivity(), "新消息提醒")
+            // 导入了json转换的工具类,首先转换出其中的类型
+            val wsType = it.toAny(WebSocketType::class.java)?.wsType
+            // 根据类型判断
+            when (wsType) {
+                Constants.WS_USER_ONLINE -> {
+                    // 具体处理
+                    // 再转换为对应的websocket接收类
+                    val wsReceiveUserOnline = it.toAny(WebSocketReceiveUserOnline::class.java)
+
+//                    val userVO =
+//                        wsReceiveUserOnline?.wsContent?.userId?.let { it1 ->
+//                            Repository.queryUserById(
+//                                it1
+//                            )
+//                        }
+//                    val nickName = userVO?.nickName
+//                    TPhoneUtil.showToast(requireActivity(), "好友 $nickName 上线了")
+                }
+                Constants.WS_SEND_MESSAGE -> {
+                    TPhoneUtil.showToast(requireActivity(), "新消息通知")
+                }
+            }
             // 消息页面更新（小红点之类的）
             loadData()
         }
@@ -117,17 +140,33 @@ class MessageFragment : Fragment() {
             TPhoneUtil.showToast(requireActivity(), "主界面WebSocket断开")
             vm.getWebSocket()
         }
+
+        val s: String = "{\n" +
+                "    \"wsContent\": {\n" +
+                "        \"online\": true,                // 用户最新状态\n" +
+                "        \"sessionIdList\": [3, 5, 6],    // 与用户相关的会话\n" +
+                "        \"userId\": 4                    // 目前用户 ID\n" +
+                "    },\n" +
+                "    \"wsType\": \"USER_ONLINE\"\n" +
+                "}"
+
+        val any = s.toAny(WebSocketType::class.java)
+
+        DLogUtils.i(TAG+ "类型测试",any?.wsType + "  ")
     }
 
     override fun onResume() {
         super.onResume()
-        DLogUtils.w("消息列表Fragment", "onResume")
+        vm.getWebSocket()
         vm.getSessionList()
     }
 
     private fun initView() {
-        b.myToolbar.imgChevronLeft.visibility = View.GONE;
-        b.myToolbar.title.text = "消息列表"
+        b.myToolbar.apply {
+            imgChevronLeft.visibility = View.GONE
+            title.text = "消息列表"
+            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
+        }
         // 下拉刷新
         b.refreshLayout.apply {
             setColorSchemeColors(

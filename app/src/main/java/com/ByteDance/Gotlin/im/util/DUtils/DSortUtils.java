@@ -20,22 +20,26 @@ public class DSortUtils {
 
     /**
      * 获得适合于适配器的参数
+     *
      * @param dataList
      * @return
      */
-    public static List<List<UserVO>> sort(List<UserVO> dataList, List<String> title){
+    public static List<List<UserVO>>
+    sort(List<UserVO> dataList, List<String> title) {
         boolean[] map = new boolean[27];
+        for (UserVO user : dataList) {
+            int index = user.getNickName().toLowerCase(Locale.ROOT).toString().charAt(0) - 'a';
+            if (index >= 0 && index < 26) {
+                if (!map[index]) map[index] = true;
+            } else {
+                if (!map[26]) map[26] = true;
+            }
+        }
+
         Collections.sort(dataList, new Comparator<UserVO>() {
             @Override
             public int compare(UserVO o1, UserVO o2) {
                 try {
-                    int index = o1.getNickName().toLowerCase(Locale.ROOT).toString().charAt(0) - 'a';
-                    if (index >= 0 && index < 26) {
-                        if (!map[index]) map[index] = true;
-                    } else {
-                        if (!map[26]) map[26] = true;
-                    }
-
                     String s1 = TComparatorUtil.getPingYin(o1.getNickName());
                     String s2 = TComparatorUtil.getPingYin(o2.getNickName());
                     String str1 = new String(s1.getBytes("GB2312"), "ISO-8859-1");
@@ -59,6 +63,7 @@ public class DSortUtils {
 
     /**
      * 把排序好的List<UserVO>按照首字母划分为List<List<UserVO>> 方便作为适配器的参数
+     *
      * @param dataList
      * @return
      */

@@ -44,7 +44,7 @@
         <cn.bingoogolapple.badgeview.BGABadgeView
             android:id="@+id/bga_red_point"
             android:layout_width="48dp"
-            android:layout_height="16dp"
+            android:layout_height="20dp"
             android:paddingHorizontal="6dp"
             android:textSize="@dimen/im_text_small"
             android:textColor="@color/fill_white"

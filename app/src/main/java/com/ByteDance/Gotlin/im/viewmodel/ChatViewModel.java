@@ -1,7 +1,7 @@
 package com.ByteDance.Gotlin.im.viewmodel;
 
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
-import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
+import static com.ByteDance.Gotlin.im.util.Constants.WS_SEND_MESSAGE;
 
 import android.os.Build;
 
@@ -150,7 +150,7 @@ public class ChatViewModel extends ViewModel {
         //打包发送消息
         Gson gson = new Gson();
         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                SEND_MESSAGE, new WSsendContent(session.getSessionId(),
+                WS_SEND_MESSAGE, new WSsendContent(session.getSessionId(),
                 re.getUserId(), 0, msg));
         webSocket.send(gson.toJson(sendChatMsg));
         MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
@@ -200,7 +200,7 @@ public class ChatViewModel extends ViewModel {
         public void onOpen(WebSocket webSocket, @NonNull Response response) {
             DLogUtils.i(TAG, "开启链接");
             WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                    SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
+                    WS_SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
                     0, "开始聊天吧"));
             webSocket.send(gson.toJson(sendChatMsg));
         }
