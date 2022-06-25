@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/d_bg_pop_win.xml" value="0.217" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/drawable/ic_img_default.xml" value="0.2495" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/d_activity_test.xml" value="0.371875" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_activity_chat.xml" value="0.36615384615384616" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_header.xml" value="0.371875" />
+        <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/h_message_item.xml" value="0.371875" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/m_activity_group_invite.xml" value="0.371875" />
         <entry key="..\:/Android Projects/GotlinIm/app/src/main/res/layout/t_fragment_message.xml" value="0.32685185185185184" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/drawable/ic_16_multi_select.xml" value="0.2345" />

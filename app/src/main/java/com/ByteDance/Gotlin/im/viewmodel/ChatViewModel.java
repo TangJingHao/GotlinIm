@@ -21,7 +21,7 @@ import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork;
-import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
+import com.ByteDance.Gotlin.im.util.Hutils.HLog;
 import com.google.gson.Gson;
 
 import java.util.Collections;
@@ -44,7 +44,6 @@ public class ChatViewModel extends ViewModel {
 
     private final static int LIST_BOTTOM = -1;
     private final static int LIST_TOP = 0;
-    private final static String TAG = "ChatViewModel";
     private final MutableLiveData<LinkedList<MessageVO>> messages;
     private final SessionVO session;
     private final ChatListAdapter adapter;
@@ -68,7 +67,7 @@ public class ChatViewModel extends ViewModel {
                 re.getUserSex(),
                 re.getUsernickName(),
                 re.getUserEmail(),
-                re.getUserAvatar() + "",
+                re.getUserAvatar(),
                 true);
     }
 
@@ -109,10 +108,12 @@ public class ChatViewModel extends ViewModel {
 
             @Override
             public void resumeWith(@NonNull Object o) {
+
                 if (o instanceof SessionHistoryDataResponse) {
                     SessionHistoryDataResponse his = (SessionHistoryDataResponse) o;
                     List<MessageVO> list = his.getData().getHistoryList();
                     //将获得的数据转换为MessageVO，并向消息列表Top位置插入
+                    if (list == null) return;
                     if (list.size() > 0) {
                         MessageVO[] messageVOS = new MessageVO[list.size()];
                         int count = list.size() - 1;
@@ -130,7 +131,7 @@ public class ChatViewModel extends ViewModel {
      * 接收text消息
      */
     private void receivedText(WebSocketReceiveChatMsg msg) {
-        DLogUtils.i(TAG, msg.getWsContent().toString());
+        HLog.i(msg.getWsContent().toString());
         WSreceiveContent c = msg.getWsContent();
         MessageVO message = new MessageVO(c.getSession(),
                 c.getSender(), c.getType(), c.getContent(),
@@ -151,6 +152,29 @@ public class ChatViewModel extends ViewModel {
                 SEND_MESSAGE, new WSsendContent(session.getSessionId(),
                 re.getUserId(), MESSAGE_TEXT, msg));
         ThreadManager.getDefFixThreadPool().execute(() -> webSocket.send(gson.toJson(sendChatMsg)));
+        MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
+        addMsg(messageVOS, LIST_BOTTOM);
+    }
+
+    /**
+     * 接收IMG消息
+     */
+    private void receivedImg(WebSocketReceiveChatMsg msg) {
+        //TODO:接收图片
+    }
+
+    /**
+     * 发送IMG消息
+     *
+     * @param path 图片路径
+     */
+    public void sendImg(String path) {
+        //TODO:发送图片
+        HLog.i(path);
+        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
+                SEND_MESSAGE, new WSsendContent(session.getSessionId(),
+                user.getUserId(), MESSAGE_IMG, path));
+
         MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
         addMsg(messageVOS, LIST_BOTTOM);
     }
@@ -193,14 +217,13 @@ public class ChatViewModel extends ViewModel {
         Gson gson = new Gson();
 
         @Override
-        public void onOpen(WebSocket webSocket, @NonNull Response response) {
-            DLogUtils.i(TAG, "开启链接");
+        public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
+            HLog.i("[开启链接]");
         }
 
-        // 回调,展示消息
         @Override
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
-            DLogUtils.i(TAG, "回调" + text);
+            HLog.i("[回调] " + text);
             WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
             ThreadManager.getDefFixThreadPool().execute(() -> {
                 int type = msg.getWsContent().getType();
@@ -213,25 +236,24 @@ public class ChatViewModel extends ViewModel {
             });
         }
 
-        // 回调
         @Override
         public void onMessage(@NonNull WebSocket webSocket, @NonNull ByteString bytes) {
-            DLogUtils.i(TAG, "回调" + bytes);
+            HLog.i("[回调] " + bytes);
         }
 
         @Override
         public void onClosing(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-            DLogUtils.i(TAG, "链接关闭中 " + reason);
+            HLog.i("[链接关闭中] " + reason);
         }
 
         @Override
         public void onClosed(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-            DLogUtils.i(TAG, "链接已关闭 " + reason);
+            HLog.i("[链接已关闭] " + reason);
         }
 
         @Override
         public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, Response response) {
-            DLogUtils.i(TAG, t.toString());
+            HLog.i("[链接关闭]" + (response != null ? response.toString() : null));
         }
     }
 }

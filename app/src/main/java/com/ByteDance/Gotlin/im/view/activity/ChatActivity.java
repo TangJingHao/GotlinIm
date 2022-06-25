@@ -21,21 +21,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ByteDance.Gotlin.im.application.BaseApp;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.util.Constants;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
+import com.ByteDance.Gotlin.im.util.Hutils.HLog;
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
+import com.bumptech.glide.Glide;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
-import com.luck.picture.lib.style.PictureSelectorStyle;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -46,7 +48,6 @@ import java.util.LinkedList;
  */
 public class ChatActivity extends AppCompatActivity {
 
-    private static final String TAG = "ChatActivity";
     private static SessionVO session;
     private HActivityChatBinding view;
     private DIncludeMyToolbarBinding toolbar;
@@ -156,9 +157,7 @@ public class ChatActivity extends AppCompatActivity {
         //返回
         back.setOnClickListener(view -> back());
         //打开图片选择器,发送照片
-        image.setOnClickListener(view -> {
-            openImgSelector();
-        });
+        image.setOnClickListener(view -> openImgSelector());
         //刷新
         refresh.setOnRefreshListener(() -> {
             model.refresh();
@@ -219,14 +218,16 @@ public class ChatActivity extends AppCompatActivity {
                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                     @Override
                     public void onResult(ArrayList<LocalMedia> result) {
+                        String path = result.get(0).getPath();
+                        //发送图片
+                        model.sendImg(path);
                     }
 
                     @Override
                     public void onCancel() {
-
+                        //ignore
                     }
                 });
-
     }
 
     @Override

@@ -4,13 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.Repository
-import com.ByteDance.Gotlin.im.util.Constants
-import com.ByteDance.Gotlin.im.util.DUtils.BGABadgeInit
-import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
-import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
-import com.ByteDance.Gotlin.im.view.activity.*
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper
-import com.xuexiang.xui.XUI
+import com.ByteDance.Gotlin.im.view.activity.MainActivity
 
 /**
  * @Author 唐靖豪
@@ -29,7 +23,7 @@ class BaseActivity : AppCompatActivity() {
 
         //判断用户是否登录过，后期可以写在闪屏页面
 //        SearchActivity.startMsgSearch(this,6)
-        startActivity(Intent(this,MainActivity::class.java))
+        startActivity(Intent(this, MainActivity::class.java))
         finish()
 //        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
 //            startActivity(Intent(this,GroupMembersActivity::class.java).putExtra(Constants.GROUP_ID,1))
