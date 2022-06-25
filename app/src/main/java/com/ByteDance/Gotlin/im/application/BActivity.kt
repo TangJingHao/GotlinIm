@@ -8,7 +8,7 @@ import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
  * @Author Zhicong Deng
  * @Date 2022/6/24 21:23
  * @Email 1520483847@qq.com
- * @Description
+ * @Description 临时测试用，各种生命周期
  */
 open class BActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
