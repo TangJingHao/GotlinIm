@@ -3,7 +3,10 @@ package com.ByteDance.Gotlin.im.viewmodel;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
 import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -38,6 +41,7 @@ import okio.ByteString;
  * @author: Hx
  * @date: 2022年06月11日 21:54
  */
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class ChatViewModel extends ViewModel {
 
     private final static int LIST_BOTTOM = -1;
