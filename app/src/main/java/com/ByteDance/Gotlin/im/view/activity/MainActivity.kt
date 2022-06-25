@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initView() {
         // 小红点监听
-        viewModelMain.msgRedPointNumObserverData.observe(this) {
+        viewModelMain.msgRedPointObserver.observe(this) {
             if (it > 0)
                 mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item).number = it
         }

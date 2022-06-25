@@ -152,26 +152,30 @@ class SearchViewModel : ViewModel() {
     // 新好友搜索【我的申请】============================================================================
 
     private val mMyApplicationData = MutableLiveData<Int>()
-    fun getMyApplicationData() {
+
+    fun getAllRequestData() {
         mMyApplicationData.postValue(0)// 数字无意义
     }
 
-    val mMyApplicationObserver = Transformations.switchMap(mMyApplicationData) {
+    /**
+     * 包括了四种类型的申请
+     */
+    val mAllRequestObserver = Transformations.switchMap(mMyApplicationData) {
         // TODO 返回网络获取的我的申请
-        MutableLiveData<String>()
+        Repository.getRequestList()
     }
 
     // 新群聊搜索【群聊申请】============================================================================
-
-    private val mMyGroupChatApplicationData = MutableLiveData<Int>()
-    fun getMyGroupChatApplicationData() {
-        mMyGroupChatApplicationData.postValue(0)// 数字无意义
-    }
-
-    val mGroupChatApplicationObserver = Transformations.switchMap(mMyGroupChatApplicationData) {
-        // TODO 返回网络获取的我的群聊申请
-        MutableLiveData<String>()
-    }
+//
+//    private val mMyGroupChatApplicationData = MutableLiveData<Int>()
+//    fun getMyGroupChatApplicationData() {
+//        mMyGroupChatApplicationData.postValue(0)// 数字无意义
+//    }
+//
+//    val mGroupChatApplicationObserver = Transformations.switchMap(mMyGroupChatApplicationData) {
+//        // TODO 返回网络获取的我的群聊申请
+//        MutableLiveData<String>()
+//    }
 
     // 其他==========================================================================================
     fun getUserId() = Repository.getUserId()

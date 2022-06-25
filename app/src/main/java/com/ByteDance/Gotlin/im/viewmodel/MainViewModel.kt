@@ -5,12 +5,8 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.info.vo.UserVO
-import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import kotlinx.coroutines.*
-import okhttp3.Response
 import okhttp3.WebSocket
-import okhttp3.WebSocketListener
-import okio.ByteString
 
 /**
  * @Author Zhicong Deng
@@ -87,11 +83,22 @@ class MainViewModel : ViewModel() {
     fun getFailureObserverData() = Repository.getFailureObserverData()
 
     // 小红点========================================================================================
-    val msgRedPointNumObserverData = MutableLiveData<Int>()
+    // 消息列表小红点
+    val msgRedPointObserver = MutableLiveData<Int>()
 
-    fun setRedPointNum(num: Int) {
-        msgRedPointNumObserverData.postValue(num)
+    fun setMsgRedPointNum(num: Int) {
+        msgRedPointObserver.postValue(num)
     }
+
+    // 好友申请小红点
+    val requestRedPointObserver = MutableLiveData<Boolean>()
+
+    fun setMsgRedPointNum(visibility: Boolean) {
+        Repository.getRequestBadge()
+        requestRedPointObserver.postValue(visibility)
+    }
+
+
 
 
 }

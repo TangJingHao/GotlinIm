@@ -12,7 +12,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import cn.bingoogolapple.badgeview.BGABadgeView
 import cn.bingoogolapple.badgeview.BGABadgeable
 import com.ByteDance.Gotlin.im.R
-import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
@@ -23,9 +22,7 @@ import com.ByteDance.Gotlin.im.info.ws.WebSocketType
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
-import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils
 import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils.toAny
-import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils.toJson
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.ChatActivity.startChat
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
@@ -103,7 +100,7 @@ class MessageFragment : Fragment() {
                 for (msg in messageList) {
                     count += msg.session.badgeNum
                 }
-                vm.setRedPointNum(count)
+                vm.setMsgRedPointNum(count)
             }
         }
 
@@ -122,14 +119,14 @@ class MessageFragment : Fragment() {
                     // 再转换为对应的websocket接收类
                     val wsReceiveUserOnline = it.toAny(WebSocketReceiveUserOnline::class.java)
 
-                    val userVO =
-                        wsReceiveUserOnline?.wsContent?.userId?.let { it1 ->
-                            Repository.queryUserById(
-                                it1
-                            )
-                        }
-                    val nickName = userVO?.nickName
-                    TPhoneUtil.showToast(requireActivity(), "好友 $nickName 上线了")
+//                    val userVO =
+//                        wsReceiveUserOnline?.wsContent?.userId?.let { it1 ->
+//                            Repository.queryUserById(
+//                                it1
+//                            )
+//                        }
+//                    val nickName = userVO?.nickName
+//                    TPhoneUtil.showToast(requireActivity(), "好友 $nickName 上线了")
                 }
                 Constants.WS_SEND_MESSAGE -> {
                     TPhoneUtil.showToast(requireActivity(), "新消息通知")

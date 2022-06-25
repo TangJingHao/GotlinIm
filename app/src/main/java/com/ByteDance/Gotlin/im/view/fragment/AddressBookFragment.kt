@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
-import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
@@ -201,7 +200,7 @@ class AddressBookFragment : Fragment() {
             setScaleItemCount(8)
             setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
                 override fun onSelectStr(index: Int, selectStr: String) {
-                    manager.scrollToPositionWithOffset(mAdapter.getmTitleIndexList().get(index), 0)
+                    manager.scrollToPositionWithOffset(mAdapter.mTitleIndexList().get(index), 0)
                 }
             })
         }
