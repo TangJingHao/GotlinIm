@@ -38,8 +38,8 @@ object Constants {
     // 网络相关
     const val BASE_URL = "http://chatspace.iceclean.top/space/"
     const val BASE_WS_URL = "ws://chatspace.iceclean.top/space/ws/chat/"
-    const val SEND_MESSAGE = "SEND_MESSAGE"
-    const val USER_ONLINE = "USER_ONLINE"
+    const val WS_SEND_MESSAGE = "SEND_MESSAGE"
+    const val WS_USER_ONLINE = "USER_ONLINE"
     const val BASE_AVATAR_URL="http://chatspace.iceclean.top"
 
     //suzy：好友类型选择

@@ -52,7 +52,7 @@ class BaseActivity : AppCompatActivity() {
                 )
             }
 
-        }, 5000) //设置时间，5秒后自动跳转
+        }, 2000) //设置时间，5秒后自动跳转
     }
 
     /**
