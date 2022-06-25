@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import cn.bingoogolapple.badgeview.BGABadgeView
 import cn.bingoogolapple.badgeview.BGABadgeable
 import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
@@ -118,9 +119,17 @@ class MessageFragment : Fragment() {
             when (wsType) {
                 Constants.WS_USER_ONLINE -> {
                     // 具体处理
-                    TPhoneUtil.showToast(requireActivity(), "好友上线通知")
                     // 再转换为对应的websocket接收类
                     val wsReceiveUserOnline = it.toAny(WebSocketReceiveUserOnline::class.java)
+
+                    val userVO =
+                        wsReceiveUserOnline?.wsContent?.userId?.let { it1 ->
+                            Repository.queryUserById(
+                                it1
+                            )
+                        }
+                    val nickName = userVO?.nickName
+                    TPhoneUtil.showToast(requireActivity(), "好友 $nickName 上线了")
                 }
                 Constants.WS_SEND_MESSAGE -> {
                     TPhoneUtil.showToast(requireActivity(), "新消息通知")
@@ -151,6 +160,7 @@ class MessageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        vm.getWebSocket()
         vm.getSessionList()
     }
 

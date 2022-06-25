@@ -40,16 +40,16 @@ class BaseActivity : AppCompatActivity() {
                 val mainIntent = Intent(this,MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
                 startActivity(mainIntent)
                 finish()
-                this.overridePendingTransition(
-                    R.anim.t_splash_open,R.anim.t_splash_close
-                )
+//                this.overridePendingTransition(
+//                    R.anim.t_splash_open,R.anim.t_splash_close
+//                )
             }else{
                 val mainIntent = Intent(this,LoginActivity::class.java) //前者为跳转前页面，后者为跳转后页面
                 startActivity(mainIntent)
                 finish()
-                this.overridePendingTransition(
-                    R.anim.t_splash_open,R.anim.t_splash_close
-                )
+//                this.overridePendingTransition(
+//                    R.anim.t_splash_open,R.anim.t_splash_close
+//                )
             }
 
         }, 2000) //设置时间，5秒后自动跳转

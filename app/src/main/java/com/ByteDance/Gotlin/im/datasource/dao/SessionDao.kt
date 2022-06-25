@@ -2,7 +2,6 @@ package com.ByteDance.Gotlin.im.datasource.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.ByteDance.Gotlin.im.entity.SessionEntity
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 
 /**
@@ -32,4 +31,7 @@ interface SessionDao {
 
     @Update
     fun updateSession(SessionEntity: SessionVO)
+
+    @Query("delete from SessionTable ")
+    fun deleteAllSession()
 }

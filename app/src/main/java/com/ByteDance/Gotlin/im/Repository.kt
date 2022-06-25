@@ -47,7 +47,7 @@ object Repository {
 
     private const val MMKV_USER_ID = "userId"
     private const val MMKV_USER_MODE = "user_mode"
-    private const val MMKV_USER_CHANGE="user_change"
+    private const val MMKV_USER_CHANGE = "user_change"
     private const val MMKV_USER_NICKNAME = "user_nickName"
     private const val MMKV_USER_AVATAR = "Avatar"
     private const val MMKV_USER_NAME = "user_name"
@@ -57,15 +57,18 @@ object Repository {
 
     //用户数据
     fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
-    fun setUserData(user: User)= mmkv.encode(MMKV_USER_DATA,user)
-    fun deleteUserData()= mmkv.removeValueForKey(MMKV_USER_DATA)
+    fun setUserData(user: User) = mmkv.encode(MMKV_USER_DATA, user)
+    fun deleteUserData() = mmkv.removeValueForKey(MMKV_USER_DATA)
+
     //模式
     fun getUserMode(): Int = mmkv.decodeInt(MMKV_USER_MODE)
     fun saveUserMode(userMode: Int) = mmkv.encode(MMKV_USER_MODE, userMode)
     fun deleteUserMode() = mmkv.removeValueForKey(MMKV_USER_MODE)
+
     //记录用户是否修改了模式
-    fun setUserChangeAction(changeMode:Int)= mmkv.encode(MMKV_USER_CHANGE,changeMode)
-    fun getUserChangeAction():Int= mmkv.decodeInt(MMKV_USER_CHANGE,Constants.USER_DEFAULT_MODE)
+    fun setUserChangeAction(changeMode: Int) = mmkv.encode(MMKV_USER_CHANGE, changeMode)
+    fun getUserChangeAction(): Int = mmkv.decodeInt(MMKV_USER_CHANGE, Constants.USER_DEFAULT_MODE)
+
     //用户id
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
@@ -100,6 +103,7 @@ object Repository {
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
+    fun deleteAllSession() = db.sessionDao().deleteAllSession()
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
@@ -107,6 +111,7 @@ object Repository {
     fun insertUser(user: UserVO) = db.userDao().insertUser(user)
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
     fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)
+    fun deleteAllUser() = db.userDao().deleteAllUser()
 
     // 消息数据表
     /**
@@ -124,6 +129,14 @@ object Repository {
     fun insertMessage(msg: MessageEntity) = db.messageDao().insertMessage(msg)
     fun upDataMessage(msg: MessageEntity) = db.messageDao().upDataMessage(msg)
     fun deleteMessage(msg: MessageEntity) = db.messageDao().deleteMessage(msg)
+    fun deleteAllMessage() = db.messageDao().deleteAllMessage()
+
+
+    fun deleteAllTable() {
+        deleteAllUser()
+        deleteAllSession()
+        deleteAllMessage()
+    }
 
     /*
     * 网络请求=======================================================================================
