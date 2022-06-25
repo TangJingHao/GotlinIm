@@ -66,6 +66,8 @@
     <string name="tab_red_group_out">退出群聊</string>
     <!--输入框文本-->
     <string name="edit_hint_new_grouping">点击输入新的分组名</string>
+    <!--选择器弹窗标题-->
+    <string name="timepicker_date_title">查询时间选择</string>
 
     <!-- 发送消息 -->
     <string name="chat_send">发送</string>
