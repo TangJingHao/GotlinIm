@@ -28,12 +28,16 @@
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_img_useravatar1.xml" value="0.252" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_img_useravatar2.xml" value="0.252" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_img_useravatar3.xml" value="0.252" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_radio_item_checked.xml" value="0.244" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_radio_item_unchecked.xml" value="0.244" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_radio_select.xml" value="0.244" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_time_select_bg.xml" value="0.2475" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/h_chat_left_item.xml" value="0.1645" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/h_chat_right_item.xml" value="0.1645" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/h_chat_send.xml" value="0.1645" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/ic_28_chevron_left.xml" value="0.2395" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/ic_img_default.xml" value="0.2395" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_checkbox_selector.xml" value="0.244" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_close_thumb.xml" value="0.1945" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_gray_track.xml" value="0.1945" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_green_track.xml" value="0.1945" />

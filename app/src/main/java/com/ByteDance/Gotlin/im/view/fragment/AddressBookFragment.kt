@@ -192,8 +192,9 @@ class AddressBookFragment : Fragment() {
 
     private fun initView() {
         b.toolbarRl.apply {
-            title.text = "通讯录"
             imgChevronLeft.visibility = View.GONE
+            title.text = "通讯录"
+            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
         }
         b.sideBar.apply {
             setScaleSize(1)

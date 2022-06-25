@@ -28,36 +28,38 @@ class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         mBinding=TActivityInitBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
-        XUI.initTheme(this)
-        setContentView(mBinding.root)
-        var phoneMode = TPhoneUtil.getPhoneMode(this)
-        if(phoneMode==Constants.USER_LIGHT_MODE){
-            QMUIStatusBarHelper.translucent(this)
-            QMUIStatusBarHelper.setStatusBarLightMode(this)
-        }else{
-            QMUIStatusBarHelper.translucent(this)
-            QMUIStatusBarHelper.setStatusBarDarkMode(this)
-        }
-        this.overridePendingTransition(
-            R.anim.t_splash_open,R.anim.t_splash_close
-        )
-        Handler(Looper.getMainLooper()).postDelayed({
-            if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
-                val mainIntent = Intent(this,MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
-                startActivity(mainIntent)
-                finish()
-                this.overridePendingTransition(
-                    R.anim.t_splash_open,R.anim.t_splash_close
-                )
-            }else{
-                val mainIntent = Intent(this,LoginActivity::class.java) //前者为跳转前页面，后者为跳转后页面
-                startActivity(mainIntent)
-                finish()
-                this.overridePendingTransition(
-                    R.anim.t_splash_open,R.anim.t_splash_close
-                )
-            }
-
-        }, 5000) //设置时间，5秒后自动跳转
+        SearchActivity.startSearchNewFriendSearch(this)
+        finish()
+//        XUI.initTheme(this)
+//        setContentView(mBinding.root)
+//        var phoneMode = TPhoneUtil.getPhoneMode(this)
+//        if(phoneMode==Constants.USER_LIGHT_MODE){
+//            QMUIStatusBarHelper.translucent(this)
+//            QMUIStatusBarHelper.setStatusBarLightMode(this)
+//        }else{
+//            QMUIStatusBarHelper.translucent(this)
+//            QMUIStatusBarHelper.setStatusBarDarkMode(this)
+//        }
+//        this.overridePendingTransition(
+//            R.anim.t_splash_open,R.anim.t_splash_close
+//        )
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
+//                val mainIntent = Intent(this,MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
+//                startActivity(mainIntent)
+//                finish()
+//                this.overridePendingTransition(
+//                    R.anim.t_splash_open,R.anim.t_splash_close
+//                )
+//            }else{
+//                val mainIntent = Intent(this,LoginActivity::class.java) //前者为跳转前页面，后者为跳转后页面
+//                startActivity(mainIntent)
+//                finish()
+//                this.overridePendingTransition(
+//                    R.anim.t_splash_open,R.anim.t_splash_close
+//                )
+//            }
+//
+//        }, 5000) //设置时间，5秒后自动跳转
     }
 }

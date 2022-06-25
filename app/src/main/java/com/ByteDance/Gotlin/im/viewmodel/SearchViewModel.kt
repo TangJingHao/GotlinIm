@@ -5,10 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.entity.MessageEntity
 import com.ByteDance.Gotlin.im.info.vo.MessageVO
 import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import kotlinx.coroutines.*
 import java.sql.Date
 
@@ -22,6 +24,7 @@ class SearchViewModel : ViewModel() {
 
     private val TAG: String = "SearchViewModel"
 
+    // 消息记录搜索===================================================================================
     private var sid: Int = 0 // 初始化默认值，无意义
     private var from: Date = Date(0)
     private var to: Date = Date(Long.MAX_VALUE)
@@ -44,6 +47,7 @@ class SearchViewModel : ViewModel() {
         val response = it.getOrNull()
         if (response == null) {
             // 网络请求失败，直接返回
+            TPhoneUtil.showToast(BaseApp.getContext(),"搜索失败，返回值为NULl")
             null
         } else {
             // 使用协程
@@ -72,8 +76,6 @@ class SearchViewModel : ViewModel() {
         mMsgSearchLiveDate.postValue(msgSearchLiveData)
     }
 
-    fun getUserId() = Repository.getUserId()
-
     // 数据库插入数据
     private fun insertMessageList(messageList: List<MessageVO>) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -97,5 +99,81 @@ class SearchViewModel : ViewModel() {
             msg.content, sendTime, msg.self
         )
     }
+
+    // 新好友搜索【邮箱】===============================================================================
+
+    private val mNewFriendSearchByEmailData = MutableLiveData<String>()
+    fun searchNewFriendByEmail(input: String) {
+        mNewFriendSearchByEmailData.postValue(input)
+    }
+
+    val newFriendSearchByEmailObserver = Transformations.switchMap(mNewFriendSearchByEmailData) {
+        // TODO 返回网络获取的邮箱搜素结果
+        MutableLiveData<String>()
+    }
+
+    // 新好友搜索【昵称】===============================================================================
+
+    private val mNewFriendSearchByNameData = MutableLiveData<String>()
+    fun searchNewFriendByName(input: String) {
+        mNewFriendSearchByNameData.postValue(input)
+    }
+
+    val newFriendSearchByNameObserver = Transformations.switchMap(mNewFriendSearchByNameData) {
+        // TODO 返回网络获取的昵称搜素结果
+        MutableLiveData<String>()
+    }
+
+    // 新群聊搜索【群id】==============================================================================
+
+    private val mNewGroupChatSearchByIdData = MutableLiveData<String>()
+    fun searchNewGroupChatById(input: String) {
+        mNewGroupChatSearchByIdData.postValue(input)
+    }
+
+    val newGroupChatSearchByIdObserver = Transformations.switchMap(mNewGroupChatSearchByIdData) {
+        // TODO 返回网络获取的群聊id搜素结果
+        MutableLiveData<String>()
+    }
+
+    // 新群聊搜索【群昵称】==============================================================================
+
+    private val mNewGroupChatSearchByNameData = MutableLiveData<String>()
+    fun searchNewGroupChatByName(input: String) {
+        mNewGroupChatSearchByNameData.postValue(input)
+    }
+
+    val newGroupChatSearchByNameObserver =
+        Transformations.switchMap(mNewGroupChatSearchByNameData) {
+            // TODO 返回网络获取的群昵称搜素结果
+            MutableLiveData<String>()
+        }
+
+    // 新好友搜索【我的申请】============================================================================
+
+    private val mMyApplicationData = MutableLiveData<Int>()
+    fun getMyApplicationData() {
+        mMyApplicationData.postValue(0)// 数字无意义
+    }
+
+    val mMyApplicationObserver = Transformations.switchMap(mMyApplicationData) {
+        // TODO 返回网络获取的我的申请
+        MutableLiveData<String>()
+    }
+
+    // 新群聊搜索【群聊申请】============================================================================
+
+    private val mMyGroupChatApplicationData = MutableLiveData<Int>()
+    fun getMyGroupChatApplicationData() {
+        mMyGroupChatApplicationData.postValue(0)// 数字无意义
+    }
+
+    val mGroupChatApplicationObserver = Transformations.switchMap(mMyGroupChatApplicationData) {
+        // TODO 返回网络获取的我的群聊申请
+        MutableLiveData<String>()
+    }
+
+    // 其他==========================================================================================
+    fun getUserId() = Repository.getUserId()
 }
 

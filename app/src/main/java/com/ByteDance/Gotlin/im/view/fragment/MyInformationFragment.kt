@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow
@@ -65,8 +66,11 @@ class MyInformationFragment : Fragment() {
      * 配置模式切换监听
      */
     private fun initView() {
-        mBinding.toolbarRl.title.text = "我的"
-        mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
+        mBinding.toolbarRl.apply {
+            imgChevronLeft.visibility = View.GONE
+            title.text = "我的"
+            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
+        }
     }
 
     private fun initListener() {

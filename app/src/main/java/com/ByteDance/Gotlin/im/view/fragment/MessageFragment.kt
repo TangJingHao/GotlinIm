@@ -16,6 +16,7 @@ import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
+import com.ByteDance.Gotlin.im.info.WebSocketReceiveUserOnline
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.ws.WebSocketType
 import com.ByteDance.Gotlin.im.util.Constants
@@ -109,11 +110,17 @@ class MessageFragment : Fragment() {
             TPhoneUtil.showToast(requireActivity(), "主界面WebSocket开启")
         }
 
+        // 监听Websocket回调的liveData
         vm.getWsMessageObserverData().observe(requireActivity()) {
+            // 导入了json转换的工具类,首先转换出其中的类型
             val wsType = it.toAny(WebSocketType::class.java)?.wsType
+            // 根据类型判断
             when (wsType) {
                 Constants.WS_USER_ONLINE -> {
+                    // 具体处理
                     TPhoneUtil.showToast(requireActivity(), "好友上线通知")
+                    // 再转换为对应的websocket接收类
+                    val wsReceiveUserOnline = it.toAny(WebSocketReceiveUserOnline::class.java)
                 }
                 Constants.WS_SEND_MESSAGE -> {
                     TPhoneUtil.showToast(requireActivity(), "新消息通知")
@@ -148,8 +155,11 @@ class MessageFragment : Fragment() {
     }
 
     private fun initView() {
-        b.myToolbar.imgChevronLeft.visibility = View.GONE;
-        b.myToolbar.title.text = "消息列表"
+        b.myToolbar.apply {
+            imgChevronLeft.visibility = View.GONE
+            title.text = "消息列表"
+            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
+        }
         // 下拉刷新
         b.refreshLayout.apply {
             setColorSchemeColors(

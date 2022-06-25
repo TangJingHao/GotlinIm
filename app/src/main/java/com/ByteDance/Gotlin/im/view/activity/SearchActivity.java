@@ -123,7 +123,6 @@ public class SearchActivity extends AppCompatActivity {
                 finish();
             }
         });
-
         initFragments(curSearchType);
         initNewFriendsMagicIndicator();
         mFragmentContainerHelper.handlePageSelected(0, false);
