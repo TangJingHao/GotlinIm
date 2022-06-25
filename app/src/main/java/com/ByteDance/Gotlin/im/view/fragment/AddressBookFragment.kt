@@ -45,10 +45,10 @@ class AddressBookFragment : Fragment() {
         private const val TAG = "AddressBookFragment"
 
         // 功能区对应
-        private const val SYSTEM_NEW_FRIEND = 0
-        private const val SYSTEM_NEW_GROUP_CHAT = 1
-        private const val SYSTEM_MY_GROUP_CHAT = 2
-        private const val SYSTEM_APPLICATION_INFO = 3
+//        private const val SYSTEM_NEW_FRIEND = 0
+//        private const val SYSTEM_NEW_GROUP_CHAT = 1
+//        private const val SYSTEM_MY_GROUP_CHAT = 2
+//        private const val SYSTEM_APPLICATION_INFO = 3
     }
 
     private val vm: MainViewModel by lazy {
@@ -74,7 +74,7 @@ class AddressBookFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        DLogUtils.w("通讯录Fragment","onResume")
+        DLogUtils.w("通讯录Fragment", "onResume")
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -90,19 +90,19 @@ class AddressBookFragment : Fragment() {
             val titleList = ArrayList<String>()
             val sortFriendList = DSortUtils.sort(mFriendList, titleList)
             // 假数据充当功能区按键
-            var systemList = ArrayList<UserVO>()
-            val u0 = UserVO(1024, "查找新好友", "女", "查找新好友", "system", null, false)
-            val u1 = UserVO(1024, "查找新群聊", "女", "查找新群聊", "system", null, false)
-            val u2 = UserVO(1024, "我的群聊", "女", "我的群聊", "system", null, false)
-            val u3 = UserVO(1024, "申请通知", "女", "申请通知", "system", null, false)
-            systemList.apply {
-                add(u0)
-                add(u1)
-                add(u2)
-                add(u3)
-            }
-            sortFriendList.add(0, systemList)
-            titleList.add(0, "-")
+//            var systemList = ArrayList<UserVO>()
+//            val u0 = UserVO(1024, "查找新好友", "女", "查找新好友", "system", null, false)
+//            val u1 = UserVO(1024, "查找新群聊", "女", "查找新群聊", "system", null, false)
+//            val u2 = UserVO(1024, "我的群聊", "女", "我的群聊", "system", null, false)
+//            val u3 = UserVO(1024, "申请通知", "女", "申请通知", "system", null, false)
+//            systemList.apply {
+//                add(u0)
+//                add(u1)
+//                add(u2)
+//                add(u3)
+//            }
+//            sortFriendList.add(0, systemList)
+//            titleList.add(0, "-")
             mSortFriendList = sortFriendList
             mTitleList = titleList
             // 适配器
@@ -123,56 +123,57 @@ class AddressBookFragment : Fragment() {
                             "   name: " + sortFriendList[groupPosition][relativePosition].nickName
                 )
                 // 功能区跳转
-                if (groupPosition == 0) {
-                    when (relativePosition) {
-                        SYSTEM_NEW_FRIEND -> {
-                            // 查找新好友
-                            SearchActivity.startSearchNewFriendSearch(requireActivity())
-                        }
-                        SYSTEM_NEW_GROUP_CHAT -> {
-                            // 查找新群聊
-                            SearchActivity.startSearchNewGroupSearch(requireActivity())
-                        }
-                        SYSTEM_APPLICATION_INFO -> {
-                            // 好友申请
-                            startActivity(
-                                Intent(requireActivity(), ApplicationInfoActivity::class.java)
-                            )
-                        }
-                        SYSTEM_MY_GROUP_CHAT -> {
-                            // 我的群聊
-                            startActivity(
-                                Intent(requireActivity(), MyGroupActivity::class.java)
-                            )
-                        }
-                    }
-                } else {
-                    // 跳转到好友信息页面
-                    val intent = Intent(this.context, FriendInfoActivity::class.java)
-                    intent.apply {
-                        putExtra(
-                            Constants.FRIEND_TYPE,
-                            Constants.FRIEND_IS
-                        )
-                        putExtra(
-                            Constants.FRIEND_ACCOUNT,
-                            sortFriendList[groupPosition][relativePosition].userId
-                        )
-                        putExtra(
-                            Constants.FRIEND_NAME,
-                            sortFriendList[groupPosition][relativePosition].userName
-                        )
-                        putExtra(
-                            Constants.FRIEND_NICKNAME,
-                            sortFriendList[groupPosition][relativePosition].nickName
-                        )
-                        putExtra(
-                            Constants.FRIEND_GROUPING,
-                            "大学同学"
-                        )
-                    }
-                    startActivity(intent)
+//                if (groupPosition == 0) {
+//                    when (relativePosition) {
+//                        SYSTEM_NEW_FRIEND -> {
+//                            // 查找新好友
+//                            SearchActivity.startSearchNewFriendSearch(requireActivity())
+//                        }
+//                        SYSTEM_NEW_GROUP_CHAT -> {
+//                            // 查找新群聊
+//                            SearchActivity.startSearchNewGroupSearch(requireActivity())
+//                        }
+//                        SYSTEM_APPLICATION_INFO -> {
+//                            // 好友申请
+//                            startActivity(
+//                                Intent(requireActivity(), ApplicationInfoActivity::class.java)
+//                            )
+//                        }
+//                        SYSTEM_MY_GROUP_CHAT -> {
+//                            // 我的群聊
+//                            startActivity(
+//                                Intent(requireActivity(), MyGroupActivity::class.java)
+//                            )
+//                        }
+//                    }
+//                }
+
+                // 跳转到好友信息页面
+                val intent = Intent(this.context, FriendInfoActivity::class.java)
+                intent.apply {
+                    putExtra(
+                        Constants.FRIEND_TYPE,
+                        Constants.FRIEND_IS
+                    )
+                    putExtra(
+                        Constants.FRIEND_ACCOUNT,
+                        sortFriendList[groupPosition][relativePosition].userId
+                    )
+                    putExtra(
+                        Constants.FRIEND_NAME,
+                        sortFriendList[groupPosition][relativePosition].userName
+                    )
+                    putExtra(
+                        Constants.FRIEND_NICKNAME,
+                        sortFriendList[groupPosition][relativePosition].nickName
+                    )
+                    putExtra(
+                        Constants.FRIEND_GROUPING,
+                        "大学同学"
+                    )
                 }
+                startActivity(intent)
+
             }
             manager = LinearLayoutManager(requireContext())
             manager.orientation = LinearLayoutManager.VERTICAL
@@ -193,7 +194,12 @@ class AddressBookFragment : Fragment() {
         b.toolbarRl.apply {
             imgChevronLeft.visibility = View.GONE
             title.text = "通讯录"
-            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
+            fLayout.setBackgroundColor(
+                AttrColorUtils.getValueOfColorAttr(
+                    requireActivity(),
+                    R.attr.bg_default
+                )
+            )
         }
         b.sideBar.apply {
             setScaleSize(1)

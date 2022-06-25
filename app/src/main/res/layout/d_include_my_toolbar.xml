@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/f_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/im_toolbar_height"
@@ -19,11 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/im_icon_medium"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/preview_text"
         android:textColor="?attr/text_ultrastrong"
         android:textSize="@dimen/im_text_medium"
-        android:text="@string/preview_text"
-        android:textStyle="bold"
-        android:gravity="center"/>
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/img_more"
@@ -31,6 +30,16 @@
         android:layout_height="@dimen/im_icon_medium"
         android:layout_gravity="center_vertical|right"
         android:background="@drawable/ic_28_more_horizontal"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_sys"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/im_icon_medium"
+        android:layout_gravity="center_vertical|right"
+        android:gravity="center"
+        android:text="展开功能区"
+        android:textColor="@color/text_strong"
+        android:textSize="@dimen/im_text_medium"/>
 
 </FrameLayout>
