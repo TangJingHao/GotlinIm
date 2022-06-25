@@ -40,6 +40,7 @@
         android:gravity="center"
         android:text="展开功能区"
         android:textColor="@color/text_strong"
-        android:textSize="@dimen/im_text_medium"/>
+        android:textSize="@dimen/im_text_medium"
+        android:visibility="gone"/>
 
 </FrameLayout>

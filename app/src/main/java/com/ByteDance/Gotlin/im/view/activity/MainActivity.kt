@@ -68,11 +68,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        // 小红点监听
+        // 消息列表底部小红点监听
         viewModelMain.msgRedPointObserver.observe(this) {
             if (it > 0)
                 mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item).number = it
         }
+
+        // 通讯录底部小红点监听
+        viewModelMain.requestRedPointObserver.observe(this) {
+            val response = it.getOrNull()
+            if (response != null) {
+                val totalUnread = response.data.total
+                if (totalUnread > 0)
+                    mBinding.bnvMain.getOrCreateBadge(R.id.navigation_address_book_item).isVisible =
+                        true
+                viewModelMain.setNewFriendRedPointNum(response.data.friend)
+                viewModelMain.setNewGroupChatRedPointNum(response.data.group)
+            }
+        }
+        // 通知更新小红点
+        viewModelMain.getMsgRedPointNum()
+
     }
 
     /**

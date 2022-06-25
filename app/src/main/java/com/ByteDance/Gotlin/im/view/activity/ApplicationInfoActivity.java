@@ -22,6 +22,7 @@ import java.util.List;
  * @Email 1520483847@qq.com
  * @Description 好友申请通知界面
  */
+@Deprecated
 public class ApplicationInfoActivity extends AppCompatActivity {
 
     private static final String TAG = "FriendApplicationActivity";

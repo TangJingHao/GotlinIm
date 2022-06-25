@@ -47,7 +47,7 @@ class SearchViewModel : ViewModel() {
         val response = it.getOrNull()
         if (response == null) {
             // 网络请求失败，直接返回
-            TPhoneUtil.showToast(BaseApp.getContext(),"搜索失败，返回值为NULl")
+            TPhoneUtil.showToast(BaseApp.getContext(), "搜索失败，返回值为NULl")
             null
         } else {
             // 使用协程
@@ -166,7 +166,7 @@ class SearchViewModel : ViewModel() {
     }
 
     // 新群聊搜索【群聊申请】============================================================================
-//
+    /
 //    private val mMyGroupChatApplicationData = MutableLiveData<Int>()
 //    fun getMyGroupChatApplicationData() {
 //        mMyGroupChatApplicationData.postValue(0)// 数字无意义
@@ -176,6 +176,10 @@ class SearchViewModel : ViewModel() {
 //        // TODO 返回网络获取的我的群聊申请
 //        MutableLiveData<String>()
 //    }
+
+    // 确认通过申请
+    fun patchRequestHandle(reqId: Int, access: Int) = Repository.patchRequestHandle(reqId, access)
+
 
     // 其他==========================================================================================
     fun getUserId() = Repository.getUserId()

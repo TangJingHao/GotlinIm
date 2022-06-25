@@ -91,13 +91,30 @@ class MainViewModel : ViewModel() {
     }
 
     // 好友申请小红点
-    val requestRedPointObserver = MutableLiveData<Boolean>()
+   private val requestRedPointData = MutableLiveData<Int>()
 
-    fun setMsgRedPointNum(visibility: Boolean) {
+    val requestRedPointObserver = Transformations.switchMap(requestRedPointData){
         Repository.getRequestBadge()
-        requestRedPointObserver.postValue(visibility)
     }
 
+    /** 更新通讯录页的小红点 */
+    fun getMsgRedPointNum() {
+        requestRedPointData.postValue(0)
+    }
+
+    // 通讯录页面 查找新好友小红点
+    val newFriendRedPointObserver = MutableLiveData<Int>()
+
+    fun setNewFriendRedPointNum(num: Int) {
+        newFriendRedPointObserver.postValue(num)
+    }
+
+    // 通讯录页面 查找新群聊小红点
+    val newGroupChatRedPointObserver = MutableLiveData<Int>()
+
+    fun setNewGroupChatRedPointNum(num: Int) {
+        newGroupChatRedPointObserver.postValue(num)
+    }
 
 
 
