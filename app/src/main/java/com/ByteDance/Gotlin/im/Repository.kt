@@ -170,7 +170,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = NetWork.getGroupMemberList(userId)
+        val groupMemberListDataResponse = NetWork.patchRequestHandle(userId)
         if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(groupMemberListDataResponse)
         } else {
@@ -224,6 +224,66 @@ object Repository {
             Result.success(sessionHistoryDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
+        }
+    }
+
+    /**
+     * 获取当前用户未读的好友和群聊申请
+     */
+    fun getRequestBadge() = fire(Dispatchers.IO) {
+        val requestBadge = NetWork.getRequestBadge(getUserId())
+        if (requestBadge.status == Constants.SUCCESS_STATUS) {
+            Result.success(requestBadge)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${requestBadge.status}"))
+        }
+    }
+
+    /**
+     * 获取与用户相关的所有申请，分为 4 类
+     */
+    fun getRequestList() = fire(Dispatchers.IO) {
+        val requestList = NetWork.getRequestList(getUserId())
+        if (requestList.status == Constants.SUCCESS_STATUS) {
+            Result.success(requestList)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${requestList.status}"))
+        }
+    }
+
+    /**
+     * 申请添加某用户为好友
+     */
+    fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /**
+     *  申请加入某群聊
+     */
+    fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.postRequestGroup(getUserId(), groupId, reqSrc, reqRemark)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /**
+     * 同意或拒绝某用户的申请
+     */
+    fun patchRequestHandle(reqId: Int, access: Int) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.patchRequestHandle(reqId,access)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
         }
     }
 
