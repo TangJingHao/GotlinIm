@@ -102,4 +102,15 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
     public void setCancelText(String cancelText) {
         b.tvSelectCancel.setText(cancelText);
     }
+
+    public void setOptions(int index) {
+        switch (index % 2) {
+            case 0: {
+                b.rgSelectGroup.check(b.options1.getId());
+            }
+            case 1: {
+                b.rgSelectGroup.check(b.options1.getId());
+            }
+        }
+    }
 }

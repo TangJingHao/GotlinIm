@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +9,16 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.application.BaseActivity
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
 import com.ByteDance.Gotlin.im.util.Constants
-import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
+import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow
@@ -34,13 +39,15 @@ import com.luck.picture.lib.style.PictureSelectorStyle
  * @Description
  * 我的
  */
-
+@RequiresApi(Build.VERSION_CODES.Q)
 class MyInformationFragment : Fragment() {
     private lateinit var mBinding: TFragmentMyInfomationBinding
     private lateinit var mMyEditMediaIListener: TMyEditMediaIListener
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
     private lateinit var mSingleSelectPopupWindow:SingleSelectPopupWindow
+    private lateinit var mDarkConfirmPopupWindow: ConfirmPopupWindow
+    private lateinit var mLightConfirmPopupWindow:ConfirmPopupWindow
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,10 +73,22 @@ class MyInformationFragment : Fragment() {
      * 配置模式切换监听
      */
     private fun initView() {
-        mBinding.toolbarRl.apply {
-            imgChevronLeft.visibility = View.GONE
-            title.text = "我的"
-            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
+        mBinding.toolbarRl.title.text = "我的"
+        mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
+        var userData = Repository.getUserData()
+        mBinding.nicknameTv.text=userData.userName
+        mBinding.emailTv.text=userData.email
+        var avatar = userData.avatar
+        var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
+        mBinding.sbIosBtn.isChecked = flag
+        //头像字符串拼接
+        if(avatar!=null){
+            var index = avatar.indexOf(".")
+            var substring = avatar.substring(index + 1)
+            var s = Constants.BASE_AVATAR_URL + substring
+            Glide.with(requireContext()).
+            load(s).
+            into(mBinding.iconIv)
         }
     }
 
@@ -124,14 +143,62 @@ class MyInformationFragment : Fragment() {
             }
             mSingleSelectPopupWindow= SingleSelectPopupWindow(requireContext(),"选择性别",
             "男","女",sexPopupWindowListener)
-            mSingleSelectPopupWindow.selectIndex=0
+            mSingleSelectPopupWindow.setOptions(0)
             mSingleSelectPopupWindow.mPopupWindow.animationStyle=R.style.t_popup_window_style
             mSingleSelectPopupWindow.setConfirmText("确认修改")
             mSingleSelectPopupWindow.setCancelText("取消修改")
             mSingleSelectPopupWindow.show()
         }
-        //修改在线状态
+        //修改模式
+        mBinding.sbIosBtn.setOnCheckedChangeListener { compoundButton, isChecked ->
+            if(isChecked){
+                TLogUtil.d("选中")
+                val modePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
+                    override fun onConfirm(input: String) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                        Repository.saveUserMode(Constants.DARK_MODE)
+                        Repository.setUserChangeAction(Constants.USER_CHANGE_MODE)
+                        activity?.finish()
+                    }
 
+                    override fun onCancel() {
+                        mDarkConfirmPopupWindow.dismiss()
+                    }
+
+                    override fun onDismiss() {
+                        mDarkConfirmPopupWindow.dismiss()
+                    }
+                }
+                mDarkConfirmPopupWindow= ConfirmPopupWindow(activity,"启动夜间模式",modePopupWindowListener)
+                mDarkConfirmPopupWindow.mPopupWindow.animationStyle=R.style.t_popup_window_style
+                mDarkConfirmPopupWindow.setConfirmText("确定启用")
+                mDarkConfirmPopupWindow.setCancelText("我再想想")
+                mDarkConfirmPopupWindow.show()
+            }else{
+                TLogUtil.d("未选中")
+                val modePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
+                    override fun onConfirm(input: String) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        Repository.saveUserMode(Constants.DARK_MODE)
+                        Repository.setUserChangeAction(Constants.USER_DEFAULT_MODE)
+                        activity?.finish()
+                    }
+
+                    override fun onCancel() {
+                        mLightConfirmPopupWindow.dismiss()
+                    }
+
+                    override fun onDismiss() {
+                        mLightConfirmPopupWindow.dismiss()
+                    }
+                }
+                mLightConfirmPopupWindow= ConfirmPopupWindow(activity,"关闭夜间模式",modePopupWindowListener)
+                mLightConfirmPopupWindow.mPopupWindow.animationStyle=R.style.t_popup_window_style
+                mLightConfirmPopupWindow.setConfirmText("确定关闭")
+                mLightConfirmPopupWindow.setCancelText("我再想想")
+                mLightConfirmPopupWindow.show()
+            }
+        }
     }
 
     /**

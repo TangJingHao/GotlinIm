@@ -63,6 +63,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/email_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="注册邮箱：1520483847@qq.com"

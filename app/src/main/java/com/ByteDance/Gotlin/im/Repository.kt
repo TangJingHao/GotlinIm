@@ -1,10 +1,13 @@
 package com.ByteDance.Gotlin.im
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
@@ -30,6 +33,7 @@ import kotlin.coroutines.CoroutineContext
  */
 
 @OptIn(DelicateCoroutinesApi::class)
+@RequiresApi(Build.VERSION_CODES.Q)
 object Repository {
 
     private const val TAG = "仓库层"
@@ -43,17 +47,25 @@ object Repository {
 
     private const val MMKV_USER_ID = "userId"
     private const val MMKV_USER_MODE = "user_mode"
+    private const val MMKV_USER_CHANGE="user_change"
     private const val MMKV_USER_NICKNAME = "user_nickName"
     private const val MMKV_USER_AVATAR = "Avatar"
     private const val MMKV_USER_NAME = "user_name"
     private const val MMKV_USER_SEX = "user_sex"
     private const val MMKV_USER_EMAIL = "user_email"
+    private const val MMKV_USER_DATA = "user_data"
 
+    //用户数据
+    fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
+    fun setUserData(user: User)= mmkv.encode(MMKV_USER_DATA,user)
+    fun deleteUserData()= mmkv.removeValueForKey(MMKV_USER_DATA)
     //模式
-    fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
-    fun saveUserStatus(userId: Int) = mmkv.encode(MMKV_USER_MODE, userId)
-    fun deleteUserStatus() = mmkv.removeValueForKey(MMKV_USER_MODE)
-
+    fun getUserMode(): Int = mmkv.decodeInt(MMKV_USER_MODE)
+    fun saveUserMode(userMode: Int) = mmkv.encode(MMKV_USER_MODE, userMode)
+    fun deleteUserMode() = mmkv.removeValueForKey(MMKV_USER_MODE)
+    //记录用户是否修改了模式
+    fun setUserChangeAction(changeMode:Int)= mmkv.encode(MMKV_USER_CHANGE,changeMode)
+    fun getUserChangeAction():Int= mmkv.decodeInt(MMKV_USER_CHANGE,Constants.USER_DEFAULT_MODE)
     //用户id
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
