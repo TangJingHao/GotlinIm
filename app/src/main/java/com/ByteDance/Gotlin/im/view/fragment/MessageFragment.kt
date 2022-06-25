@@ -15,7 +15,6 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
-import com.ByteDance.Gotlin.im.application.ThreadManager
 import com.ByteDance.Gotlin.im.databinding.TFragmentMessageBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
@@ -82,7 +81,7 @@ class MessageFragment : Fragment() {
 
                     override fun onClick(view: View, position: Int, badge: BGABadgeView) {
                         //跳转到聊天界面
-                        val session: SessionVO = messageList.get(position).session
+                        val session: SessionVO = messageList[position].session
                         badge.hiddenBadge()
                         startChat(context, session)
                     }

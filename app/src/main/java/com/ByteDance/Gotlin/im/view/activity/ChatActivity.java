@@ -25,10 +25,19 @@ import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
+import com.ByteDance.Gotlin.im.util.Constants;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
+import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.config.SelectModeConfig;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.interfaces.OnResultCallbackListener;
+import com.luck.picture.lib.style.PictureSelectorStyle;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -146,14 +155,27 @@ public class ChatActivity extends AppCompatActivity {
         send.setOnClickListener(view -> send());
         //返回
         back.setOnClickListener(view -> back());
-        //打开图片选择器
+        //打开图片选择器,发送照片
         image.setOnClickListener(view -> {
-
+            openImgSelector();
         });
         //刷新
         refresh.setOnRefreshListener(() -> {
             model.refresh();
             refresh.setRefreshing(false);
+        });
+
+        //跳转到
+        toolbar.imgMore.setOnClickListener(v -> {
+            int chatType = session.getType();
+            //跳转到群聊信息页面
+            if (chatType == Constants.CHAT_GROUP) {
+                //TODO 跳转群聊信息页面
+            }
+            //跳转到好友信息页面
+            else if (chatType == Constants.CHAT_PRIVATE) {
+                //TODO 跳转好友信息页面
+            }
         });
     }
 
@@ -184,6 +206,27 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void back() {
         finish();
+    }
+
+    /**
+     * 启动照片选择器
+     */
+    private void openImgSelector() {
+        PictureSelector.create(this)
+                .openGallery(SelectMimeType.ofImage())
+                .setImageEngine(TGlideEngine.createGlideEngine())
+                .setSelectionMode(SelectModeConfig.SINGLE)
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(ArrayList<LocalMedia> result) {
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+
     }
 
     @Override

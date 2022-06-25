@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.viewmodel;
 
+import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_IMG;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
 import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
 
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
+import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse;
 import com.ByteDance.Gotlin.im.info.WSreceiveContent;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
@@ -47,14 +49,14 @@ public class ChatViewModel extends ViewModel {
     private final SessionVO session;
     private final ChatListAdapter adapter;
     private final Repository re = Repository.INSTANCE;
-    private WebSocket webSocket;
+    private final WebSocket webSocket;
+    private final UserVO user;
     private int page = 0;
-    private UserVO user;
 
     ChatViewModel(SessionVO session) {
         this.session = session;
         SocketListener listener = new SocketListener();
-//        //初始化webSocket
+        //初始化webSocket
         webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
         LinkedList<MessageVO> list = new LinkedList<>();
         adapter = new ChatListAdapter(list);
@@ -111,15 +113,14 @@ public class ChatViewModel extends ViewModel {
                     SessionHistoryDataResponse his = (SessionHistoryDataResponse) o;
                     List<MessageVO> list = his.getData().getHistoryList();
                     //将获得的数据转换为MessageVO，并向消息列表Top位置插入
-                    MessageVO[] messageVOS = new MessageVO[list.size()];
-                    int count = 0;
-                    for (MessageVO h : list) {
-                        messageVOS[count++] = new MessageVO(
-                                h.getSession(), h.getSender(),
-                                h.getType(), h.getContent(),
-                                h.getSendTime(), h.getSelf());
+                    if (list.size() > 0) {
+                        MessageVO[] messageVOS = new MessageVO[list.size()];
+                        int count = list.size() - 1;
+                        for (MessageVO h : list) {
+                            messageVOS[count--] = h;
+                        }
+                        addMsg(messageVOS, LIST_TOP);
                     }
-                    addMsg(messageVOS, LIST_TOP);
                 }
             }
         });
@@ -129,6 +130,7 @@ public class ChatViewModel extends ViewModel {
      * 接收text消息
      */
     private void receivedText(WebSocketReceiveChatMsg msg) {
+        DLogUtils.i(TAG, msg.getWsContent().toString());
         WSreceiveContent c = msg.getWsContent();
         MessageVO message = new MessageVO(c.getSession(),
                 c.getSender(), c.getType(), c.getContent(),
@@ -147,8 +149,8 @@ public class ChatViewModel extends ViewModel {
         Gson gson = new Gson();
         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
                 SEND_MESSAGE, new WSsendContent(session.getSessionId(),
-                re.getUserId(), 0, msg));
-        webSocket.send(gson.toJson(sendChatMsg));
+                re.getUserId(), MESSAGE_TEXT, msg));
+        ThreadManager.getDefFixThreadPool().execute(() -> webSocket.send(gson.toJson(sendChatMsg)));
         MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
         addMsg(messageVOS, LIST_BOTTOM);
     }
@@ -163,7 +165,6 @@ public class ChatViewModel extends ViewModel {
             newData = new LinkedList<>(oldData);
         else
             newData = new LinkedList<>();
-
         //向新数据中插入
         if (pos == LIST_BOTTOM) {
             Collections.addAll(newData, messageVOS);
@@ -180,10 +181,9 @@ public class ChatViewModel extends ViewModel {
      * 将发送的数据转化为MessageVO,用于装进聊天界面
      */
     private MessageVO ws2Message(WebSocketSendChatMsg ws, boolean self) {
-
         WSsendContent c = ws.getWsContent();
         return new MessageVO(session, user, c.getType(),
-                c.getContent(), "", self);
+                c.getContent(), "xxxx-xx-xx xx:xx:xx", self);
     }
 
     /**
@@ -195,10 +195,6 @@ public class ChatViewModel extends ViewModel {
         @Override
         public void onOpen(WebSocket webSocket, @NonNull Response response) {
             DLogUtils.i(TAG, "开启链接");
-            WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                    SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
-                    0, "开始聊天吧"));
-            webSocket.send(gson.toJson(sendChatMsg));
         }
 
         // 回调,展示消息
@@ -206,16 +202,15 @@ public class ChatViewModel extends ViewModel {
         public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
             DLogUtils.i(TAG, "回调" + text);
             WebSocketReceiveChatMsg msg = gson.fromJson(text, WebSocketReceiveChatMsg.class);
-            if (msg.getWsContent().getType() == MESSAGE_TEXT) {
-
-            }
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+            ThreadManager.getDefFixThreadPool().execute(() -> {
+                int type = msg.getWsContent().getType();
+                if (type == MESSAGE_TEXT) {
                     receivedText(msg);
+                } else if (type == MESSAGE_IMG) {
+                    //TODO:处理图片信息
+
                 }
-            }).start();
+            });
         }
 
         // 回调
@@ -226,17 +221,17 @@ public class ChatViewModel extends ViewModel {
 
         @Override
         public void onClosing(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-            DLogUtils.i(TAG, "链接关闭中");
+            DLogUtils.i(TAG, "链接关闭中 " + reason);
         }
 
         @Override
         public void onClosed(@NonNull WebSocket webSocket, int code, @NonNull String reason) {
-            DLogUtils.i(TAG, "链接已关闭");
+            DLogUtils.i(TAG, "链接已关闭 " + reason);
         }
 
         @Override
         public void onFailure(@NonNull WebSocket webSocket, @NonNull Throwable t, Response response) {
-            DLogUtils.i(TAG, "链接失败/发送失败" + t);
+            DLogUtils.i(TAG, t.toString());
         }
     }
 }
