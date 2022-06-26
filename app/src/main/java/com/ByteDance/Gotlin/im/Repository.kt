@@ -44,7 +44,6 @@ import kotlin.coroutines.CoroutineContext
 object Repository {
     //临时存放token
     var mToken = ""
-
     private const val TAG = "仓库层"
 
     /*
@@ -100,22 +99,6 @@ object Repository {
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
     fun deleteUserId() = mmkv.removeValueForKey(MMKV_USER_ID)
-
-    /**
-     * 获取当前用户nickName
-     */
-    fun getUsernickName() = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
-
-    /**
-     * 获取当前用户头像
-     */
-    fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, "../img/home.png")
-
-    fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
-
-    fun getUserSex() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
-
-    fun getUserEmail() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
 
     /*
     * 数据库=========================================================================================

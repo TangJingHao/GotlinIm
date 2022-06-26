@@ -9,11 +9,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
-import com.ByteDance.Gotlin.im.databinding.TActivityInitBinding
-import com.ByteDance.Gotlin.im.databinding.TActivityInitNightBinding
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
-import com.ByteDance.Gotlin.im.view.activity.*
+import com.ByteDance.Gotlin.im.view.activity.LoginActivity
+import com.ByteDance.Gotlin.im.view.activity.MainActivity
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
 
@@ -27,32 +26,33 @@ import com.xuexiang.xui.XUI
  */
 @RequiresApi(Build.VERSION_CODES.Q)
 class BaseActivity : AppCompatActivity() {
-    private var mode=Constants.LIGHT_MODE
+    private var mode = Constants.LIGHT_MODE
     override fun onCreate(savedInstanceState: Bundle?) {
         XUI.initTheme(this)
         super.onCreate(savedInstanceState)
         QMUIStatusBarHelper.translucent(this)
         initTheme()
-        if(mode==Constants.LIGHT_MODE){
+        if (mode == Constants.LIGHT_MODE) {
             setContentView(R.layout.t_activity_init)
-        }else if(mode==Constants.DARK_MODE){
+        } else if (mode == Constants.DARK_MODE) {
             setContentView(R.layout.t_activity_init_night)
         }
         Handler(Looper.getMainLooper()).postDelayed({
+
             if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
                 Repository.mToken=Repository.getToken()
                 val mainIntent = Intent(this,MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
                 startActivity(mainIntent)
                 finish()
                 this.overridePendingTransition(
-                    R.anim.t_splash_open,R.anim.t_splash_close
+                    R.anim.t_splash_open, R.anim.t_splash_close
                 )
-            }else{
-                val mainIntent = Intent(this,LoginActivity::class.java) //前者为跳转前页面，后者为跳转后页面
+            } else {
+                val mainIntent = Intent(this, LoginActivity::class.java) //前者为跳转前页面，后者为跳转后页面
                 startActivity(mainIntent)
                 finish()
                 this.overridePendingTransition(
-                    R.anim.t_splash_open,R.anim.t_splash_close
+                    R.anim.t_splash_open, R.anim.t_splash_close
                 )
             }
 
@@ -64,22 +64,22 @@ class BaseActivity : AppCompatActivity() {
      */
     private fun initTheme() {
         //用户设置了模式
-        if(Repository.getUserChangeAction()==Constants.USER_DEFAULT_MODE){
+        if (Repository.getUserChangeAction() == Constants.USER_DEFAULT_MODE) {
             var phoneMode = TPhoneUtil.getPhoneMode(this)
-            if(phoneMode==Constants.LIGHT_MODE){
+            if (phoneMode == Constants.LIGHT_MODE) {
                 QMUIStatusBarHelper.setStatusBarLightMode(this)
-            }else{
+            } else {
                 QMUIStatusBarHelper.setStatusBarDarkMode(this)
-                mode=Constants.DARK_MODE
+                mode = Constants.DARK_MODE
             }
-        }else{
+        } else {
             //用户没有设置模式
             var userStatus = Repository.getUserMode()
-            if(userStatus==Constants.USER_LIGHT_MODE){
+            if (userStatus == Constants.USER_LIGHT_MODE) {
                 QMUIStatusBarHelper.setStatusBarLightMode(this)
-            }else{
+            } else {
                 QMUIStatusBarHelper.setStatusBarDarkMode(this)
-                mode=Constants.DARK_MODE
+                mode = Constants.DARK_MODE
             }
         }
     }

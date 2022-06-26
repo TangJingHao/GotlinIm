@@ -30,12 +30,13 @@ object Constants {
     const val MESSAGE_IMG = 1
 
     //聊天类型
+    const val SEND_MESSAGE = "SEND_MESSAGE"
     const val CHAT_PRIVATE = 0
     const val CHAT_GROUP = 1
 
     //用户的状态设置
     const val USER_DEFAULT_MODE = 0//默认状态则不做处理
-    const val USER_CHANGE_MODE=1//用户修改界面
+    const val USER_CHANGE_MODE = 1//用户修改界面
     const val USER_DARK_MODE = 1
     const val USER_LIGHT_MODE = 2
 
@@ -44,7 +45,7 @@ object Constants {
     const val BASE_WS_URL = "ws://chatspace.iceclean.top/space/ws/chat/"
     const val WS_SEND_MESSAGE = "SEND_MESSAGE"
     const val WS_USER_ONLINE = "USER_ONLINE"
-    const val BASE_AVATAR_URL="http://chatspace.iceclean.top"
+    const val BASE_AVATAR_URL = "http://chatspace.iceclean.top"
 
     //suzy：好友类型选择
     const val FRIEND_ID = "FriendId"

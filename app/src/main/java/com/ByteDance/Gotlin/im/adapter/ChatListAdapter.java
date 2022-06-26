@@ -2,10 +2,10 @@ package com.ByteDance.Gotlin.im.adapter;
 
 import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
 import static com.ByteDance.Gotlin.im.util.Constants.DEFAULT_IMG;
-import static com.ByteDance.Gotlin.im.util.Hutils.DensityUtil.px2dp;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.R;
@@ -27,7 +28,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
 import java.util.LinkedList;
@@ -48,6 +48,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     private final int max_height;
     private LinkedList<MessageVO> list;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public ChatListAdapter(LinkedList<MessageVO> list) {
         this.list = list;
         context = BaseApp.Companion.getContext();
@@ -143,10 +144,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
     /**
      * 自适应加载图片
+     *
      * @param path 图片路径
-     * @param v 目标
+     * @param v    目标
      */
-    @Deprecated
     private void loadImg(String path, ImageView v) {
         CustomTarget<Drawable> target = new CustomTarget<Drawable>() {
             @Override

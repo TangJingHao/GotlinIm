@@ -21,18 +21,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.ByteDance.Gotlin.im.application.BaseApp;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.util.Constants;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
-import com.ByteDance.Gotlin.im.util.Hutils.HLog;
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
-import com.bumptech.glide.Glide;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
@@ -55,7 +52,6 @@ public class ChatActivity extends AppCompatActivity {
     private TextView send;
     private ChatViewModel model;
     private ImageButton back;
-    private RecyclerView chatList;
     private SwipeRefreshLayout refresh;
     private ImageButton image;
 
@@ -98,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
         input = view.input;
         send = view.send;
         back = toolbar.imgChevronLeft;
-        chatList = view.chatList;
+        RecyclerView chatList = view.chatList;
         refresh = view.refresh;
         image = view.image;
         model = new ViewModelProvider(this, new ChatViewModelFactory()).get(ChatViewModel.class);

@@ -3,8 +3,12 @@ package com.ByteDance.Gotlin.im.viewmodel;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_IMG;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
 import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
+import static com.ByteDance.Gotlin.im.util.Hutils.TimeUtils.getCurrentTime;
+
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,6 +17,7 @@ import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.adapter.ChatListAdapter;
 import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse;
+import com.ByteDance.Gotlin.im.info.User;
 import com.ByteDance.Gotlin.im.info.WSreceiveContent;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
@@ -27,6 +32,7 @@ import com.google.gson.Gson;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
@@ -47,11 +53,11 @@ public class ChatViewModel extends ViewModel {
     private final MutableLiveData<LinkedList<MessageVO>> messages;
     private final SessionVO session;
     private final ChatListAdapter adapter;
-    private final Repository re = Repository.INSTANCE;
     private final WebSocket webSocket;
     private final UserVO user;
     private int page = 0;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     ChatViewModel(SessionVO session) {
         this.session = session;
         SocketListener listener = new SocketListener();
@@ -61,14 +67,15 @@ public class ChatViewModel extends ViewModel {
         adapter = new ChatListAdapter(list);
         messages = new MutableLiveData<>();
         //填充User
-        user = new UserVO(
-                re.getUserId(),
-                re.getUserName(),
-                re.getUserSex(),
-                re.getUsernickName(),
-                re.getUserEmail(),
-                re.getUserAvatar(),
-                true);
+        Repository re = Repository.INSTANCE;
+        User u = re.getUserData();
+        user = new UserVO(u.getUserId(),
+                Objects.requireNonNull(u.getUserName()),
+                Objects.requireNonNull(u.getSex()),
+                Objects.requireNonNull(u.getNickName()),
+                Objects.requireNonNull(u.getEmail()),
+                u.getAvatar(),
+                u.getOnline());
     }
 
     @Override
@@ -97,9 +104,10 @@ public class ChatViewModel extends ViewModel {
     /**
      * 刷新聊天列表，显示更多聊天记录
      */
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void refresh() {
         //从数据库加载聊天记录
-        NetWork.INSTANCE.getSessionHistoryList(re.getUserId(), session.getSessionId(), page++, new Continuation<SessionHistoryDataResponse>() {
+        NetWork.INSTANCE.getSessionHistoryList(user.getUserId(), session.getSessionId(), page++, new Continuation<SessionHistoryDataResponse>() {
             @NonNull
             @Override
             public CoroutineContext getContext() {
@@ -150,7 +158,7 @@ public class ChatViewModel extends ViewModel {
         Gson gson = new Gson();
         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
                 SEND_MESSAGE, new WSsendContent(session.getSessionId(),
-                re.getUserId(), MESSAGE_TEXT, msg));
+                user.getUserId(), MESSAGE_TEXT, msg));
         ThreadManager.getDefFixThreadPool().execute(() -> webSocket.send(gson.toJson(sendChatMsg)));
         MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
         addMsg(messageVOS, LIST_BOTTOM);
@@ -207,7 +215,7 @@ public class ChatViewModel extends ViewModel {
     private MessageVO ws2Message(WebSocketSendChatMsg ws, boolean self) {
         WSsendContent c = ws.getWsContent();
         return new MessageVO(session, user, c.getType(),
-                c.getContent(), "xxxx-xx-xx xx:xx:xx", self);
+                c.getContent(), getCurrentTime(), self);
     }
 
     /**
