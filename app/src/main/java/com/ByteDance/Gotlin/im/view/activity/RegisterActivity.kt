@@ -87,7 +87,7 @@ class RegisterActivity : AppCompatActivity() {
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.putExtra("username",mUserName)
                     intent.putExtra("password",mPassword)
-                    startActivityForResult(intent,100)
+                    setResult(100,intent)
                     finish()
                     this.overridePendingTransition(
                         R.anim.t_splash_open, R.anim.t_splash_close

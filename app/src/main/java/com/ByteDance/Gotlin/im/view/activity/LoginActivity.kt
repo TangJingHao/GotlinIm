@@ -80,8 +80,7 @@ class LoginActivity : AppCompatActivity() {
                     Repository.setUserLoginUserName(mUserName)
                     Repository.mToken = responseData.data.token
                     var intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    startActivityForResult(intent,100)
                     this.overridePendingTransition(
                         R.anim.t_splash_open, R.anim.t_splash_close
                     )
@@ -115,7 +114,6 @@ class LoginActivity : AppCompatActivity() {
         }
         mBinding.registerTv.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
-            finish()
             this.overridePendingTransition(
                 R.anim.t_splash_open, R.anim.t_splash_close
             )
