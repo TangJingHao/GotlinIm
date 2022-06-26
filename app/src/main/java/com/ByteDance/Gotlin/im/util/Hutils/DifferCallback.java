@@ -50,7 +50,7 @@ public class DifferCallback extends DiffUtil.Callback {
         if (!o.getSender().equals(n.getSender())) return false;
         if (o.getType() != n.getType()) return false;
         if (!o.getContent().equals(n.getContent())) return false;
-        if (!o.getSendTime().equals(n.getSendTime())) ;
+        if (!o.getSendTime().equals(n.getSendTime())) return false;
         return o.getSelf() == n.getSelf();
     }
 }

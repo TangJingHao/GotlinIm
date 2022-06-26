@@ -83,7 +83,7 @@ class MessageFragment : Fragment() {
 
                     override fun onClick(view: View, position: Int, badge: BGABadgeView) {
                         //跳转到聊天界面
-                        val session: SessionVO = messageList.get(position).session
+                        val session: SessionVO = messageList[position].session
                         badge.hiddenBadge()
                         startChat(context, session)
                     }

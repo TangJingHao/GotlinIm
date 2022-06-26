@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendSettingBinding
@@ -33,8 +34,7 @@ class FriendSettingActivity : AppCompatActivity() {
 
         initView()
         setListener()
-        setGroupingData()
-
+        //setGroupingData()
     }
 
     private fun initView() {
@@ -47,7 +47,7 @@ class FriendSettingActivity : AppCompatActivity() {
         else etNewGrouping.hint = this.resources.getString(R.string.edit_hint_new_grouping)
 
         etNickName.hint = intent.getStringExtra(Constants.FRIEND_NICKNAME).toString()
-        etNewGrouping.hint = intent.getStringExtra(Constants.FRIEND_GROUPING).toString()
+        //etNewGrouping.hint = intent.getStringExtra(Constants.FRIEND_GROUPING).toString()
     }
 
     private fun setListener() {
@@ -57,11 +57,17 @@ class FriendSettingActivity : AppCompatActivity() {
         }
         //保存按钮 按下则确定保留
         mBinding.toolbarSetFriendInfo.imgMore.onClick {
-            nickname = etNickName.text.toString()
-            "保存修改成功".showToast(this)
-            //etNickName.clearComposingText()
-            //etNickName.hint = nickname
+            if(nickname != etNickName.text.toString()){
+                mViewModel.saveNickName(etNickName.text.toString())
+            }else{
+                "没有修改不用保存!".showToast(this)
+            }
         }
+        //数据刷新
+        mViewModel.nickNameLiveData.observe(this, Observer {
+            "保存修改成功".showToast(this)
+            etNickName.hint = it
+        })
 
     }
 

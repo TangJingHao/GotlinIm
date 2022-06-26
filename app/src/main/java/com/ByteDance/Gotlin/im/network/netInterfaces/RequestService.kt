@@ -6,6 +6,10 @@ import com.ByteDance.Gotlin.im.info.response.RequestBadgeDataResponse
 import com.ByteDance.Gotlin.im.info.response.RequestListDataResponse
 import retrofit2.Call
 import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Query
 
 /**
  * @Author Zhicong Deng

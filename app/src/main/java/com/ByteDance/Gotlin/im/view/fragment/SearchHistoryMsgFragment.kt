@@ -16,7 +16,12 @@ import com.ByteDance.Gotlin.im.adapter.LoadMoreAdapter
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding
 import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
+import com.ByteDance.Gotlin.im.util.Mutils.MTimePickerUtils
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel
+import com.bigkoo.pickerview.listener.OnTimeSelectListener
+import com.bigkoo.pickerview.view.TimePickerView
+import com.google.android.exoplayer2.util.Log
 import java.sql.Date
 
 /**
@@ -77,6 +82,12 @@ class SearchHistoryMsgFragment : Fragment() {
 
     var mAdapter: LoadMoreAdapter? = null
 
+    //时间选择器
+    private lateinit var dataPickerView : TimePickerView
+    private var mTimePickerUtils = MTimePickerUtils()
+    private lateinit var dateFrom : Date
+    private lateinit var dataTo : Date
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 初始化参数
@@ -116,11 +127,27 @@ class SearchHistoryMsgFragment : Fragment() {
             tvTimeFrom.setOnClickListener { view: View? ->
                 // TODO 时间选择器（起始）,传入from中
 //                loadMsgWithParam(null, from, null)
-
+                dataPickerView = mTimePickerUtils.initDatePicker(context,activity,
+                    OnTimeSelectListener { date, v ->
+                        //java的date转sql的date
+                        dateFrom = Date(mTimePickerUtils.getDateHMS(date).time)
+                        b.timeBar.tvTimeFrom.text = mTimePickerUtils.getDateYMD(date)
+                        MLogUtil.i(TAG, "-----起止时间：$dateFrom------")
+                    })
+                dataPickerView.show()
             }
             tvTimeTo.setOnClickListener { view: View? ->
                 // TODO 时间选择器（结束），传入to中
 //                loadMsgWithParam(null, null, to)
+                dataPickerView = mTimePickerUtils.initDatePicker(context,activity,
+                    OnTimeSelectListener { date, v ->
+                        //java的date转sql的date
+                        dataTo = Date(date.time)
+                        loadMsgWithParam("",dateFrom,dataTo)
+                        b.timeBar.tvTimeTo.text = mTimePickerUtils.getDateYMD(date)
+                        MLogUtil.i(TAG, "-----截至时间：$dataTo------")
+                    })
+                dataPickerView.show()
             }
         }
 
