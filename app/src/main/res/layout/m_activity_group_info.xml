@@ -38,7 +38,7 @@
                     android:layout_height="@dimen/user_pic"
                     android:layout_marginStart="@dimen/im_spacing_large"
                     android:layout_marginTop="@dimen/im_spacing_large"
-                    android:background="@mipmap/ic_launcher"
+                    android:background="@drawable/ic_img_default"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -167,6 +167,22 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView4">
 
         <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?attr/bg_default"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
+            android:layout_marginBottom="@dimen/im_spacing_medium"
+            app:cardCornerRadius="@dimen/im_spacing_small"
+            >
+            <include
+                android:id="@+id/tab_add_start_group"
+                layout="@layout/m_info_item_blue" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/tab_layout_group"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"

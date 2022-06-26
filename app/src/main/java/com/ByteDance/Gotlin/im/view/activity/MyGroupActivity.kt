@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.databinding.DActivityMyGroupBinding
 import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.util.Constants
@@ -93,7 +94,8 @@ class MyGroupActivity : AppCompatActivity() {
                         putExtra(Constants.GROUP_MY_NAME,groupVO.markName)
                         putExtra(Constants.GROUP_OWNER,groupVO.creatorId)
                     }
-//                    startActivity()
+                    this.overridePendingTransition(R.anim.t_splash_open, R.anim.t_splash_close)
+
                 })
                 b.rvLayout.adapter = adapter
                 b.rvLayout.layoutManager = LinearLayoutManager(mContext)

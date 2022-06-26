@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.adapter;
 
 import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
+import static com.ByteDance.Gotlin.im.util.Constants.DEFAULT_IMG;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,15 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.R;
 import com.ByteDance.Gotlin.im.databinding.DItemLittleTitleBinding;
-import com.ByteDance.Gotlin.im.databinding.DItemUserInfoMessageBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoSimpleBinding;
 import com.ByteDance.Gotlin.im.databinding.DItemUserInfoStatueBinding;
 import com.ByteDance.Gotlin.im.info.vo.GroupVO;
-import com.ByteDance.Gotlin.im.info.vo.TestUser;
+import com.ByteDance.Gotlin.im.info.vo.SessionRequestVO;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils;
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils;
-import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -44,6 +43,15 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     private final static String TAG = "TabWithTitleAdapter";
 
     private final Context mContext;
+
+    public List<String> mTitleList() {
+        return mTitleList;
+    }
+
+    public List<Integer> mTitleIndexList() {
+        return mTitleIndexList;
+    }
+
     // 要展示的信息
     private final List<List<E>> mDataInfoList;
     // 各组组名
@@ -73,16 +81,13 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public static final int TYPE_USER_INFO_STATUE = 1;
     // 头像、用户名
     public static final int TYPE_USER_INFO_SIMPLE = 2;
-    // 头像、用户名、信息、发送时间
-    public static final int TYPE_USER_MESSAGE = 3;
+
     // 当前状态（只能是1/2/3）
     public int mTabType;
 
-    private static int DEFAULT_IMG = R.drawable.d_img_useravatar1;
-
     RoundedCorners roundedCorners = new RoundedCorners(8);//数字为圆角度数
     RequestOptions options = new RequestOptions()
-            .transforms(new CenterCrop(),roundedCorners)
+            .transforms(new CenterCrop(), roundedCorners)
             .diskCacheStrategy(DiskCacheStrategy.NONE)//不做磁盘缓存
             .skipMemoryCache(true);//不做内存缓存
 
@@ -130,7 +135,8 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         // 确定总item数量，titleItem出现的position
         for (int i = 0; i < mDataInfoList.size(); i++) {
             mTitleIndexList.add(i, titlePositionIndex);
-            int curGroupsize = mDataInfoList.get(i).size();
+            int curGroupsize = 0;
+            if (mDataInfoList.get(i) != null) curGroupsize = mDataInfoList.get(i).size();
             titlePositionIndex += 1 + curGroupsize;
             totalLen += curGroupsize;
         }
@@ -204,17 +210,12 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
             case TYPE_USER_INFO_STATUE: {
                 DItemUserInfoStatueBinding statueBinding = DItemUserInfoStatueBinding
                         .inflate(LayoutInflater.from(parent.getContext()), parent, false);
-                return new UserStatueInfoViewHolder(statueBinding);
+                return new StatueInfoViewHolder(statueBinding);
             }
-            case TYPE_USER_INFO_SIMPLE: {
+            default: { // case TYPE_USER_INFO_SIMPLE:
                 DItemUserInfoSimpleBinding simpleBinding = DItemUserInfoSimpleBinding
                         .inflate(LayoutInflater.from(parent.getContext()), parent, false);
                 return new SimpleInfoViewHolder(simpleBinding);
-            }
-            default: {  // TYPE_USER_MESSAGE
-                DItemUserInfoMessageBinding messageBinding = DItemUserInfoMessageBinding
-                        .inflate(LayoutInflater.from(parent.getContext()), parent, false);
-                return new UserMessageViewHolder(messageBinding);
             }
         }
     }
@@ -223,49 +224,193 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int group = getGroupFromMap(position);
         int relativePosition = getRelativePositionFromMap(position);
-        if (group == GROUP_TITLE) { // 是标题类型，此时relativePosition表示第几组
+        // 是标题类型，此时relativePosition表示第几组
+        if (group == GROUP_TITLE) {
             TitleViewHolder titleHolder = (TitleViewHolder) holder;
             if (relativePosition < mTitleList.size()) {
-                titleHolder.b.tvListTitle.setText(mTitleList.get(relativePosition));
+                String title = mTitleList.get(relativePosition);
+                if (title == "-") {
+                    titleHolder.b.tvListTitle.setText("功能区");
+                    titleHolder.b.fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(mContext, R.attr.bg_default));
+                } else
+                    titleHolder.b.tvListTitle.setText(mTitleList.get(relativePosition));
             } else {
                 titleHolder.b.tvListTitle.setText("未知分组");
             }
-        } else {
+        }
+        // 不同的显示类型
+        else {
             E data = mDataInfoList.get(group).get(relativePosition);
-
-            // TODO 泛型适配不同的User类，需要修改的靓仔请找到自己的case修改
             switch (mTabType) {
                 case TYPE_USER_INFO_STATUE: {
-                    UserStatueInfoViewHolder userHolder = (UserStatueInfoViewHolder) holder;
+                    StatueInfoViewHolder h = (StatueInfoViewHolder) holder;
                     if (data instanceof GroupVO) {
+
                         GroupVO item = (GroupVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-                                .into(userHolder.b.imgUserPic);
-                        userHolder.b.tvUserName.setText(item.getGroupName());
-                        userHolder.b.tvUserMail.setText("gid：" + item.getGroupId());
+                                .into(h.b.imgAvatar);
+                        h.b.tvTitleName.setText(item.getGroupName());
+                        h.b.tvInfo.setText("gid：" + item.getGroupId());
+
                     } else if (data instanceof UserVO) {
+
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-                                .into(userHolder.b.imgUserPic);
-                        userHolder.b.tvUserName.setText(item.getUserName());
-                        userHolder.b.tvUserMail.setText("uid：" + item.getUserId());
-                        userHolder.b.tvStatue.setText(item.getOnline() ? "在线" : "离线");
+                                .into(h.b.imgAvatar);
+                        h.b.tvTitleName.setText(item.getUserName());
+                        h.b.tvInfo.setText("uid：" + item.getUserId());
+                        h.b.tvStatue.setText(item.getOnline() ? "在线" : "离线");
+
+                    } else if (data instanceof SessionRequestVO) {
+                        SessionRequestVO item = (SessionRequestVO) data;
+                        int kind = item.getKind();
+                        int type = item.getType();
+                        // 好友申请
+                        if (type == 0) {
+                            UserVO userVo = item.getUser();
+                            Glide.with(mContext)
+                                    .load(userVo.getAvatar() == null ? DEFAULT_IMG : BASE_URL + userVo.getAvatar())
+                                    .into(h.b.imgAvatar);
+                            // 用户收到好友申请,user为申请者
+                            if (kind == 0) {
+                                String title = "" + userVo.getUserName() + "(" + item.getReqSrc() + ")";
+                                h.b.tvTitleName.setText(title);
+
+                                String info = "" + item.getSendTime() + ":" + item.getReqRemark();
+                                h.b.tvInfo.setText(info);
+
+                                int reqStatus = item.getReqStatus();
+                                switch (reqStatus) {
+                                    case 0:
+                                    case 1: {
+                                        h.b.tvStatue.setText("操作");
+                                        h.b.tvStatue.setTextColor(AttrColorUtils.
+                                                getValueOfColorAttr(mContext, R.attr.fill_white));
+                                        h.b.tvStatue.setBackgroundColor(AttrColorUtils.
+                                                getValueOfColorAttr(mContext, R.attr.text_link));
+                                        // 为操作选项提供回调接口
+                                        h.b.tvStatue.setOnClickListener(view -> {
+                                            if (mOnMoreClickListener != null) {
+                                                DLogUtils.i(TAG,"点击了状态");
+                                                mOnMoreClickListener.onMoreClick(view, group, relativePosition);
+                                            }
+                                        });
+                                        break;
+                                    }
+                                    case 2: {
+                                        h.b.tvStatue.setText("已接受");
+                                        break;
+                                    }
+                                    case 3: {
+                                        h.b.tvStatue.setText("已拒绝");
+                                        break;
+                                    }
+                                }
+                            }
+                            // 用户发起的好友申请，user为目标好友
+                            else {
+
+                                String title = userVo.getUserName();
+                                h.b.tvTitleName.setText(title);
+
+                                String info = "" + item.getSendTime() + ":" + item.getReqRemark();
+                                h.b.tvInfo.setText(info);
+
+                                int reqStatus = item.getReqStatus();
+                                switch (reqStatus) {
+                                    case 0:
+                                    case 1: {
+                                        h.b.tvStatue.setText("等待验证");
+                                        break;
+                                    }
+                                    case 2: {
+                                        h.b.tvStatue.setText("已接受");
+                                        break;
+                                    }
+                                    case 3: {
+                                        h.b.tvStatue.setText("已拒绝");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        // 群聊申请
+                        else {
+                            GroupVO groupVo = item.getGroup();
+                            Glide.with(mContext)
+                                    .load(groupVo.getAvatar() == null ? DEFAULT_IMG : BASE_URL + groupVo.getAvatar())
+                                    .into(h.b.imgAvatar);
+                            // 用户收到群聊申请，user为邀请者，group为目标群聊
+                            if (kind == 0) {
+                                String title = "" + groupVo.getGroupName() + "(" + item.getReqSrc() + ")";
+                                h.b.tvTitleName.setText(title);
+
+                                String info = "" + item.getSendTime() + ":" + item.getReqRemark();
+                                h.b.tvInfo.setText(info);
+
+                                int reqStatus = item.getReqStatus();
+                                switch (reqStatus) {
+                                    case 0:
+                                    case 1: {
+                                        h.b.tvStatue.setText("操作");
+                                        h.b.tvStatue.setTextColor(AttrColorUtils.
+                                                getValueOfColorAttr(mContext, R.attr.fill_white));
+                                        h.b.tvStatue.setBackgroundColor(AttrColorUtils.
+                                                getValueOfColorAttr(mContext, R.attr.text_link));
+                                        // 为操作选项提供回调接口
+                                        h.b.tvStatue.setOnClickListener(view -> {
+                                            if (mOnMoreClickListener != null) {
+                                                DLogUtils.i(TAG,"点击了状态");
+                                                mOnMoreClickListener.onMoreClick(view, group, relativePosition);
+                                            }
+                                        });
+                                        break;
+                                    }
+                                    case 2: {
+                                        h.b.tvStatue.setText("已入群");
+                                        break;
+                                    }
+                                    case 3: {
+                                        h.b.tvStatue.setText("已拒绝");
+                                        break;
+                                    }
+                                }
+
+                            }
+                            // 用户发起的群聊申请，group为目标群聊
+                            else {
+                                String title = "" + groupVo.getGroupName();
+                                h.b.tvTitleName.setText(title);
+
+                                String info = "" + item.getSendTime() + ":" + item.getReqRemark();
+                                h.b.tvInfo.setText(info);
+
+                                int reqStatus = item.getReqStatus();
+                                switch (reqStatus) {
+                                    case 0:
+                                    case 1: {
+                                        h.b.tvStatue.setText("等待验证");
+                                        break;
+                                    }
+                                    case 2: {
+                                        h.b.tvStatue.setText("已入群");
+                                        break;
+                                    }
+                                    case 3: {
+                                        h.b.tvStatue.setText("已拒绝");
+                                        break;
+                                    }
+                                }
+
+                            }
+                        }
                     }
+
                     if (mItemOnClickListener != null)
-                        userHolder.b.rLayout.setOnClickListener(view ->
+                        h.b.rLayout.setOnClickListener(view ->
                                 mItemOnClickListener.onItemClick(view, group, relativePosition));
-                    if (mOnMoreClickListener != null) {
-                        userHolder.b.tvStatue.setOnClickListener(view ->
-                                mOnMoreClickListener.onMoreClick(view,
-                                        group, relativePosition));
-                        userHolder.b.tvStatue.setBackgroundColor(
-                                AttrColorUtils.getValueOfColorAttr(mContext, R.attr.accent_default));
-                        userHolder.b.tvStatue.setText("操作");
-                        userHolder.b.tvStatue.setTextColor(AttrColorUtils
-                                .getValueOfColorAttr(mContext, R.attr.fill_white));
-                    }
                     break;
                 }
                 case TYPE_USER_INFO_SIMPLE: {
@@ -275,15 +420,15 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .apply(options)
-                                .into(simpleHolder.b.imgUserPic);
-                        simpleHolder.b.tvUserName.setText(item.getGroupName());
+                                .into(simpleHolder.b.imgAvatar);
+                        simpleHolder.b.tvTitleName.setText(item.getGroupName());
                     } else if (data instanceof UserVO) {
                         UserVO item = (UserVO) data;
                         Glide.with(mContext)
                                 .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
                                 .apply(options)
-                                .into(simpleHolder.b.imgUserPic);
-                        simpleHolder.b.tvUserName.setText(item.getUserName());
+                                .into(simpleHolder.b.imgAvatar);
+                        simpleHolder.b.tvTitleName.setText(item.getUserName());
                     }
                     if (mItemOnClickListener != null) {
                         simpleHolder.b.rLayout.setOnClickListener(new View.OnClickListener() {
@@ -294,23 +439,6 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         });
                     }
                     break;
-                }
-                case TYPE_USER_MESSAGE: {
-//                    // TODO 在此处处理泛型类的转换
-//                    UserVO item = (UserVO) mDataInfoList.get(group).get(relativePosition);
-//                    UserMessageViewHolder MessageHolder = (UserMessageViewHolder) holder;
-//
-//                    // TODO 网络头像加载，目前仅加载默认头像
-//                    Glide.with(mContext)
-//                            .load(item.getAvatar() == null ? DEFAULT_IMG : BASE_URL + item.getAvatar())
-//                            .into(MessageHolder.b.imgUserPic);
-//                    MessageHolder.b.tvUserName.setText(item.getUserName());
-//                    MessageHolder.b.tvUserMsg.setText(item.getMsg());
-//                    MessageHolder.b.tvTime.setText("当前时间");
-//                    if (mItemOnClickListener != null)
-//                        MessageHolder.b.rLayout.setOnClickListener(view ->
-//                                mItemOnClickListener.onItemClick(view, group, relativePosition));
-//                    break;
                 }
                 default:
                     break;
@@ -340,10 +468,10 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         }
     }
 
-    static class UserStatueInfoViewHolder extends RecyclerView.ViewHolder {
+    static class StatueInfoViewHolder extends RecyclerView.ViewHolder {
         DItemUserInfoStatueBinding b;
 
-        public UserStatueInfoViewHolder(@NonNull DItemUserInfoStatueBinding b) {
+        public StatueInfoViewHolder(@NonNull DItemUserInfoStatueBinding b) {
             super(b.getRoot());
             this.b = b;
         }
@@ -353,15 +481,6 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
         DItemUserInfoSimpleBinding b;
 
         public SimpleInfoViewHolder(@NonNull DItemUserInfoSimpleBinding b) {
-            super(b.getRoot());
-            this.b = b;
-        }
-    }
-
-    static class UserMessageViewHolder extends RecyclerView.ViewHolder {
-        DItemUserInfoMessageBinding b;
-
-        public UserMessageViewHolder(@NonNull DItemUserInfoMessageBinding b) {
             super(b.getRoot());
             this.b = b;
         }

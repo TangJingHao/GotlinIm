@@ -7,6 +7,7 @@
     android:background="?attr/bg_weak">
 
     <EditText
+        android:id="@+id/et_input"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="center"
@@ -15,8 +16,12 @@
         android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
         android:background="?attr/tsp_fill_medium"
         android:textSize="@dimen/im_text_medium"
+        android:lines="1"
         android:textColor="@color/text_ultrastrong"
-        android:hint="@string/preview_text">
+        android:hint="@string/preview_text"
+        android:imeOptions="actionSearch"
+        android:singleLine="true"
+        >
     </EditText>
 
 </FrameLayout>

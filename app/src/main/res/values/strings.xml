@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GotlinIm</string>
+    <string name="app_name">雁书</string>
 
     <!--by邓志聪==================================================================-->
     <string-array name="indicator_search_new_friend_title">
@@ -62,14 +62,15 @@
     <string name="tab_blue_add">添加好友</string>
     <string name="tab_blue_start">开始聊天</string>
     <string name="tab_red_delete_friend">删除好友</string>
+    <string name="tab_red_group_add">加入群聊</string>
+    <string name="tab_red_group_start">开始聊天</string>
     <string name="tab_red_group_delete">解散群聊</string>
     <string name="tab_red_group_out">退出群聊</string>
+    <string name="grouping_default">无</string>
     <!--输入框文本-->
     <string name="edit_hint_new_grouping">点击输入新的分组名</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--选择器弹窗标题-->
+    <string name="timepicker_date_title">查询时间选择</string>
 
     <!-- 发送消息 -->
     <string name="chat_send">发送</string>

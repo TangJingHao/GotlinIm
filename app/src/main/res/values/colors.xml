@@ -107,7 +107,7 @@
     <color name="dark_fill_white">       #E0ffffff</color>
 
     <color name="dark_bg_default">  #121212</color>
-    <color name="dark_bg_weak">     #2F2F2F</color>
+    <color name="dark_bg_weak">     #1b1b1b</color>
 
     <!--  中性灰色_Gray  -->
     <color name="Gray_01">#1f1f1f</color>

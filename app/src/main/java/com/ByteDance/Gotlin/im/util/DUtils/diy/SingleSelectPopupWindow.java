@@ -17,13 +17,20 @@ import com.ByteDance.Gotlin.im.databinding.DPopupWindowSingleSelectBinding;
  * @Description 单选类型弹窗, 目前仅支持双选
  */
 public class SingleSelectPopupWindow extends BasePopupWindow {
+    public int getSelectIndex() {
+        return selectIndex;
+    }
+
+    public void setSelectIndex(int selectIndex) {
+        this.selectIndex = selectIndex;
+    }
 
     @SuppressLint("StaticFieldLeak")
     private static DPopupWindowSingleSelectBinding b;
 
     private int selectIndex = 0;
 
-    String[] options = new String[]{"选项0","选项1"};
+    String[] options = new String[]{"选项0", "选项1"};
 
     public SingleSelectPopupWindow(Context context, String title, String option0, String option1,
                                    PopupWindowListener listener) {
@@ -34,7 +41,6 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
                         ViewGroup.LayoutParams.WRAP_CONTENT, true),
                 listener
         );
-
 
         options[0] = option0;
         options[1] = option1;
@@ -95,5 +101,16 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
     @Override
     public void setCancelText(String cancelText) {
         b.tvSelectCancel.setText(cancelText);
+    }
+
+    public void setOptions(int index) {
+        switch (index % 2) {
+            case 0: {
+                b.rgSelectGroup.check(b.options1.getId());
+            }
+            case 1: {
+                b.rgSelectGroup.check(b.options1.getId());
+            }
+        }
     }
 }

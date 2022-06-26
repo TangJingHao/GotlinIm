@@ -19,7 +19,7 @@ import com.ByteDance.Gotlin.im.viewmodel.GroupInfoViewModel
 import com.qmuiteam.qmui.kotlin.onClick
 
 class GroupInviteActivity : AppCompatActivity() {
-    val mBinding: MActivityGroupInviteBinding by lazy {
+    private val mBinding: MActivityGroupInviteBinding by lazy {
     MActivityGroupInviteBinding.inflate(LayoutInflater.from(this))
 }
 

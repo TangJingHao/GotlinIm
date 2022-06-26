@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fill_weak"
+    android:padding="@dimen/im_common_horizontal_large">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="64dp">
+
+        <ImageView
+            android:id="@+id/initIv"
+            android:layout_width="@dimen/im_icon_huge"
+            android:layout_height="@dimen/im_icon_huge"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ic_app_logo_yanshu" />
+
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="@dimen/im_icon_large"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/im_spacing_medium"
+            android:layout_toEndOf="@id/initIv"
+            android:background="@drawable/ic_app_title_yanshu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/initIv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:text=" 鸿雁传书  快人一步"
+            android:textColor="@color/text_medium"
+            android:textSize="@dimen/im_text_small" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

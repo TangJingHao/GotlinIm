@@ -38,22 +38,20 @@
         android:theme="@style/Theme.GotlinIm">
         <activity
             android:name=".view.activity.MyGroupActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.ApplicationInfoActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.FriendSettingActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.GroupInviteActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".application.BaseActivity"
             android:theme="@style/SplashActivityTheme"
-            android:launchMode="standard"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -61,29 +59,29 @@
         </activity>
         <activity
             android:name=".view.activity.GroupInfoActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.GroupMembersActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.FriendInfoActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.MainActivity"
-            android:launchMode="standard"
+            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.ChatActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.LoginActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.RegisterActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.SearchActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".view.activity.TestActivity"
             android:exported="false" />

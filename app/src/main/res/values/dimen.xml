@@ -5,7 +5,7 @@
     <!--登录/注册页距离屏幕左右边距-->
     <dimen name="im_common_horizontal_large">32dp</dimen>
     <!--Toolbar-->
-    <dimen name="im_toolbar_height">72dp</dimen>
+    <dimen name="im_toolbar_height">64dp</dimen>
     <!--底部栏-->
     <dimen name="im_bottom_height">72dp</dimen>
     <!--输入框-->
@@ -58,8 +58,6 @@
     <!--状态栏高度-->
     <dimen name="im_status_height">30dp</dimen>
     <!--  消息图片大小  -->
-    <dimen name="default_msgImg_width">52dp</dimen>
-    <dimen name="max_msgImg_width">180dp</dimen>
-    <dimen name="default_msgImg_height">56dp</dimen>
-    <dimen name="max_msgImg_height">135dp</dimen>
+    <dimen name="max_msgImg_width">200dp</dimen>
+    <dimen name="max_msgImg_height">100dp</dimen>
 </resources>

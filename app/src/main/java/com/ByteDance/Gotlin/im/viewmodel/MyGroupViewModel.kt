@@ -22,7 +22,7 @@ class MyGroupViewModel : ViewModel() {
     }
 
     fun getGroupList() {
-        mUserIdLiveData.value = Repository.getUserId()
+        mUserIdLiveData.postValue(Repository.getUserId())
     }
 
 }

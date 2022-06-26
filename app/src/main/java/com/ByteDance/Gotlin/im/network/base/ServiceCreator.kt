@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.network.base
 
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
@@ -38,7 +39,7 @@ object ServiceCreator {
     private val customLogInterceptor = CustomLogInterceptor()
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(customLogInterceptor)  // 添加了日志拦截器，不用可以注释掉
+//        .addInterceptor(customLogInterceptor)  // 添加了日志拦截器，不用可以注释掉
         .addNetworkInterceptor { chain ->
             val response = chain.proceed(chain.request())
             response.newBuilder() // http1.0 的 pragma 头
@@ -57,9 +58,17 @@ object ServiceCreator {
 
     // 用于webSocket
     var WebSocketClient = OkHttpClient.Builder()
-        .pingInterval(3, TimeUnit.SECONDS)
-        .readTimeout(3, TimeUnit.SECONDS)
+        .addInterceptor(Interceptor {
+            val request: Request = it.request()
+                .newBuilder()
+                .addHeader("token", Repository.mToken)
+                .build()
+            it.proceed(request)
+        })
+        .pingInterval(30, TimeUnit.SECONDS)
+        .connectTimeout(10, TimeUnit.SECONDS)
         .build()
+
 
     fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)
 

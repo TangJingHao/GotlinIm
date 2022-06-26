@@ -1,9 +1,14 @@
 package com.ByteDance.Gotlin.im.datasource.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import com.ByteDance.Gotlin.im.datasource.dao.BookDao
-import com.ByteDance.Gotlin.im.entity.Book
+import android.content.Context
+import androidx.room.*
+import com.ByteDance.Gotlin.im.datasource.dao.MessageDao
+import com.ByteDance.Gotlin.im.datasource.dao.SessionDao
+import com.ByteDance.Gotlin.im.datasource.dao.UserDao
+import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
+import java.sql.Date
 
 /**
  * @Author Zhicong Deng
@@ -11,7 +16,44 @@ import com.ByteDance.Gotlin.im.entity.Book
  * @Email 1520483847@qq.com
  * @Description 学习测试用数据库
  */
-@Database(entities = [Book::class], version = 1)
+@Database(entities = [UserVO::class, SessionVO::class, MessageEntity::class], version = 3)
+@TypeConverters(Converters::class)
 abstract class SQLDatabase : RoomDatabase() {
-    abstract fun book(): BookDao
+    abstract fun userDao(): UserDao
+    abstract fun sessionDao(): SessionDao
+    abstract fun messageDao(): MessageDao
+
+    companion object {
+
+        private var instance: SQLDatabase? = null
+
+        @Synchronized
+        fun getDatabase(context: Context): SQLDatabase {
+            instance?.let {
+                return it
+            }
+            return Room.databaseBuilder(
+                context.applicationContext,
+                SQLDatabase::class.java, "app_database"
+            )
+                .fallbackToDestructiveMigration()
+                .build().apply {
+                    instance = this
+                }
+        }
+    }
 }
+
+class Converters {
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return if (value == null) null else Date(value)
+    }
+
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
+    }
+}
+

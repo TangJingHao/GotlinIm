@@ -38,6 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginVertical="2dp"
+
                     android:background="?attr/tsp_fill_weak"
                     android:text="选项一"/>
                 <RadioButton
