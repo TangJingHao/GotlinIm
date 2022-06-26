@@ -1,10 +1,10 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.database.Cursor
+import android.net.Uri
+import android.os.*
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +20,6 @@ import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseActivity
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
 import com.ByteDance.Gotlin.im.info.response.ImageData
-import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netInterfaces.SendImageService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
@@ -40,10 +39,11 @@ import com.luck.picture.lib.style.PictureSelectorStyle
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 
 
@@ -255,20 +255,23 @@ class MyInformationFragment : Fragment() {
                 val selectList = PictureSelector.obtainSelectorList(result.data)
                 val media = selectList[0]
                 val cut = media.isCut
-                var filepath=""
-                filepath = if (cut) {
+                TLogUtil.d(media.realPath)
+                var filepath=media.realPath
+                if (cut) {
                     //是裁剪过的
                     Glide.with(requireContext()).load(media.cutPath).into(mBinding.iconIv)
-                    media.cutPath
                 } else { //没有裁剪过的
                     Glide.with(requireContext()).load(media.path).into(mBinding.iconIv)
-                    media.path
                 }
-                val file = File(filepath)
+                val retrofitHead = Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val file = File(Environment.getExternalStorageDirectory().absolutePath+filepath)
                 val requestBody = RequestBody.create(MediaType.parse("image/jpg"), file)
                 val createFormData =
                     MultipartBody.Part.createFormData("file", file.name, requestBody)
-                val mSender = ServiceCreator.create<SendImageService>()
+                val mSender = retrofitHead.create(SendImageService::class.java)
                 val sendImage = mSender.sendImage(Repository.getToken(),Repository.getUserId(), createFormData)
                 sendImage.enqueue(object :Callback<ImageData>{
                     override fun onResponse(call: Call<ImageData>, response: Response<ImageData>) {
@@ -292,5 +295,5 @@ class MyInformationFragment : Fragment() {
         }
     }
 
-
 }
+
