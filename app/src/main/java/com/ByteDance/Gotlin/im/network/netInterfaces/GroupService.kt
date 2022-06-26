@@ -1,10 +1,12 @@
 package com.ByteDance.Gotlin.im.network.netInterfaces
 
 import com.ByteDance.Gotlin.im.info.FriendListDataResponse
+import com.ByteDance.Gotlin.im.info.response.GroupCreateDataResponse
 import com.ByteDance.Gotlin.im.info.response.GroupMembersDataResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 /**
@@ -20,7 +22,14 @@ interface GroupService {
      */
     @GET("group/list/user")
     fun getGroupMemberList(
-        @Header("token")token:String,
+        @Header("token") token: String,
         @Query("groupId") groupId: Int
     ): Call<GroupMembersDataResponse>
+
+    @POST("group")
+    fun postNewGroup(
+        @Header("token") token: String,
+        @Query("userId") userId: Int,
+        @Query("groupName") groupName: String
+    ): Call<GroupCreateDataResponse>
 }

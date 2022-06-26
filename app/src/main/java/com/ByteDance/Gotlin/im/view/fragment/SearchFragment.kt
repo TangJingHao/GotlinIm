@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding
-import com.ByteDance.Gotlin.im.info.vo.SessionRequestListVO
 import com.ByteDance.Gotlin.im.info.vo.SessionRequestVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
@@ -35,10 +35,10 @@ class SearchFragment : Fragment() {
         // 启动fragment的参数
         private const val SEARCH_MAILBOX = 0
         private const val SEARCH_NICKNAME = 1
-        private const val MY_APPLICATION = 2
+        private const val REQUEST_FRIEND = 2
         private const val SEARCH_GROUP_CHAT_ID = 3
         private const val SEARCH_GROUP_CHAT_NICKNAME = 4
-        private const val MY_GROUP_CHAR_APPLICATION = 5
+        private const val REQUEST_GROUP_CHAR = 5
         private const val SEARCH_HISTORY_MESSAGE = 6
 
         /**
@@ -115,21 +115,13 @@ class SearchFragment : Fragment() {
                         b.searchBar.etInput.clearFocus()
                         hideKeyboard()
                         when (searchParam) {
-                            SEARCH_MAILBOX -> {
-                                DLogUtils.i(TAG + "发起邮箱搜索", inputText)
-                                vm.searchNewFriendByEmail(inputText)
+                            SEARCH_MAILBOX, SEARCH_NICKNAME -> {
+                                DLogUtils.i(TAG + "发起查找新好友搜索", inputText)
+                                vm.searchNewFriend(inputText)
                             }
-                            SEARCH_NICKNAME -> {
-                                DLogUtils.i(TAG + "发起昵称搜索", inputText)
-                                vm.searchNewFriendByName(inputText)
-                            }
-                            SEARCH_GROUP_CHAT_ID -> {
-                                DLogUtils.i(TAG + "发起群聊id搜索", inputText)
-                                vm.searchNewGroupChatById(inputText)
-                            }
-                            SEARCH_GROUP_CHAT_NICKNAME -> {
-                                DLogUtils.i(TAG + "发起群聊昵称搜索", inputText)
-                                vm.searchNewGroupChatByName(inputText)
+                            SEARCH_GROUP_CHAT_ID, SEARCH_GROUP_CHAT_NICKNAME -> {
+                                DLogUtils.i(TAG + "发起查找新群聊搜索", inputText)
+                                vm.searchNewGroupChat(inputText)
                             }
                         }
                         return true
@@ -147,32 +139,51 @@ class SearchFragment : Fragment() {
 
         // 不同类型下监听返回数据
         when (searchParam) {
-            SEARCH_MAILBOX -> {
-                vm.newFriendSearchByEmailObserver.observe(requireActivity()) {
-                    // TODO 新建adapter,传入资料,刷新滑动列表，点击事件
-                    DLogUtils.i(TAG + "邮箱搜索", "SEARCH_MAILBOX")
-                }
-            }
-            SEARCH_NICKNAME -> {
+            /** 查找新好友 */
+            SEARCH_MAILBOX, SEARCH_NICKNAME -> {
+                vm.newFriendSearchObserver.observe(requireActivity()) {
+                    val response = it.getOrNull()
+                    if (response != null) {
+                        val resultUserList = response.data.result
+                        val dataList = ArrayList<List<UserVO>>()
+                        dataList.add(resultUserList)
+                        val title = ArrayList<String>()
+                        title.add("搜索到${response.data.total}条匹配结果")
+                        val userSearchAdapter = TabWithTitleAdapter(
+                            requireActivity(),
+                            dataList, title, TabWithTitleAdapter.TYPE_USER_INFO_SIMPLE
+                        )
+                        userSearchAdapter.setItemOnClickListener(object :
+                            TabWithTitleAdapter.OnItemClickListener {
+                            override fun onItemClick(
+                                v: View?,
+                                groupPosition: Int,
+                                relativePosition: Int
+                            ) {
+                                // 搜索到的好友数据
+                                val user = resultUserList[relativePosition]
+                                TPhoneUtil.showToast(requireActivity(), "点击了用户${user.userName}")
+                                // TODO 舒欣，跳转到好友详情页（接上好友申请弹窗）
 
-                vm.newFriendSearchByNameObserver.observe(requireActivity()) {
-                    // TODO 新建adapter,传入资料,刷新滑动列表，点击事件
-                    DLogUtils.i(TAG + "昵称搜索", "SEARCH_NICKNAME")
+                            }
+
+                        })
+                        b.rvLayout.apply {
+                            adapter = userSearchAdapter
+                        }
+                        userSearchAdapter.notifyDataSetChanged()
+                    }
                 }
             }
-            SEARCH_GROUP_CHAT_ID -> {
-                vm.newGroupChatSearchByIdObserver.observe(requireActivity()) {
+            /** 查找新群聊 */
+            SEARCH_GROUP_CHAT_ID, SEARCH_GROUP_CHAT_NICKNAME -> {
+                vm.newGroupChatSearchObserver.observe(requireActivity()) {
                     // TODO 新建adapter,传入资料,刷新滑动列表，点击事件
-                    DLogUtils.i(TAG + "群聊id搜索", "SEARCH_GROUP_CHAT_ID")
+                    DLogUtils.i(TAG, "群聊搜索=====")
                 }
             }
-            SEARCH_GROUP_CHAT_NICKNAME -> {
-                vm.newGroupChatSearchByNameObserver.observe(requireActivity()) {
-                    // TODO 新建adapter,传入资料,刷新滑动列表，点击事件
-                    DLogUtils.i(TAG + "群聊昵称搜索", "SEARCH_GROUP_CHAT_NICKNAME")
-                }
-            }
-            MY_APPLICATION -> {
+            /** 好友申请 */
+            REQUEST_FRIEND -> {
                 b.searchBar.fLayout.visibility = View.GONE
                 vm.mAllRequestObserver.observe(requireActivity()) {
                     // TODO 我的申请页面
@@ -202,7 +213,8 @@ class SearchFragment : Fragment() {
                             // TODO 弹窗确定是否通过申请
                             ConfirmPopupWindow(
                                 requireActivity(),
-                                "确认添加其为好友？",
+                                "确认添加${friendRequest[relativePosition].user.userName}\n" +
+                                        "${friendRequest[relativePosition].user.email}为好友？",
                                 object : PopupWindowListener {
                                     val reqId = friendRequest[relativePosition].reqId
                                     override fun onConfirm(input: String?) {
@@ -240,7 +252,8 @@ class SearchFragment : Fragment() {
                 }
                 vm.getAllRequestData()
             }
-            MY_GROUP_CHAR_APPLICATION -> {
+            /** 群聊申请 */
+            REQUEST_GROUP_CHAR -> {
                 b.searchBar.fLayout.visibility = View.GONE
                 vm.mAllRequestObserver.observe(requireActivity()) {
                     // TODO 新建adapter,传入资料,刷新滑动列表，点击事件
@@ -268,34 +281,34 @@ class SearchFragment : Fragment() {
                         )
 
                         adapter.setMoreOnClickListener { v, groupPosition, relativePosition ->
-                            ConfirmPopupWindow(
-                                requireActivity(),
-                                "确认加入该群聊？",
-                                object : PopupWindowListener {
-                                    val reqId = groupRequest[relativePosition].reqId
-                                    override fun onConfirm(input: String?) {
-                                        // TODO "确认逻辑，发送确认消息"
-                                        vm.patchRequestHandle(reqId, true)
-                                        // 发送确认后刷新页面
-                                        vm.getAllRequestData()
-                                        // 发送确认后刷新页面
-                                        vm.getAllRequestData()
-                                    }
-
-                                    override fun onCancel() {
-                                        vm.patchRequestHandle(reqId, false)
-                                        // 发送确认后刷新页面
-                                        vm.getAllRequestData()
-                                    }
-
-                                    override fun onDismiss() {
-
-                                    }
-                                }).apply {
-                                setConfirmText("确认加入")
-                                setCancelText("取消加入")
-                                show()
-                            }
+//                            ConfirmPopupWindow(
+//                                requireActivity(),
+//                                "确认加入该群聊？",
+//                                object : PopupWindowListener {
+//                                    val reqId = groupRequest[relativePosition].reqId
+//                                    override fun onConfirm(input: String?) {
+//                                        // TODO "确认逻辑，发送确认消息"
+//                                        vm.patchRequestHandle(reqId, true)
+//                                        // 发送确认后刷新页面
+//                                        vm.getAllRequestData()
+//                                        // 发送确认后刷新页面
+//                                        vm.getAllRequestData()
+//                                    }
+//
+//                                    override fun onCancel() {
+//                                        vm.patchRequestHandle(reqId, false)
+//                                        // 发送确认后刷新页面
+//                                        vm.getAllRequestData()
+//                                    }
+//
+//                                    override fun onDismiss() {
+//
+//                                    }
+//                                }).apply {
+//                                setConfirmText("确认加入")
+//                                setCancelText("取消加入")
+//                                show()
+//                            }
                             TPhoneUtil.showToast(requireActivity(), "群聊申请操作确认弹窗")
                         }
 

@@ -26,6 +26,8 @@ abstract class BasePopupWindow extends PopupWindow {
 
     abstract void setPopupWindowListener();
 
+    abstract void setTitleText(String text);
+
     abstract void setConfirmText(String text);
 
     abstract void setCancelText(String text);

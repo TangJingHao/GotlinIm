@@ -46,7 +46,8 @@ class MainViewModel : ViewModel() {
             runBlocking {
                 val res = async {
                     // 先插入数据
-                    insertFriendList(friendList)
+                    if (friendList != null && friendList.size > 0)
+                        insertFriendList(friendList)
                     Repository.queryAllUsers()
                 }.await()
                 // 阻塞等待返回结果
@@ -89,9 +90,14 @@ class MainViewModel : ViewModel() {
             runBlocking {
                 val res = async {
                     // 先插入数据
-                    insertSessionList(msgList)
-                    val b = MutableLiveData<Boolean>(true)
-                    b
+                    if (msgList != null && msgList.size > 0) {
+                        insertSessionList(msgList)
+                        val b = MutableLiveData<Boolean>(true)
+                        b
+                    } else {
+                        val b = MutableLiveData<Boolean>(false)
+                        b
+                    }
                 }.await()
                 // 阻塞等待返回结果
                 return@runBlocking res

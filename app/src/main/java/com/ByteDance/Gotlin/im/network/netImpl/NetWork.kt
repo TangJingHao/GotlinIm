@@ -37,38 +37,53 @@ object NetWork {
     suspend fun registerCode(userName: String, email: String) =
         registerService.registerForCode(userName, email).await()
 
-    suspend fun register(userName: String, userPass: String, sex: String, email: String, code: String)=
+    suspend fun register(
+        userName: String,
+        userPass: String,
+        sex: String,
+        email: String,
+        code: String
+    ) =
         registerService.registerForLogin(userName, userPass, sex, email, code).await()
 
     suspend fun getGroupList(userId: Int) =
-        addressBookService.getGroupList(Repository.mToken,userId,).await()
+        addressBookService.getGroupList(Repository.mToken, userId).await()
 
     suspend fun getFriendList(userId: Int) =
-        addressBookService.getFriendList(Repository.mToken,userId).await()
+        addressBookService.getFriendList(Repository.mToken, userId).await()
 
     suspend fun getSessionList(userId: Int) =
-        msgService.getSessionList(Repository.mToken,userId).await()
+        msgService.getSessionList(Repository.mToken, userId).await()
 
     suspend fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) =
-        msgService.getSessionHistoryList(Repository.mToken,userId, sessionId, page).await()
+        msgService.getSessionHistoryList(Repository.mToken, userId, sessionId, page).await()
 
-    suspend fun patchRequestHandle(groupId: Int) =
-        groupService.getGroupMemberList(Repository.mToken,groupId).await()
+    suspend fun getGroupMemberList(groupId: Int) =
+        groupService.getGroupMemberList(Repository.mToken, groupId).await()
+
+    suspend fun newGroup(uid: Int, groupName: String) =
+        groupService.postNewGroup(Repository.mToken, uid, groupName).await()
 
     suspend fun getRequestBadge(userId: Int) =
-        requestService.getRequestBadge(Repository.mToken,userId).await()
+        requestService.getRequestBadge(Repository.mToken, userId).await()
 
     suspend fun getRequestList(userId: Int) =
-        requestService.getRequestList(Repository.mToken,userId).await()
+        requestService.getRequestList(Repository.mToken, userId).await()
 
     suspend fun postRequestFriend(senderId: Int, userId: Int, reqSrc: String, reqRemark: String) =
-        requestService.postRequestFriend(Repository.mToken,senderId, userId, reqSrc, reqRemark).await()
+        requestService.postRequestFriend(Repository.mToken, senderId, userId, reqSrc, reqRemark)
+            .await()
 
     suspend fun postRequestGroup(senderId: Int, groupId: Int, reqSrc: String, reqRemark: String) =
-        requestService.postRequestGroup(Repository.mToken,senderId, groupId, reqSrc, reqRemark).await()
+        requestService.postRequestGroup(Repository.mToken, senderId, groupId, reqSrc, reqRemark)
+            .await()
 
     suspend fun patchRequestHandle(reqId: Int, access: Boolean) =
-        requestService.patchRequestHandle(Repository.mToken,reqId, access).await()
+        requestService.patchRequestHandle(Repository.mToken, reqId, access).await()
+
+    suspend fun searchUser(key: String) =
+        requestService.searchUser(Repository.mToken, key).await()
+
 
     // 获取websocket并链接
     fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {

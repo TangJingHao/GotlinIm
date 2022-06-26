@@ -1,9 +1,6 @@
 package com.ByteDance.Gotlin.im.network.netInterfaces
 
-import com.ByteDance.Gotlin.im.info.response.DefaultResponse
-import com.ByteDance.Gotlin.im.info.response.GroupMembersDataResponse
-import com.ByteDance.Gotlin.im.info.response.RequestBadgeDataResponse
-import com.ByteDance.Gotlin.im.info.response.RequestListDataResponse
+import com.ByteDance.Gotlin.im.info.response.*
 import retrofit2.Call
 import retrofit2.http.*
 import retrofit2.http.GET
@@ -18,6 +15,16 @@ import retrofit2.http.Query
  * @Description 各种好友群聊添加申请
  */
 interface RequestService {
+
+    /**
+     * 用户模糊搜索
+     * 可以通过用户 ID、用户名、昵称、邮箱搜索，用户 ID 和邮箱是精确搜索，其他为模糊查询
+     */
+    @GET("user/search")
+    fun searchUser(
+        @Header("token") token: String,
+        @Query("key") key: String
+    ): Call<SearchUserDataResponse>
 
     /**
      * 获取未读申请数量
@@ -71,7 +78,7 @@ interface RequestService {
      */
     @PATCH("request/handle")
     fun patchRequestHandle(
-        @Header("token")token:String,
+        @Header("token") token: String,
         @Query("reqId") reqId: Int,
         @Query("access") access: Boolean
     ): Call<DefaultResponse>

@@ -247,6 +247,19 @@ object Repository {
     /**
      * 获取群聊列表
      */
+    fun newGroup(groupName: String) = fire(Dispatchers.IO) {
+        val newGroup = NetWork.newGroup(getUserId(), groupName)
+        val status = newGroup.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+            Result.success(newGroup)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${newGroup.status}"))
+        }
+    }
+
+    /**
+     * 获取群聊列表
+     */
     fun getGroupList(userId: Int) = fire(Dispatchers.IO) {
         val groupListDataResponse = NetWork.getGroupList(userId)
         val status = groupListDataResponse.status
@@ -261,7 +274,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = NetWork.patchRequestHandle(userId)
+        val groupMemberListDataResponse = NetWork.getGroupMemberList(userId)
         val status = groupMemberListDataResponse.status
         if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(groupMemberListDataResponse)
@@ -385,6 +398,17 @@ object Repository {
             Result.success(defaultResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /** 搜索新好友接口 */
+    fun searchUser(key: String) = fire(Dispatchers.IO) {
+        val searchUserList = NetWork.searchUser(key)
+        val status = searchUserList.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+            Result.success(searchUserList)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${searchUserList.status}"))
         }
     }
 

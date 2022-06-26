@@ -25,4 +25,14 @@ class MyGroupViewModel : ViewModel() {
         mUserIdLiveData.postValue(Repository.getUserId())
     }
 
+    private val groupNameLiveData = MutableLiveData<String>()
+
+    val newGroupObserver = Transformations.switchMap(groupNameLiveData) {
+        Repository.newGroup(it)
+    }
+
+    fun newGroup(input: String) {
+        groupNameLiveData.postValue(input)
+    }
+
 }
