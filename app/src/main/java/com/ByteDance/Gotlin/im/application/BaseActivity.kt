@@ -16,6 +16,7 @@ import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.*
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
+import com.ByteDance.Gotlin.im.view.activity.MainActivity
 
 /**
  * @Author 唐靖豪

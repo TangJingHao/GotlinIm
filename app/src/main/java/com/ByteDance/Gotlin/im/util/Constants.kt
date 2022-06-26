@@ -29,6 +29,10 @@ object Constants {
     const val MESSAGE_TEXT = 0
     const val MESSAGE_IMG = 1
 
+    //聊天类型
+    const val CHAT_PRIVATE = 0
+    const val CHAT_GROUP = 1
+
     //用户的状态设置
     const val USER_DEFAULT_MODE = 0//默认状态则不做处理
     const val USER_CHANGE_MODE=1//用户修改界面
