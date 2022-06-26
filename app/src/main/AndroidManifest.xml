@@ -38,23 +38,18 @@
         android:theme="@style/Theme.GotlinIm">
         <activity
             android:name=".view.activity.MyGroupActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.ApplicationInfoActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.FriendSettingActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.GroupInviteActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".application.BaseActivity"
-            android:theme="@style/SplashActivityTheme"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,15 +58,12 @@
         </activity>
         <activity
             android:name=".view.activity.GroupInfoActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.GroupMembersActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.FriendInfoActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.MainActivity"
@@ -79,21 +71,15 @@
             android:exported="true" />
         <activity
             android:name=".view.activity.ChatActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.LoginActivity"
-            android:launchMode="singleInstance"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.RegisterActivity"
-            android:launchMode="singleInstance"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.SearchActivity"
-            android:configChanges="uiMode"
             android:exported="true" />
         <activity
             android:name=".view.activity.TestActivity"

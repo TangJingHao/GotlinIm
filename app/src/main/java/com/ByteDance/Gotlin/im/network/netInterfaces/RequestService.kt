@@ -5,10 +5,7 @@ import com.ByteDance.Gotlin.im.info.response.GroupMembersDataResponse
 import com.ByteDance.Gotlin.im.info.response.RequestBadgeDataResponse
 import com.ByteDance.Gotlin.im.info.response.RequestListDataResponse
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.PATCH
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * @Author Zhicong Deng
@@ -24,6 +21,7 @@ interface RequestService {
      */
     @GET("request/badge")
     fun getRequestBadge(
+        @Header("token") token: String,
         @Query("userId") userId: Int
     ): Call<RequestBadgeDataResponse>
 
@@ -33,6 +31,7 @@ interface RequestService {
      */
     @GET("request/list")
     fun getRequestList(
+        @Header("token") token: String,
         @Query("userId") userId: Int
     ): Call<RequestListDataResponse>
 
@@ -42,6 +41,7 @@ interface RequestService {
      */
     @POST("request/friend ")
     fun postRequestFriend(
+        @Header("token") token: String,
         @Query("senderId") senderId: Int,
         @Query("userId") userId: Int,
         @Query("reqSrc") reqSrc: String,
@@ -53,10 +53,11 @@ interface RequestService {
      */
     @POST("request/group")
     fun postRequestGroup(
+        @Header("token") token: String,
         @Query("senderId") senderId: Int,
         @Query("groupId") groupId: Int,
         @Query("reqSrc") reqSrc: String,
-    @Query("reqRemark") reqRemark: String
+        @Query("reqRemark") reqRemark: String
     ): Call<DefaultResponse>
 
 
@@ -66,6 +67,7 @@ interface RequestService {
      */
     @PATCH("request/handle")
     fun patchRequestHandle(
+        @Header("token")token:String,
         @Query("reqId") reqId: Int,
         @Query("access") access: Int
     ): Call<DefaultResponse>

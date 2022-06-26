@@ -83,7 +83,7 @@
             android:id="@+id/email_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="邮箱"
+            android:text="用户名"
             android:textColor="?attr/text_strong"
             android:textSize="@dimen/im_text_large" />
 
