@@ -49,7 +49,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private DActivityTestBinding b;
     private Context mContext;
 
-    ConfirmPopupWindow confirmPopupWindow;
+    ConfirmPopupWindow confirmPopupWindow, confirmPopupWindow2;
     InputPopupWindow inputPopupWindow;
     SingleSelectPopupWindow singleSelectPopupWindow;
 
@@ -88,57 +88,46 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
          * websocket测试代码==========================================================================
          * */
         // 测试发送消息
-        b.btnSend.setOnClickListener(new View.OnClickListener() {
-            int count = 0;
-
-            @Override
-            public void onClick(View view) {
-                // 注意线程
-                ThreadManager.getDefFixThreadPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        DLogUtils.i("线程名" + Thread.currentThread().getName(), "onClick");
-                        b.tvMe.setText("发送测试信息" + count);
-                        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                                SEND_MESSAGE, new WSsendContent(6, 1, 0,
-                                "发送测试信息" + count++));
-                        webSocket.send(gson.toJson(sendChatMsg));
-                    }
-                });
-            }
-        });
-
-        b.btnConnext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                EchoWebSocketListener listener = new EchoWebSocketListener();
-                webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
-            }
-        });
-
-        b.btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                webSocket.cancel();
-            }
-        });
+//        b.btnSend.setOnClickListener(new View.OnClickListener() {
+//            int count = 0;
+//
+//            @Override
+//            public void onClick(View view) {
+//                // 注意线程
+//                ThreadManager.getDefFixThreadPool().execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        DLogUtils.i("线程名" + Thread.currentThread().getName(), "onClick");
+//                        b.tvMe.setText("发送测试信息" + count);
+//                        WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
+//                                SEND_MESSAGE, new WSsendContent(6, 1, 0,
+//                                "发送测试信息" + count++));
+//                        webSocket.send(gson.toJson(sendChatMsg));
+//                    }
+//                });
+//            }
+//        });
+//
+//        b.btnConnext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                EchoWebSocketListener listener = new EchoWebSocketListener();
+//                webSocket = Repository.INSTANCE.getWebSocketAndConnect(listener);
+//            }
+//        });
+//
+//        b.btnClose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                webSocket.cancel();
+//            }
+//        });
 
         initPopupWindow();
 
-        b.testRvLayout.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
-
         b.btnPopConfirm.setOnClickListener(this);
+        b.btnPopConfirm2.setOnClickListener(this);
         b.btnPopInput.setOnClickListener(this);
         b.btnPopSelect.setOnClickListener(this);
         b.btnMain.setOnClickListener(this);
@@ -146,30 +135,17 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        int sid = 6;
-        int uid = 1;
-        Date from = new Date(1654012800); // 6.1
-        Date to = new Date(1655654400); // 6.20
-        String content = "测试";
 
         if (view.equals(b.btnPopConfirm)) {
+            DLogUtils.i(TAG,"展示第一个");
             confirmPopupWindow.show();
+        } else if (view.equals(b.btnPopConfirm2)) {
+            DLogUtils.i(TAG,"展示第二个");
+            confirmPopupWindow2.show();
         } else if (view.equals(b.btnPopInput)) {
             inputPopupWindow.show();
         } else if (view.equals(b.btnPopSelect)) {
             singleSelectPopupWindow.show();
-        } else if (view.equals(b.btnMain)) {
-            startActivity(new Intent(this, MainActivity.class));
-        } else if (view.equals(b.btnNetHistory)) {
-
-        } else if (view.equals(b.btnDbHistory)) {
-
-        } else if (view.equals(b.btnDbHistoryTime)) {
-
-        } else if (view.equals(b.btnDbHistoryContent)) {
-
-        } else if (view.equals(b.btnDbHistorySearch)) {
-
         }
     }
 
@@ -196,7 +172,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         };
 
         // 新建弹窗
-        confirmPopupWindow = new ConfirmPopupWindow(this, "测试", popupWindowListener);
+        confirmPopupWindow = new ConfirmPopupWindow(mContext, "测试", popupWindowListener);
+        confirmPopupWindow2 = new ConfirmPopupWindow(mContext, "测试222222222222", popupWindowListener);
         // （可选）设置按钮文本
         confirmPopupWindow.setConfirmText("确认文本");
         confirmPopupWindow.setCancelText("取消测试文本");
@@ -212,19 +189,19 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * WebSocket链接测试
      */
-    private void connect() {
-        DLogUtils.i(TAG, "创建wedSocket");
-        EchoWebSocketListener listener = new EchoWebSocketListener();
-        Request request = new Request.Builder()
-                .url(BASE_WS_URL + repository.getUserId())
-                .build();
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(3, TimeUnit.SECONDS)
-                .build();
-        webSocket = client.newWebSocket(request, listener);
-        client.dispatcher().executorService().shutdown();
-        DLogUtils.i(TAG, "创建wedSocket完成");
-    }
+//    private void connect() {
+//        DLogUtils.i(TAG, "创建wedSocket");
+//        EchoWebSocketListener listener = new EchoWebSocketListener();
+//        Request request = new Request.Builder()
+//                .url(BASE_WS_URL + repository.getUserId())
+//                .build();
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .readTimeout(3, TimeUnit.SECONDS)
+//                .build();
+//        webSocket = client.newWebSocket(request, listener);
+//        client.dispatcher().executorService().shutdown();
+//        DLogUtils.i(TAG, "创建wedSocket完成");
+//    }
 
     class EchoWebSocketListener extends WebSocketListener {
 
