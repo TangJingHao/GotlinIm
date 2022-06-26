@@ -71,7 +71,13 @@ class MainActivity : AppCompatActivity() {
         // 消息列表底部小红点监听
         viewModelMain.msgRedPointObserver.observe(this) {
             if (it > 0)
-                mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item).number = it
+                mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item).apply {
+                    number = it
+                    isVisible = true
+                    horizontalOffset  = 20
+                    verticalOffset = 10
+                    backgroundColor = R.color.critical_default
+                }
         }
 
         // 通讯录底部小红点监听
@@ -80,8 +86,12 @@ class MainActivity : AppCompatActivity() {
             if (response != null) {
                 val totalUnread = response.data.total
                 if (totalUnread > 0)
-                    mBinding.bnvMain.getOrCreateBadge(R.id.navigation_address_book_item).isVisible =
-                        true
+                    mBinding.bnvMain.getOrCreateBadge(R.id.navigation_address_book_item).apply {
+                        isVisible = true
+                        horizontalOffset  = 20
+                        verticalOffset = 10
+                        backgroundColor = R.color.critical_default
+                    }
                 viewModelMain.setNewFriendRedPointNum(response.data.friend)
                 viewModelMain.setNewGroupChatRedPointNum(response.data.group)
             }

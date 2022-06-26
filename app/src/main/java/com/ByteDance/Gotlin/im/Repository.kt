@@ -347,6 +347,7 @@ object Repository {
         val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
         val status = defaultResponse.status
         if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+
             Result.success(defaultResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
