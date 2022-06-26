@@ -69,18 +69,18 @@ class FriendInfoActivity : AppCompatActivity() {
                 override fun onConfirm(input: String?) {
                     "删除成功".showToast(this@FriendInfoActivity)
                 }
-                override fun onCancel() { mDeletePopupWindow.dismiss() }
+                override fun onCancel() { }
 
-                override fun onDismiss() { mDeletePopupWindow.dismiss() }
+                override fun onDismiss() { }
             })
         }else{
             mDeletePopupWindow = ConfirmPopupWindow(this,"确定向${userName}发送好友申请?",object: PopupWindowListener{
                 override fun onConfirm(input: String?) {
                     Repository.postRequestFriend(friendId,"通过ID"," ")
                 }
-                override fun onCancel() { mDeletePopupWindow.dismiss() }
+                override fun onCancel() {  }
 
-                override fun onDismiss() {mDeletePopupWindow.dismiss() }
+                override fun onDismiss() { }
 
             })
         }
