@@ -106,7 +106,7 @@ class AddressBookFragment : Fragment() {
                         Constants.FRIEND_IS
                     )
                     putExtra(
-                        Constants.FRIEND_ACCOUNT,
+                        Constants.FRIEND_ID,
                         sortFriendList[groupPosition][relativePosition].userId
                     )
                     putExtra(
