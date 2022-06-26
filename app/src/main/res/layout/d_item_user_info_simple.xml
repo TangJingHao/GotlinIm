@@ -9,7 +9,7 @@
     android:paddingHorizontal="@dimen/im_common_horizontal">
 
     <TextView
-        android:id="@+id/tv_user_name"
+        android:id="@+id/tv_title_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

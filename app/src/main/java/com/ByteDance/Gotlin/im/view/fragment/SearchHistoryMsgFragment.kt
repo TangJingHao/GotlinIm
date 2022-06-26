@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ByteDance.Gotlin.im.adapter.UserHistoryMsgAdapter
+import com.ByteDance.Gotlin.im.adapter.LoadMoreAdapter
 import com.ByteDance.Gotlin.im.databinding.DFragmentSearchBinding
 import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
@@ -80,7 +80,7 @@ class SearchHistoryMsgFragment : Fragment() {
     // 搜索类型，0为不可搜索，1为加载更多数据，2为搜索新内容
     private var refreshMode = 0
 
-    var mAdapter: UserHistoryMsgAdapter? = null
+    var mAdapter: LoadMoreAdapter? = null
 
     //时间选择器
     private lateinit var dataPickerView : TimePickerView
@@ -118,7 +118,8 @@ class SearchHistoryMsgFragment : Fragment() {
      */
     private fun initViewAndEvent() {
 
-        mAdapter = UserHistoryMsgAdapter(requireActivity())
+        mAdapter =
+            LoadMoreAdapter(requireActivity())
 
         // 时间选择器相关
         b.timeBar.apply {

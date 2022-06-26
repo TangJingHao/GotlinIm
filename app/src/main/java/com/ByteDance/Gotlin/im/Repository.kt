@@ -1,12 +1,13 @@
 package com.ByteDance.Gotlin.im
 
-import androidx.lifecycle.LiveData
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
-import com.ByteDance.Gotlin.im.entity.SessionEntity
-import com.ByteDance.Gotlin.im.entity.UserEntity
+import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
@@ -16,12 +17,11 @@ import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import okhttp3.Request
+import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import okio.ByteString
 import java.sql.Date
 import kotlin.coroutines.CoroutineContext
 
@@ -33,9 +33,12 @@ import kotlin.coroutines.CoroutineContext
  */
 
 @OptIn(DelicateCoroutinesApi::class)
+@RequiresApi(Build.VERSION_CODES.Q)
 object Repository {
+    //临时存放token
+    public var token=""
 
-    private const val TAG = "Repository"
+    private const val TAG = "仓库层"
 
     /*
     * MMKV==========================================================================================
@@ -46,16 +49,27 @@ object Repository {
 
     private const val MMKV_USER_ID = "userId"
     private const val MMKV_USER_MODE = "user_mode"
+    private const val MMKV_USER_CHANGE = "user_change"
     private const val MMKV_USER_NICKNAME = "user_nickName"
     private const val MMKV_USER_AVATAR = "Avatar"
     private const val MMKV_USER_NAME = "user_name"
     private const val MMKV_USER_SEX = "user_sex"
     private const val MMKV_USER_EMAIL = "user_email"
+    private const val MMKV_USER_DATA = "user_data"
+
+    //用户数据
+    fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
+    fun setUserData(user: User) = mmkv.encode(MMKV_USER_DATA, user)
+    fun deleteUserData() = mmkv.removeValueForKey(MMKV_USER_DATA)
 
     //模式
-    fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
-    fun saveUserStatus(userId: Int) = mmkv.encode(MMKV_USER_MODE, userId)
-    fun deleteUserStatus() = mmkv.removeValueForKey(MMKV_USER_MODE)
+    fun getUserMode(): Int = mmkv.decodeInt(MMKV_USER_MODE)
+    fun saveUserMode(userMode: Int) = mmkv.encode(MMKV_USER_MODE, userMode)
+    fun deleteUserMode() = mmkv.removeValueForKey(MMKV_USER_MODE)
+
+    //记录用户是否修改了模式
+    fun setUserChangeAction(changeMode: Int) = mmkv.encode(MMKV_USER_CHANGE, changeMode)
+    fun getUserChangeAction(): Int = mmkv.decodeInt(MMKV_USER_CHANGE, Constants.USER_DEFAULT_MODE)
 
     //用户id
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
@@ -91,6 +105,7 @@ object Repository {
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
+    fun deleteAllSession() = db.sessionDao().deleteAllSession()
     fun querySessionByName(name:String) = db.sessionDao().querySessionByName(name)
 
     // 用户数据表
@@ -99,6 +114,7 @@ object Repository {
     fun insertUser(user: UserVO) = db.userDao().insertUser(user)
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
     fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)
+    fun deleteAllUser() = db.userDao().deleteAllUser()
 
     // 消息数据表
     /**
@@ -116,6 +132,14 @@ object Repository {
     fun insertMessage(msg: MessageEntity) = db.messageDao().insertMessage(msg)
     fun upDataMessage(msg: MessageEntity) = db.messageDao().upDataMessage(msg)
     fun deleteMessage(msg: MessageEntity) = db.messageDao().deleteMessage(msg)
+    fun deleteAllMessage() = db.messageDao().deleteAllMessage()
+
+
+    fun deleteAllTable() {
+        deleteAllUser()
+        deleteAllSession()
+        deleteAllMessage()
+    }
 
     /*
     * 网络请求=======================================================================================
@@ -149,7 +173,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = NetWork.getGroupMemberList(userId)
+        val groupMemberListDataResponse = NetWork.patchRequestHandle(userId)
         if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(groupMemberListDataResponse)
         } else {
@@ -207,6 +231,66 @@ object Repository {
     }
 
     /**
+     * 获取当前用户未读的好友和群聊申请
+     */
+    fun getRequestBadge() = fire(Dispatchers.IO) {
+        val requestBadge = NetWork.getRequestBadge(getUserId())
+        if (requestBadge.status == Constants.SUCCESS_STATUS) {
+            Result.success(requestBadge)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${requestBadge.status}"))
+        }
+    }
+
+    /**
+     * 获取与用户相关的所有申请，分为 4 类
+     */
+    fun getRequestList() = fire(Dispatchers.IO) {
+        val requestList = NetWork.getRequestList(getUserId())
+        if (requestList.status == Constants.SUCCESS_STATUS) {
+            Result.success(requestList)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${requestList.status}"))
+        }
+    }
+
+    /**
+     * 申请添加某用户为好友
+     */
+    fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /**
+     *  申请加入某群聊
+     */
+    fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.postRequestGroup(getUserId(), groupId, reqSrc, reqRemark)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /**
+     * 同意或拒绝某用户的申请
+     */
+    fun patchRequestHandle(reqId: Int, access: Int) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.patchRequestHandle(reqId,access)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /**
      * 保存备注
      */
     fun saveNickName(friendId: String, nickname: String) = liveData<String> {
@@ -239,20 +323,6 @@ object Repository {
     }
 
     /**
-     * webSocket使用
-     */
-    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
-        return runBlocking {
-            val websocket = async {
-                NetWork.getWebSocketAndConnect(
-                    Request.Builder().url(Constants.BASE_WS_URL + getUserId()).build(), listener
-                )
-            }.await()
-            return@runBlocking websocket
-        }
-    }
-
-    /**
      * 获取群聊信息
      */
     fun getGroupInfo(groupId: Int) = liveData<Int> {
@@ -282,4 +352,76 @@ object Repository {
             emit(result)
         }
 
+    // WebSocket尝试解决方案==========================================================================
+    /**
+     * webSocket使用(即将弃用)
+     */
+    fun getWebSocketAndConnect(listener: WebSocketListener): WebSocket {
+        return runBlocking {
+            val websocket = async {
+                NetWork.getWebSocketAndConnect(
+                    Request.Builder().url(Constants.BASE_WS_URL + getUserId()).build(), listener
+                )
+            }.await()
+            return@runBlocking websocket
+        }
+    }
+
+    // 开局创建WebSocket
+    private fun getWebSocketAndConnect(): WebSocket {
+        return runBlocking {
+            val webSocket = withContext(Dispatchers.Default) {
+                NetWork.getWebSocketAndConnect(
+                    Request.Builder().url(Constants.BASE_WS_URL + getUserId()).build(),
+                    EchoWebSocketListener()
+                )
+            }
+            return@runBlocking webSocket
+        }
+    }
+
+    private var webSocket: WebSocket? = null
+    private val onWsOpenObserverData = MutableLiveData<Response>()
+    private val onWsMessageObserverData = MutableLiveData<String>()
+    private val onWsFailureObserverData = MutableLiveData<Throwable>()
+
+    // 用于WebSocket观察返回数据，自行判断回调
+    fun getWsOpenObserverData() = this.onWsOpenObserverData
+    fun getWsMessageObserverData() = this.onWsMessageObserverData
+    fun getFailureObserverData() = this.onWsFailureObserverData
+    fun getWebSocket(): WebSocket {
+        if (this.webSocket == null) {
+            this.webSocket = getWebSocketAndConnect()
+        }
+        return webSocket!!
+    }
+
+    class EchoWebSocketListener : WebSocketListener() {
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            DLogUtils.i(TAG, "WebSocket链接开启$webSocket\n$response")
+            onWsOpenObserverData.postValue(response)
+        }
+
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            DLogUtils.i(TAG, "回调$webSocket\n$text")
+            onWsMessageObserverData.postValue(text)
+        }
+
+        override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+            DLogUtils.i(TAG, "回调$bytes")
+        }
+
+        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+            DLogUtils.i(TAG, "链接关闭中")
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            DLogUtils.i(TAG, "链接已关闭")
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            DLogUtils.i(TAG, "链接失败\t$t\n$response")
+            onWsFailureObserverData.postValue(t)
+        }
+    }
 }

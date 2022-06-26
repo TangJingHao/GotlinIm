@@ -1,10 +1,7 @@
 package com.ByteDance.Gotlin.im.network.netImpl
 
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
-import com.ByteDance.Gotlin.im.network.netInterfaces.AddressBookService
-import com.ByteDance.Gotlin.im.network.netInterfaces.GroupService
-import com.ByteDance.Gotlin.im.network.netInterfaces.LoginService
-import com.ByteDance.Gotlin.im.network.netInterfaces.MsgService
+import com.ByteDance.Gotlin.im.network.netInterfaces.*
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -27,6 +24,7 @@ object NetWork {
     private val addressBookService = ServiceCreator.create<AddressBookService>()
     private val msgService = ServiceCreator.create<MsgService>()
     private val groupService = ServiceCreator.create<GroupService>()
+    private val requestService = ServiceCreator.create<RequestService>()
 
     suspend fun login(userName: String, userPass: String) =
         loginService.login(userName, userPass).await()
@@ -43,9 +41,23 @@ object NetWork {
     suspend fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) =
         msgService.getSessionHistoryList(userId, sessionId, page).await()
 
-    suspend fun getGroupMemberList(groupId: Int)=
+    suspend fun patchRequestHandle(groupId: Int) =
         groupService.getGroupMemberList(groupId).await()
 
+    suspend fun getRequestBadge(userId: Int) =
+        requestService.getRequestBadge(userId).await()
+
+    suspend fun getRequestList(userId: Int) =
+        requestService.getRequestList(userId).await()
+
+    suspend fun postRequestFriend(senderId: Int, userId: Int, reqSrc: String, reqRemark: String) =
+        requestService.postRequestFriend(senderId, userId, reqSrc, reqRemark).await()
+
+    suspend fun postRequestGroup(senderId: Int, groupId: Int, reqSrc: String, reqRemark: String) =
+        requestService.postRequestGroup(senderId, groupId, reqSrc, reqRemark).await()
+
+    suspend fun patchRequestHandle(reqId: Int, access: Int) =
+        requestService.patchRequestHandle(reqId, access).await()
 
     // 获取websocket并链接
     fun getWebSocketAndConnect(request: Request, listener: WebSocketListener): WebSocket {

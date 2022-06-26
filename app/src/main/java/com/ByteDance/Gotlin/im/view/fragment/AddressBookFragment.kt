@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
-import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
@@ -71,6 +70,11 @@ class AddressBookFragment : Fragment() {
         initView()
 
         return b.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        DLogUtils.w("通讯录Fragment","onResume")
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -187,15 +191,16 @@ class AddressBookFragment : Fragment() {
 
     private fun initView() {
         b.toolbarRl.apply {
-            title.text = "通讯录"
             imgChevronLeft.visibility = View.GONE
+            title.text = "通讯录"
+            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
         }
         b.sideBar.apply {
             setScaleSize(1)
             setScaleItemCount(8)
             setOnStrSelectCallBack(object : TSideBar.ISideBarSelectCallBack {
                 override fun onSelectStr(index: Int, selectStr: String) {
-                    manager.scrollToPositionWithOffset(mAdapter.getmTitleIndexList().get(index), 0)
+                    manager.scrollToPositionWithOffset(mAdapter.mTitleIndexList().get(index), 0)
                 }
             })
         }

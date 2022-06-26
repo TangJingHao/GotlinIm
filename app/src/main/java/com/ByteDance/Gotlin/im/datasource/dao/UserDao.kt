@@ -2,7 +2,6 @@ package com.ByteDance.Gotlin.im.datasource.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.ByteDance.Gotlin.im.entity.UserEntity
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 
 /**
@@ -21,7 +20,7 @@ interface UserDao {
 
     @Query(
         "select * from UserTable " +
-                "where userId = :userId"
+                "where userId = :userId and userId"
     )
     fun queryUserById(userId: Int): LiveData<UserVO>
 
@@ -33,5 +32,8 @@ interface UserDao {
 
     @Delete
     fun deleteUser(user: UserVO)
+
+    @Query("delete from UserTable ")
+    fun deleteAllUser()
 
 }

@@ -147,7 +147,7 @@
             android:background="@drawable/t_login_button_bg"
             android:gravity="center"
             android:text="登  录"
-            android:textColor="?attr/fill_weak"
+            android:textColor="?attr/fill_white"
             android:textSize="@dimen/im_text_large" />
 
         <CheckBox

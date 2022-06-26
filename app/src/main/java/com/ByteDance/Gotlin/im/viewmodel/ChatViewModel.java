@@ -1,9 +1,12 @@
 package com.ByteDance.Gotlin.im.viewmodel;
 
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
-import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
+import static com.ByteDance.Gotlin.im.util.Constants.WS_SEND_MESSAGE;
+
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -38,6 +41,7 @@ import okio.ByteString;
  * @author: Hx
  * @date: 2022年06月11日 21:54
  */
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class ChatViewModel extends ViewModel {
 
     private final static int LIST_BOTTOM = -1;
@@ -146,7 +150,7 @@ public class ChatViewModel extends ViewModel {
         //打包发送消息
         Gson gson = new Gson();
         WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                SEND_MESSAGE, new WSsendContent(session.getSessionId(),
+                WS_SEND_MESSAGE, new WSsendContent(session.getSessionId(),
                 re.getUserId(), 0, msg));
         webSocket.send(gson.toJson(sendChatMsg));
         MessageVO[] messageVOS = {ws2Message(sendChatMsg, true)};
@@ -196,7 +200,7 @@ public class ChatViewModel extends ViewModel {
         public void onOpen(WebSocket webSocket, @NonNull Response response) {
             DLogUtils.i(TAG, "开启链接");
             WebSocketSendChatMsg sendChatMsg = new WebSocketSendChatMsg(
-                    SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
+                    WS_SEND_MESSAGE, new WSsendContent(session.getSessionId(), re.getUserId(),
                     0, "开始聊天吧"));
             webSocket.send(gson.toJson(sendChatMsg));
         }
