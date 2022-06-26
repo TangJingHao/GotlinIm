@@ -73,6 +73,7 @@ class LoginActivity : AppCompatActivity() {
                 if (responseData.msg == "登录成功") {
                     Repository.saveUserId(responseData.data.user.userId)
                     Repository.setUserData(responseData.data.user)
+                    Repository.token=responseData.data.token
                     var intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()

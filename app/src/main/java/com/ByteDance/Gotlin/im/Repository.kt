@@ -35,6 +35,8 @@ import kotlin.coroutines.CoroutineContext
 @OptIn(DelicateCoroutinesApi::class)
 @RequiresApi(Build.VERSION_CODES.Q)
 object Repository {
+    //临时存放token
+    public var token=""
 
     private const val TAG = "仓库层"
 

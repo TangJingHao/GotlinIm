@@ -10,7 +10,8 @@ data class LoginDataResponse(
 )
 data class Data(
     val success: Boolean,
-    val user: User
+    val user: User,
+    val token: String
 )
 
 data class User(
