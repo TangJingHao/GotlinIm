@@ -64,6 +64,7 @@
     <string name="tab_red_delete_friend">删除好友</string>
     <string name="tab_red_group_delete">解散群聊</string>
     <string name="tab_red_group_out">退出群聊</string>
+    <string name="grouping_default">无</string>
     <!--输入框文本-->
     <string name="edit_hint_new_grouping">点击输入新的分组名</string>
     <!--选择器弹窗标题-->

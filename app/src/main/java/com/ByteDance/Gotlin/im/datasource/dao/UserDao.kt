@@ -23,7 +23,7 @@ interface UserDao {
         "select * from UserTable " +
                 "where userId = :userId"
     )
-    fun queryUserById(userId: Int): UserVO
+    fun queryUserById(userId: Int): LiveData<UserVO>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: UserVO)

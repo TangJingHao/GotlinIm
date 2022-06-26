@@ -8,23 +8,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_ACCOUNT
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_GROUPING
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_IS
+import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NAME
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NICKNAME
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NO
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_TYPE
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
+import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.i
 import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
 import com.qmuiteam.qmui.kotlin.onClick
+import kotlinx.coroutines.runBlocking
+import kotlin.concurrent.thread
 
 /**
  * @Description：好友信息页面，由查找好友后点击进去和在好友列表中点击进入
- *              需要用户唯一标识（账号）和是否为好友
+ *              需要传入三个参数 用户唯一标识（账号） 是否为好友  用户名字
  * @Author：Suzy.Mo
  * @Date：2022/6/11 21:03
  */
@@ -39,6 +45,8 @@ class FriendInfoActivity : AppCompatActivity() {
     private lateinit var tvAccount: TextView
     private lateinit var tvGrouping: TextView
     private lateinit var switchIsCared: Switch
+    private lateinit var userName:String
+    private lateinit var session:SessionVO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,17 +64,18 @@ class FriendInfoActivity : AppCompatActivity() {
     private fun setFriendData() {
         mViewModel.friendInfoLiveData.observe(this, Observer { result->
             if(result!=null){
-                tvNickname.text = result
+                //tvNickname.text = result
                 //设置好友信息
-                //mBinding.tvFriendName.text =
-                //mBinding.tvSex.text =
-                //mBinding.tvNickname.text=
-                //mBinding.tvAccount.text =
-                //mBinding.tvGrouping.text =
-                mBinding.tvFriendName.text = intent.getStringExtra(Constants.FRIEND_NAME)
-                mBinding.tvNickname.text= intent.getStringExtra(Constants.FRIEND_NICKNAME)
-                mBinding.tvAccount.text = intent.getStringExtra(FRIEND_ACCOUNT)
-                mBinding.tvGrouping.text = intent.getStringExtra(Constants.FRIEND_GROUPING)
+                userName = result.userName
+                mBinding.tvFriendName.text =userName
+                mBinding.tvSex.text =result.sex
+                mBinding.tvNickname.text=result.nickName
+                mBinding.tvAccount.text =result.userId.toString()
+                mBinding.tvGrouping.text =this.resources.getString(R.string.grouping_default)
+//                mBinding.tvFriendName.text = intent.getStringExtra(Constants.FRIEND_NAME)
+//                mBinding.tvNickname.text= intent.getStringExtra(Constants.FRIEND_NICKNAME)
+//                mBinding.tvAccount.text = intent.getStringExtra(FRIEND_ACCOUNT)
+//                mBinding.tvGrouping.text = intent.getStringExtra(Constants.FRIEND_GROUPING)
             }
         })
     }
@@ -88,19 +97,23 @@ class FriendInfoActivity : AppCompatActivity() {
         }
         mBinding.tabAddOrStart.root.onClick {
             if (mFriendType == FRIEND_IS){
-                MLogUtil.v(TAG_FRIEND_INFO,"--开始聊天--")
+                MLogUtil.v(TAG_FRIEND_INFO,"-----开始聊天-----")
                 //TODO:跳转到聊天页面
-
+                ChatActivity.startChat(this@FriendInfoActivity,session)
 
 
             }else if (mFriendType == FRIEND_NO){
                 MLogUtil.v(TAG_FRIEND_INFO,"--添加好友--")
-            } }
-        mBinding.tabDeleteFriend.root.onClick { MLogUtil.v(TAG_FRIEND_INFO,"--删除好友--") }
+            }
+        }
+        mBinding.tabDeleteFriend.root.onClick {
+            MLogUtil.v(TAG_FRIEND_INFO,"--删除好友--")
+
+        }
         mBinding.tabItemInfoSearch.root.onClick {
             MLogUtil.v(TAG_FRIEND_INFO,"--消息搜索--")
             //TODO:跳转到搜索聊天消息,需要会话id
-            //  SearchActivity.startMsgSearch(this,sessionId )
+            SearchActivity.startMsgSearch(this,session.sessionId)
         }
     }
 
@@ -116,7 +129,8 @@ class FriendInfoActivity : AppCompatActivity() {
         switchIsCared = mBinding.switchIsCared
         //获取类型并设置账号获取信息
         mFriendType = intent.getIntExtra(FRIEND_TYPE, 0)
-        mViewModel.getFriendInfo(intent.getStringExtra(FRIEND_ACCOUNT).toString())
+        mViewModel.getFriendInfo(intent.getIntExtra(FRIEND_ACCOUNT,0))
+        userName = intent.getStringExtra(FRIEND_NAME).toString()
         //控件初始化
         mBinding.toolbarFriendInfo.title.text = this.resources.getString(R.string.title_info_friend)
         mBinding.tabSetRemarks.tvItemMainText.text =
@@ -136,6 +150,17 @@ class FriendInfoActivity : AppCompatActivity() {
             switchIsCared.isClickable = false
         }
 
+        //获取好友session
+        thread{
+            session = Repository.querySessionByName(userName)
+            if(session!=null){
+                i(TAG_FRIEND_INFO,"好友会话信息：${session.sessionId.toString()+session.name}")
+            }else{
+
+            }
+
+
+        }
     }
 
 }

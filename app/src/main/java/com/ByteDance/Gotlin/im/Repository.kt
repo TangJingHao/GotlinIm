@@ -91,6 +91,7 @@ object Repository {
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
+    fun querySessionByName(name:String) = db.sessionDao().querySessionByName(name)
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()

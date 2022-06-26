@@ -27,7 +27,7 @@ class BaseActivity : AppCompatActivity() {
 
         //判断用户是否登录过，后期可以写在闪屏页面
 //        SearchActivity.startMsgSearch(this,6)
-        startActivity(Intent(this,SearchActivity::class.java).putExtra("search_type",2).putExtra("session_id",1))
+        startActivity(Intent(this,MainActivity::class.java).putExtra("search_type",2).putExtra("session_id",1))
 //        finish()
 //        if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
 //            startActivity(Intent(this,GroupMembersActivity::class.java).putExtra(Constants.GROUP_ID,1))
