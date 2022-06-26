@@ -516,14 +516,17 @@ object Repository {
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
             DLogUtils.i(TAG, "链接关闭中")
+            getWebSocket()
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             DLogUtils.i(TAG, "链接已关闭")
+            getWebSocket()
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             DLogUtils.i(TAG, "链接失败\t$t\n$response")
+            getWebSocket()
             onWsFailureObserverData.postValue(t)
         }
     }
