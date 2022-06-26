@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
-import com.ByteDance.Gotlin.im.info.vo.UserVO
+import com.ByteDance.Gotlin.im.info.FriendListBean
 import kotlinx.coroutines.*
 import okhttp3.WebSocket
 
@@ -51,10 +51,10 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun insertFriendList(friendList: List<UserVO>) {
+    private fun insertFriendList(friendList: List<FriendListBean>) {
         GlobalScope.launch(Dispatchers.IO) {
             for (friend in friendList) {
-                Repository.insertUser(friend)
+                Repository.insertUser(friend.user)
             }
         }
     }
