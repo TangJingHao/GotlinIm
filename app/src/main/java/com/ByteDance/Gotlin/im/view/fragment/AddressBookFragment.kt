@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.TestUser
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
@@ -27,6 +28,7 @@ import com.ByteDance.Gotlin.im.view.custom.TSideBar
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
+import kotlinx.coroutines.runBlocking
 
 /**
  * @Author 唐靖豪
@@ -43,9 +45,11 @@ class AddressBookFragment : Fragment() {
     private lateinit var manager: LinearLayoutManager
     private var mTitleList = ArrayList<String>()
 
+    /** 判断数据库是已经存储完成 */
+    private var hasSave = false
+
     companion object {
         private const val TAG = "AddressBookFragment"
-
     }
 
     private val vm: MainViewModel by lazy {
@@ -95,32 +99,8 @@ class AddressBookFragment : Fragment() {
                             "   position:" + relativePosition +
                             "   name: " + sortFriendList[groupPosition][relativePosition].nickName
                 )
-                // 跳转到好友信息页面
-                val intent = Intent(this.context, FriendInfoActivity::class.java)
-                intent.apply {
-                    putExtra(
-                        Constants.FRIEND_TYPE,
-                        Constants.FRIEND_IS
-                    )
-                    putExtra(
-                        Constants.FRIEND_ID,
-                        sortFriendList[groupPosition][relativePosition].userId
-                    )
-                    putExtra(
-                        Constants.FRIEND_NAME,
-                        sortFriendList[groupPosition][relativePosition].userName
-                    )
-                    putExtra(
-                        Constants.FRIEND_NICKNAME,
-                        sortFriendList[groupPosition][relativePosition].nickName
-                    )
-                    putExtra(
-                        Constants.FRIEND_GROUPING,
-                        "大学同学"
-                    )
-                }
-                startActivity(intent)
-
+                // 通知viewModel 查询相关信息,在监听处自动跳转
+                vm.getSessionByUid(sortFriendList[groupPosition][relativePosition])
             }
             manager = LinearLayoutManager(requireContext())
             manager.orientation = LinearLayoutManager.VERTICAL
@@ -176,7 +156,7 @@ class AddressBookFragment : Fragment() {
                 })
         }
         // 展开功能区文字小红点
-        vm.requestRedPointObserver.observe(requireActivity()){
+        vm.requestRedPointObserver.observe(requireActivity()) {
             val response = it.getOrNull()
             if (response != null) {
                 val totalUnread = response.data.total
@@ -200,6 +180,13 @@ class AddressBookFragment : Fragment() {
 
                     })
             }
+        }
+        // 判断数据库是否已存储完成
+        vm.sessionDB.observe(requireActivity()) {
+            hasSave = it
+        }
+        vm.startActivityObserver.observe(requireActivity()) {
+            startActivity2FriendInfo(it.user, it.session)
         }
     }
 
@@ -248,10 +235,10 @@ class AddressBookFragment : Fragment() {
                 AttrColorUtils
                     .getValueOfColorAttr(activity, R.attr.bg_weak)
             )
-            setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            setOnRefreshListener {
                 initData()
                 b.refreshLayout.isRefreshing = false
-            })
+            }
         }
         // 查找新好友
         b.sysNewFriend.apply {
@@ -260,7 +247,6 @@ class AddressBookFragment : Fragment() {
                 SearchActivity.startSearchNewFriendSearch(requireActivity())
             }
         }
-
         // 查找新群聊
         b.sysNewGroupChat.apply {
             tvTitleName.text = "查找新群聊"
@@ -268,7 +254,6 @@ class AddressBookFragment : Fragment() {
                 SearchActivity.startSearchNewGroupSearch(requireActivity())
             }
         }
-
         // 我的群聊
         b.sysMyGroup.apply {
             tvTitleName.text = "我的群聊"
@@ -276,14 +261,44 @@ class AddressBookFragment : Fragment() {
                 startActivity(Intent(requireActivity(), MyGroupActivity::class.java))
             }
         }
-
-
         // 测试用，添加新好友
         b.sysTestAddNew.apply {
-            tvTitleName.text = "添加新好友测试"
+            tvTitleName.text = "测试"
             rLayout.setOnClickListener {
                 startActivity(Intent(requireActivity(), TestActivity::class.java))
             }
+        }
+    }
+
+
+    private fun startActivity2FriendInfo(user: UserVO, session: SessionVO) {
+        if (hasSave) {
+            // TODO 舒欣请在此处编写跳转到好友详细信息页面的逻辑
+            val intent = Intent(this.context, FriendInfoActivity::class.java)
+            intent.apply {
+                putExtra(
+                    Constants.FRIEND_TYPE,
+                    Constants.FRIEND_IS
+                )
+                putExtra(
+                    Constants.FRIEND_ID,
+                    user.userId
+                )
+                putExtra(
+                    Constants.FRIEND_NAME,
+                    user.userName
+                )
+                putExtra(
+                    Constants.FRIEND_NICKNAME,
+                    user.nickName
+                )
+                putExtra(
+                    Constants.FRIEND_GROUPING,
+                    "大学同学"
+                )
+            }
+            // TODO 我把启动备注掉了
+//            startActivity(intent)
         }
     }
 

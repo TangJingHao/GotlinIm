@@ -1,10 +1,16 @@
 package com.ByteDance.Gotlin.im.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.FriendListBean
+import com.ByteDance.Gotlin.im.info.MessageList
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
+import com.ByteDance.Gotlin.im.model.SessionUserLiveData
 import kotlinx.coroutines.*
 import okhttp3.WebSocket
 
@@ -18,8 +24,6 @@ class MainViewModel : ViewModel() {
 
     // 通用=========================================================================================
     val TAG = "MainViewModel"
-
-    fun getUserId() = Repository.getUserId()
 
     // 好友列表======================================================================================
 
@@ -54,6 +58,9 @@ class MainViewModel : ViewModel() {
     private fun insertFriendList(friendList: List<FriendListBean>) {
         GlobalScope.launch(Dispatchers.IO) {
             for (friend in friendList) {
+                // su 关系表
+                Repository.insertSU(SessionUserEntity(friend.sessionId, friend.user.userId))
+                // 用户表
                 Repository.insertUser(friend.user)
             }
         }
@@ -68,6 +75,36 @@ class MainViewModel : ViewModel() {
 
     val sessionObserverData = Transformations.switchMap(mSessionData) {
         Repository.getSessionList(it)
+    }
+
+    val sessionDB = Transformations.switchMap(sessionObserverData) {
+        val response = it.getOrNull()
+        if (response == null) {
+            // 网络请求失败，直接返回
+            null
+        } else {
+            // 使用协程
+            val msgList = response.data.messageList
+            // 协程返回数据的方法
+            runBlocking {
+                val res = async {
+                    // 先插入数据
+                    insertSessionList(msgList)
+                    val b = MutableLiveData<Boolean>(true)
+                    b
+                }.await()
+                // 阻塞等待返回结果
+                return@runBlocking res
+            }
+        }
+    }
+
+    private fun insertSessionList(msgList: List<MessageList>) {
+        GlobalScope.launch(Dispatchers.IO) {
+            for (msg in msgList) {
+                Repository.insertSession(msg.session)
+            }
+        }
     }
 
     fun getSessionList() {
@@ -91,9 +128,9 @@ class MainViewModel : ViewModel() {
     }
 
     // 好友申请小红点
-   private val requestRedPointData = MutableLiveData<Int>()
+    private val requestRedPointData = MutableLiveData<Int>()
 
-    val requestRedPointObserver = Transformations.switchMap(requestRedPointData){
+    val requestRedPointObserver = Transformations.switchMap(requestRedPointData) {
         Repository.getRequestBadge()
     }
 
@@ -116,6 +153,27 @@ class MainViewModel : ViewModel() {
         newGroupChatRedPointObserver.postValue(num)
     }
 
+
+    // 跳转页面=======================================================================================
+    val startActivityData = MutableLiveData<UserVO>()
+
+    val startActivityObserver = Transformations.switchMap(startActivityData) {
+        // 协程返回数据的方法
+        runBlocking {
+            val res = async {
+                val session: SessionVO = withContext(Dispatchers.IO) {
+                    Repository.querySessionByUid(it.userId)
+                }
+                MutableLiveData(SessionUserLiveData(session, it))
+            }.await()
+            // 阻塞等待返回结果
+            return@runBlocking res
+        }
+    }
+
+    fun getSessionByUid(user: UserVO) {
+        startActivityData.postValue(user)
+    }
 
 
 }

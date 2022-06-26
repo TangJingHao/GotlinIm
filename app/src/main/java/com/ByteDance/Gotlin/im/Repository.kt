@@ -7,6 +7,7 @@ import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
@@ -63,7 +64,7 @@ object Repository {
     private const val MMKV_USER_SEX = "user_sex"
     private const val MMKV_USER_EMAIL = "user_email"
     private const val MMKV_USER_DATA = "user_data"
-    private const val MMKV_USER_TOKEN="user_token"
+    private const val MMKV_USER_TOKEN = "user_token"
 
     private const val MMKV_LOGIN_USER_NAME = "login_user_name"//用户账户
     private const val MMKV_LOGIN_PASSWORD = "login_user_password"//用户密码
@@ -72,9 +73,10 @@ object Repository {
     fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
     fun setUserData(user: User) = mmkv.encode(MMKV_USER_DATA, user)
     fun deleteUserData() = mmkv.removeValueForKey(MMKV_USER_DATA)
-    fun setToken(token:String)= mmkv.encode(MMKV_USER_TOKEN,token)
-    fun getToken():String= mmkv.decodeString(MMKV_USER_TOKEN)
-    fun deleteToken()= mmkv.removeValueForKey(MMKV_USER_TOKEN)
+    fun setToken(token: String) = mmkv.encode(MMKV_USER_TOKEN, token)
+    fun getToken(): String = mmkv.decodeString(MMKV_USER_TOKEN)
+    fun deleteToken() = mmkv.removeValueForKey(MMKV_USER_TOKEN)
+
     //用户密码和账户(保存在本地的)
     fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")
     fun setUserLoginUserName(loginUserName: String) =
@@ -125,13 +127,12 @@ object Repository {
     private val db = SQLDatabase.getDatabase(BaseApp.getContext())
 
     // 会话数据表
-    fun queryAllSessions() = db.sessionDao().queryAllSession()
-    fun querySessionById(sessionId: Int) = db.sessionDao().querySessionById(sessionId)
+    /** 根据用户id返回sessionVO 的 LiveData */
+    fun querySessionByUid(uid: Int) = db.sessionDao().querySessionByUid(uid)
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
     fun deleteAllSession() = db.sessionDao().deleteAllSession()
-    fun querySessionByName(name:String) = db.sessionDao().querySessionByName(name)
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
@@ -142,14 +143,7 @@ object Repository {
     fun deleteAllUser() = db.userDao().deleteAllUser()
 
     // 消息数据表
-    /**
-     * 根据会话id查找
-     */
-    fun queryMsgBySid(sid: Int) = db.messageDao().queryMsgBySid(sid)
-
-    /**
-     * 根据会话id，发送者id,时间范围以及消息模糊查找
-     */
+    /** 根据会话id，发送者id,时间范围以及消息模糊查找 */
     fun queryMessage(sid: Int, from: Date, to: Date, content: String, limit: Int) =
         db.messageDao().queryMessage(sid, from, to, content, limit)
 
@@ -160,10 +154,23 @@ object Repository {
     fun deleteAllMessage() = db.messageDao().deleteAllMessage()
 
 
+    // session - user 关系表
+    fun insertSU(su: SessionUserEntity) = db.suDao().insertSU(su)
+
     fun deleteAllTable() {
         deleteAllUser()
         deleteAllSession()
         deleteAllMessage()
+    }
+
+    /** 根据uid检索并切换线程返回Session的LiveDat*/
+    fun getSessionByUid(uid: Int) = fire(Dispatchers.IO) {
+        val session = querySessionByUid(uid)
+        if (session != null) {
+            Result.success(session)
+        } else {
+            Result.failure(RuntimeException("数据库检索不到对应session"))
+        }
     }
 
     /*
@@ -209,8 +216,8 @@ object Repository {
                 response: retrofit2.Response<LoginDataResponse>
             ) {
                 val responseBody = response.body()
-                if(responseBody!=null){
-                    mToken =responseBody.data.token
+                if (responseBody != null) {
+                    mToken = responseBody.data.token
                 }
             }
 
