@@ -76,7 +76,6 @@ class MainActivity : AppCompatActivity() {
                     isVisible = true
                     horizontalOffset  = 20
                     verticalOffset = 10
-                    backgroundColor = R.color.critical_default
                 }
         }
 
@@ -90,7 +89,6 @@ class MainActivity : AppCompatActivity() {
                         isVisible = true
                         horizontalOffset  = 20
                         verticalOffset = 10
-                        backgroundColor = R.color.critical_default
                     }
                 viewModelMain.setNewFriendRedPointNum(response.data.friend)
                 viewModelMain.setNewGroupChatRedPointNum(response.data.group)

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/fill_weak"
+    android:background="@color/dark_fill_weak"
     android:padding="@dimen/im_common_horizontal_large">
 
     <RelativeLayout
@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/im_spacing_medium"
             android:layout_toEndOf="@id/initIv"
-            android:background="@drawable/ic_app_title_yanshu" />
+            android:background="@drawable/ic_app_title_yanshu_night" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
             android:text=" 鸿雁传书  快人一步"
-            android:textColor="?attr/text_medium"
+            android:textColor="@color/dark_text_medium"
             android:textSize="@dimen/im_text_small" />
 
     </RelativeLayout>
