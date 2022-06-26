@@ -52,4 +52,7 @@ interface MessageDao {
 
     @Delete
     fun deleteMessage(message: MessageEntity)
+
+    @Query("delete from MessageTable ")
+    fun deleteAllMessage()
 }

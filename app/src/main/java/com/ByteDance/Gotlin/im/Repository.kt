@@ -1,10 +1,13 @@
 package com.ByteDance.Gotlin.im
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
@@ -30,9 +33,12 @@ import kotlin.coroutines.CoroutineContext
  */
 
 @OptIn(DelicateCoroutinesApi::class)
+@RequiresApi(Build.VERSION_CODES.Q)
 object Repository {
+    //临时存放token
+    public var token=""
 
-    private const val TAG = "Repository"
+    private const val TAG = "仓库层"
 
     /*
     * MMKV==========================================================================================
@@ -43,16 +49,27 @@ object Repository {
 
     private const val MMKV_USER_ID = "userId"
     private const val MMKV_USER_MODE = "user_mode"
+    private const val MMKV_USER_CHANGE = "user_change"
     private const val MMKV_USER_NICKNAME = "user_nickName"
     private const val MMKV_USER_AVATAR = "Avatar"
     private const val MMKV_USER_NAME = "user_name"
     private const val MMKV_USER_SEX = "user_sex"
     private const val MMKV_USER_EMAIL = "user_email"
+    private const val MMKV_USER_DATA = "user_data"
+
+    //用户数据
+    fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
+    fun setUserData(user: User) = mmkv.encode(MMKV_USER_DATA, user)
+    fun deleteUserData() = mmkv.removeValueForKey(MMKV_USER_DATA)
 
     //模式
-    fun getUserStatus(): Int = mmkv.decodeInt(MMKV_USER_MODE, Constants.USER_DEFAULT_MODE)
-    fun saveUserStatus(userId: Int) = mmkv.encode(MMKV_USER_MODE, userId)
-    fun deleteUserStatus() = mmkv.removeValueForKey(MMKV_USER_MODE)
+    fun getUserMode(): Int = mmkv.decodeInt(MMKV_USER_MODE)
+    fun saveUserMode(userMode: Int) = mmkv.encode(MMKV_USER_MODE, userMode)
+    fun deleteUserMode() = mmkv.removeValueForKey(MMKV_USER_MODE)
+
+    //记录用户是否修改了模式
+    fun setUserChangeAction(changeMode: Int) = mmkv.encode(MMKV_USER_CHANGE, changeMode)
+    fun getUserChangeAction(): Int = mmkv.decodeInt(MMKV_USER_CHANGE, Constants.USER_DEFAULT_MODE)
 
     //用户id
     fun saveUserId(userId: Int) = mmkv.encode(MMKV_USER_ID, userId)
@@ -88,6 +105,7 @@ object Repository {
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
+    fun deleteAllSession() = db.sessionDao().deleteAllSession()
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
@@ -95,6 +113,7 @@ object Repository {
     fun insertUser(user: UserVO) = db.userDao().insertUser(user)
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
     fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)
+    fun deleteAllUser() = db.userDao().deleteAllUser()
 
     // 消息数据表
     /**
@@ -112,6 +131,14 @@ object Repository {
     fun insertMessage(msg: MessageEntity) = db.messageDao().insertMessage(msg)
     fun upDataMessage(msg: MessageEntity) = db.messageDao().upDataMessage(msg)
     fun deleteMessage(msg: MessageEntity) = db.messageDao().deleteMessage(msg)
+    fun deleteAllMessage() = db.messageDao().deleteAllMessage()
+
+
+    fun deleteAllTable() {
+        deleteAllUser()
+        deleteAllSession()
+        deleteAllMessage()
+    }
 
     /*
     * 网络请求=======================================================================================
@@ -145,7 +172,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = NetWork.getGroupMemberList(userId)
+        val groupMemberListDataResponse = NetWork.patchRequestHandle(userId)
         if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(groupMemberListDataResponse)
         } else {
@@ -199,6 +226,66 @@ object Repository {
             Result.success(sessionHistoryDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
+        }
+    }
+
+    /**
+     * 获取当前用户未读的好友和群聊申请
+     */
+    fun getRequestBadge() = fire(Dispatchers.IO) {
+        val requestBadge = NetWork.getRequestBadge(getUserId())
+        if (requestBadge.status == Constants.SUCCESS_STATUS) {
+            Result.success(requestBadge)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${requestBadge.status}"))
+        }
+    }
+
+    /**
+     * 获取与用户相关的所有申请，分为 4 类
+     */
+    fun getRequestList() = fire(Dispatchers.IO) {
+        val requestList = NetWork.getRequestList(getUserId())
+        if (requestList.status == Constants.SUCCESS_STATUS) {
+            Result.success(requestList)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${requestList.status}"))
+        }
+    }
+
+    /**
+     * 申请添加某用户为好友
+     */
+    fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /**
+     *  申请加入某群聊
+     */
+    fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.postRequestGroup(getUserId(), groupId, reqSrc, reqRemark)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /**
+     * 同意或拒绝某用户的申请
+     */
+    fun patchRequestHandle(reqId: Int, access: Int) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.patchRequestHandle(reqId,access)
+        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+            Result.success(defaultResponse)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
         }
     }
 

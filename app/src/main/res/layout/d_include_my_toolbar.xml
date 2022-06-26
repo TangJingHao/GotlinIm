@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/f_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/im_toolbar_height"
-    android:background="?attr/bg_default"
+    android:background="?attr/bg_weak"
     android:paddingHorizontal="@dimen/im_common_horizontal">
 
     <ImageButton

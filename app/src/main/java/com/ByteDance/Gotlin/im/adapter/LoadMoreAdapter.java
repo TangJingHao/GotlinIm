@@ -30,10 +30,10 @@ import java.util.List;
  * @Email 1520483847@qq.com
  * @Description
  */
-public class UserHistoryMsgAdapter extends RecyclerView.Adapter {
+public class LoadMoreAdapter extends RecyclerView.Adapter {
     private static final String TAG = "UserHistoryMsgAdapter";
     private List<MessageEntity> mDataList = new ArrayList<>();
-    private Context mContext;
+    private final Context mContext;
 
     //上拉加载更多布局
     public static final int TYPE_FOOT = 1;
@@ -45,13 +45,7 @@ public class UserHistoryMsgAdapter extends RecyclerView.Adapter {
     // 消息记录中被选中的高亮部分
     private String highLightPart = "";
 
-    RoundedCorners roundedCorners = new RoundedCorners(8);// 数字为圆角度数
-    RequestOptions options = new RequestOptions()
-            .transforms(new CenterCrop(), roundedCorners)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)// 不做磁盘缓存
-            .skipMemoryCache(true);// 不做内存缓存
-
-    public UserHistoryMsgAdapter(Context mContext) {
+    public LoadMoreAdapter(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -126,11 +120,9 @@ public class UserHistoryMsgAdapter extends RecyclerView.Adapter {
     }
 
     // 匹配到合适的文字并高光
-    // TODO 高光文字
     public String changeMsgWithHighLight(String content) {
         if (!highLightPart.equals("")) {
-            String replace = content.replaceAll(highLightPart, "<font color='#1e6fff'>" + highLightPart + "</font>");
-            return replace;
+            return content.replaceAll(highLightPart, "<font color='#1e6fff'>" + highLightPart + "</font>");
         }
         return content;
     }

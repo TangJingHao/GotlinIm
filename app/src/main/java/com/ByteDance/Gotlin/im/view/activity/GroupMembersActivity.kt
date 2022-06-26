@@ -52,7 +52,7 @@ class GroupMembersActivity : AppCompatActivity() {
     private fun initView() {
         mBinding.toolbarGroupMembers.title.text = this.resources.getString(R.string.title_info_group_members)
         mBinding.toolbarGroupMembers.imgChevronLeft.setOnClickListener { onBackPressed() }
-        mBinding.tabInviteNumbers.tvUserName.text = this.resources.getString(R.string.title_info_group_invite)
+        mBinding.tabInviteNumbers.tvTitleName.text = this.resources.getString(R.string.title_info_group_invite)
     }
 
     @SuppressLint("NotifyDataSetChanged")
