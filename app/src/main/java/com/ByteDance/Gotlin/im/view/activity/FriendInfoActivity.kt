@@ -1,5 +1,7 @@
 package com.ByteDance.Gotlin.im.view.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Switch
@@ -22,15 +24,14 @@ import com.ByteDance.Gotlin.im.util.Constants.FRIEND_TYPE
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.i
+import com.ByteDance.Gotlin.im.util.Mutils.MToastUtil.showToast
 import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
 import com.qmuiteam.qmui.kotlin.onClick
-import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 
 /**
  * @Description：好友信息页面，由查找好友后点击进去和在好友列表中点击进入
- *              需要传入三个参数 用户唯一标识（账号） 是否为好友  用户名字
  * @Author：Suzy.Mo
  * @Date：2022/6/11 21:03
  */
@@ -56,6 +57,18 @@ class FriendInfoActivity : AppCompatActivity() {
         initView()
         setListener()
         setFriendData()
+    }
+
+    /**
+     *  是否为好友  用户唯一标识（账号） 好友名字
+     */
+    private fun startFriendInfo(context: Context, friendType:Int,friendAccount: Int,friendName:String) {
+        startActivity<FriendInfoActivity>(context){
+            putExtra(FRIEND_TYPE, friendType)
+            putExtra(FRIEND_ACCOUNT,friendAccount)
+            putExtra(FRIEND_NAME,friendName)
+        }
+        this.overridePendingTransition(R.anim.t_splash_open,R.anim.t_splash_close)
     }
 
     /**
@@ -104,11 +117,12 @@ class FriendInfoActivity : AppCompatActivity() {
 
             }else if (mFriendType == FRIEND_NO){
                 MLogUtil.v(TAG_FRIEND_INFO,"--添加好友--")
+                //TODO:弹窗添加好友
             }
         }
         mBinding.tabDeleteFriend.root.onClick {
             MLogUtil.v(TAG_FRIEND_INFO,"--删除好友--")
-
+            //TODO:弹窗删除好友
         }
         mBinding.tabItemInfoSearch.root.onClick {
             MLogUtil.v(TAG_FRIEND_INFO,"--消息搜索--")
@@ -156,9 +170,8 @@ class FriendInfoActivity : AppCompatActivity() {
             if(session!=null){
                 i(TAG_FRIEND_INFO,"好友会话信息：${session.sessionId.toString()+session.name}")
             }else{
-
+                "无次会话".showToast(this)
             }
-
 
         }
     }

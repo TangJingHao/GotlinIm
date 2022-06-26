@@ -148,30 +148,16 @@ class AddressBookFragment : Fragment() {
                     }
                 } else {
                     // 跳转到好友信息页面
-                    val intent = Intent(this.context, FriendInfoActivity::class.java)
-                    intent.apply {
-                        putExtra(
-                            Constants.FRIEND_TYPE,
-                            Constants.FRIEND_IS
-                        )
-                        putExtra(
-                            Constants.FRIEND_ACCOUNT,
-                            sortFriendList[groupPosition][relativePosition].userId
-                        )
-                        putExtra(
-                            Constants.FRIEND_NAME,
-                            sortFriendList[groupPosition][relativePosition].userName
-                        )
-                        putExtra(
-                            Constants.FRIEND_NICKNAME,
-                            sortFriendList[groupPosition][relativePosition].nickName
-                        )
-                        putExtra(
-                            Constants.FRIEND_GROUPING,
-                            "大学同学"
-                        )
+                    context?.let { it1 ->
+                        com.ByteDance.Gotlin.im.util.Mutils.startActivity<FriendInfoActivity>(it1) {
+                            putExtra(Constants.FRIEND_TYPE, Constants.FRIEND_IS)
+                            putExtra(Constants.FRIEND_ACCOUNT, sortFriendList[groupPosition][relativePosition].userId)
+                            putExtra(Constants.FRIEND_NAME, sortFriendList[groupPosition][relativePosition].userName)
+                            putExtra(Constants.FRIEND_NICKNAME, sortFriendList[groupPosition][relativePosition].nickName)
+                            putExtra(Constants.FRIEND_GROUPING, "大学同学")
+                        }
                     }
-                    startActivity(intent)
+                    activity?.overridePendingTransition(R.anim.t_splash_open,R.anim.t_splash_close)
                 }
             }
             manager = LinearLayoutManager(requireContext())

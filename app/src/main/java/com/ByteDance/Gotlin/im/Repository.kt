@@ -339,6 +339,18 @@ object Repository {
     }
 
     /**
+     * 获取好友信息
+     */
+    fun getNickNameSave(nickname: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---$nickname---")
+        //调后台接口上传
+
+        //搜索数据库
+
+        emit(nickname)
+    }
+
+    /**
      * 返回一个liveData(统一处理异常信息)
      */
     private fun <T> fire(context: CoroutineContext, block: suspend () -> Result<T>) =

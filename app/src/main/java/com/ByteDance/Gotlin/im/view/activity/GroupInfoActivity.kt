@@ -8,9 +8,13 @@ import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
 import com.ByteDance.Gotlin.im.databinding.MActivityGroupInfoBinding
+import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.Constants.GROUP_IS
+import com.ByteDance.Gotlin.im.util.Constants.GROUP_NO
 import com.ByteDance.Gotlin.im.util.Constants.OWNER_IS
 import com.ByteDance.Gotlin.im.util.Constants.OWNER_NO
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
@@ -19,9 +23,11 @@ import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
 import com.ByteDance.Gotlin.im.viewmodel.GroupInfoViewModel
 import com.qmuiteam.qmui.kotlin.onClick
+import kotlin.concurrent.thread
 
 /**
  * @Description：群聊信息页面
+ *               跳转需要群的所有信息
  * @Author：Suzy.Mo
  * @Date：2022/6/11 22:03
  */
@@ -38,6 +44,8 @@ class GroupInfoActivity : AppCompatActivity() {
     private lateinit var tvGroupId : TextView
     private lateinit var tvGroupMembers : TextView
     private lateinit var tvGroupMyName : TextView
+    private val groupType by lazy { intent.getIntExtra(Constants.GROUP_TYPE,1) }
+    private lateinit var mSession :SessionVO
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +72,12 @@ class GroupInfoActivity : AppCompatActivity() {
         }else if(mOwnerType == OWNER_NO){
             mBinding.tabDeleteGroup.tvRed.text = this.resources.getString(R.string.tab_red_group_out)
         }
+        if (groupType == GROUP_IS){
+            mBinding.tabAddStartGroup.tvBlue.text = this.resources.getString(R.string.tab_red_group_start)
+        }else if(groupType == GROUP_NO){
+            mBinding.tabAddStartGroup.tvBlue.text = this.resources.getString(R.string.tab_red_group_add)
+            mBinding.tabLayoutGroup.visibility = View.INVISIBLE
+        }
     }
 
     private fun setListener() {
@@ -76,6 +90,8 @@ class GroupInfoActivity : AppCompatActivity() {
             MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊名称--")
             if (mOwnerType == OWNER_IS){
                 "群主可修改".showToast(this)
+                //TODO:弹窗修改
+
             }else if(mOwnerType == OWNER_NO){
                 "不是群主不可修改".showToast(this)
             }
@@ -85,9 +101,14 @@ class GroupInfoActivity : AppCompatActivity() {
             startActivity<GroupMembersActivity>(this){
                 putExtra(Constants.GROUP_ID,groupId)
             }
+            this.overridePendingTransition(R.anim.t_splash_open,R.anim.t_splash_close)
 
         }
-        mBinding.tabGroupNickname.root.onClick { MLogUtil.v(Constants.TAG_GROUP_INFO,"--我的群昵称（弹窗修改）--") }
+        mBinding.tabGroupNickname.root.onClick {
+            MLogUtil.v(Constants.TAG_GROUP_INFO,"--我的群昵称（弹窗修改）--")
+            //TODO:弹窗修改界面
+
+        }
         mBinding.tabItemInfoSearch.root.onClick {
             MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")
             //TODO:跳转到搜索聊天消息,需要会话id
@@ -97,8 +118,23 @@ class GroupInfoActivity : AppCompatActivity() {
             MLogUtil.v(Constants.TAG_GROUP_INFO,"--删除群聊--")
             if (mOwnerType == OWNER_IS){
                 "确定解散群聊".showToast(this)
+                //TODO:弹窗解散群聊
+
             }else if(mOwnerType == OWNER_NO){
                 "确定退出群聊".showToast(this)
+                //TODO:弹窗退出群聊
+
+            }
+        }
+        mBinding.tabAddStartGroup.root.onClick {
+            if (groupType == GROUP_IS){
+                MLogUtil.v(Constants.TAG_GROUP_INFO,"----加入群聊----")
+                //TODO:跳转到聊天
+                ChatActivity.startChat(this,mSession)
+
+            }else if(groupType == GROUP_NO){
+                //TODO:弹窗进行申请加入
+
             }
         }
     }

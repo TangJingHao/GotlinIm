@@ -62,6 +62,8 @@
     <string name="tab_blue_add">添加好友</string>
     <string name="tab_blue_start">开始聊天</string>
     <string name="tab_red_delete_friend">删除好友</string>
+    <string name="tab_red_group_add">加入群聊</string>
+    <string name="tab_red_group_start">开始聊天</string>
     <string name="tab_red_group_delete">解散群聊</string>
     <string name="tab_red_group_out">退出群聊</string>
     <string name="grouping_default">无</string>

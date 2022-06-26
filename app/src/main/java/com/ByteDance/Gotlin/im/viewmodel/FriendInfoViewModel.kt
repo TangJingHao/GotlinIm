@@ -35,13 +35,17 @@ class FriendInfoViewModel : ViewModel() {
     }
 
     //修改的昵称
-    private val modifyNicknameLiveData = MutableLiveData<String>()
+    private val saveNicknameLiveData = MutableLiveData<String>()
 
     //申请修改后的数据
-//    val nickNameLiveData =Transformations.switchMap(modifyNicknameLiveData){ newNickname->
-//        i(TAG_FRIEND_INFO,"===中转：向仓库层申请修改===")
-//        Repository.getFriendInfo(newNickname)
-//    }
+    val nickNameLiveData =Transformations.switchMap(saveNicknameLiveData){ newNickname->
+        i(TAG_FRIEND_INFO,"===中转：向仓库层申请修改===")
+        Repository.getFriendInfo(newNickname)
+    }
+
+    fun saveNickName(nickName:String){
+        saveNicknameLiveData.postValue(nickName)
+    }
 
     //修改分组 参数还有变
 //    var modifyGroupingLiveData = Transformations.switchMap(friendAccountLivaData){account->
@@ -52,10 +56,6 @@ class FriendInfoViewModel : ViewModel() {
     fun getFriendInfo(friendAccount:Int) {
         i(TAG_FRIEND_INFO,"---获取好友信息---")
         friendAccountLivaData.postValue(friendAccount)
-    }
-
-    fun saveNickName(nickName:String){
-
     }
 
 }
