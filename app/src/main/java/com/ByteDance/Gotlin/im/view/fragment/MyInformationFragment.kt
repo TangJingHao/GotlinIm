@@ -19,6 +19,9 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseActivity
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
+import com.ByteDance.Gotlin.im.info.response.ImageData
+import com.ByteDance.Gotlin.im.network.base.ServiceCreator
+import com.ByteDance.Gotlin.im.network.netInterfaces.SendImageService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
@@ -34,6 +37,15 @@ import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.config.SelectModeConfig
 import com.luck.picture.lib.style.PictureSelectorStyle
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+
 
 /**
  * @Author 唐靖豪
@@ -243,12 +255,37 @@ class MyInformationFragment : Fragment() {
                 val selectList = PictureSelector.obtainSelectorList(result.data)
                 val media = selectList[0]
                 val cut = media.isCut
-                if (cut) {
+                var filepath=""
+                filepath = if (cut) {
                     //是裁剪过的
                     Glide.with(requireContext()).load(media.cutPath).into(mBinding.iconIv)
+                    media.cutPath
                 } else { //没有裁剪过的
                     Glide.with(requireContext()).load(media.path).into(mBinding.iconIv)
+                    media.path
                 }
+                val file = File(filepath)
+                val requestBody = RequestBody.create(MediaType.parse("image/jpg"), file)
+                val createFormData =
+                    MultipartBody.Part.createFormData("file", file.name, requestBody)
+                val mSender = ServiceCreator.create<SendImageService>()
+                val sendImage = mSender.sendImage(Repository.getToken(),Repository.getUserId(), createFormData)
+                sendImage.enqueue(object :Callback<ImageData>{
+                    override fun onResponse(call: Call<ImageData>, response: Response<ImageData>) {
+                        if(response?.body() != null){
+                            val status = response.body()!!.status
+                            if(status==Constants.SUCCESS_STATUS){
+                                TLogUtil.d("头像上传成功")
+                                TPhoneUtil.showToast(requireContext(),"头像上传成功")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ImageData>, t: Throwable) {
+                        t.printStackTrace()
+                        TLogUtil.d("头像上传失败")
+                    }
+                })
             } else if (resultCode == AppCompatActivity.RESULT_CANCELED) {
                 TLogUtil.d("点击取消")
             }
