@@ -7,14 +7,18 @@ import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
+import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
+import com.ByteDance.Gotlin.im.network.netInterfaces.LoginService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
+import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
 import okhttp3.Request
@@ -22,8 +26,11 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import retrofit2.Call
+import retrofit2.Callback
 import java.sql.Date
 import kotlin.coroutines.CoroutineContext
+
 
 /**
  * @Author 唐靖豪
@@ -36,7 +43,7 @@ import kotlin.coroutines.CoroutineContext
 @RequiresApi(Build.VERSION_CODES.Q)
 object Repository {
     //临时存放token
-    public var token=""
+    var mToken = ""
 
     private const val TAG = "仓库层"
 
@@ -56,11 +63,29 @@ object Repository {
     private const val MMKV_USER_SEX = "user_sex"
     private const val MMKV_USER_EMAIL = "user_email"
     private const val MMKV_USER_DATA = "user_data"
+    private const val MMKV_USER_TOKEN="user_token"
+
+    private const val MMKV_LOGIN_USER_NAME = "login_user_name"//用户账户
+    private const val MMKV_LOGIN_PASSWORD = "login_user_password"//用户密码
 
     //用户数据
     fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
     fun setUserData(user: User) = mmkv.encode(MMKV_USER_DATA, user)
     fun deleteUserData() = mmkv.removeValueForKey(MMKV_USER_DATA)
+    fun setToken(token:String)= mmkv.encode(MMKV_USER_TOKEN,token)
+    fun getToken():String= mmkv.decodeString(MMKV_USER_TOKEN)
+    fun deleteToken()= mmkv.removeValueForKey(MMKV_USER_TOKEN)
+    //用户密码和账户(保存在本地的)
+    fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")
+    fun setUserLoginUserName(loginUserName: String) =
+        mmkv.encode(MMKV_LOGIN_USER_NAME, loginUserName)
+
+    fun deleteLoginUserName() = mmkv.removeValueForKey(MMKV_LOGIN_USER_NAME)
+    fun getUserLoginPassword(): String = mmkv.decodeString(MMKV_LOGIN_PASSWORD, "")
+    fun setUserLoginPassword(loginPassword: String) =
+        mmkv.encode(MMKV_LOGIN_PASSWORD, loginPassword)
+
+    fun deleteLoginPassword() = mmkv.removeValueForKey(MMKV_LOGIN_PASSWORD)
 
     //模式
     fun getUserMode(): Int = mmkv.decodeInt(MMKV_USER_MODE)
@@ -106,6 +131,7 @@ object Repository {
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
     fun deleteAllSession() = db.sessionDao().deleteAllSession()
+    fun querySessionByName(name:String) = db.sessionDao().querySessionByName(name)
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
@@ -149,7 +175,8 @@ object Repository {
      */
     fun login(userName: String, userPass: String) = fire(Dispatchers.IO) {
         val loginDataResponse = NetWork.login(userName, userPass)
-        if (loginDataResponse.status == Constants.SUCCESS_STATUS) {
+        val status = loginDataResponse.status
+        if (status == Constants.SUCCESS_STATUS) {
             Result.success(loginDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${loginDataResponse.status}"))
@@ -157,11 +184,66 @@ object Repository {
     }
 
     /**
+     * 获取验证码
+     */
+    fun registerForCode(userName: String, email: String) = fire(Dispatchers.IO) {
+        val registerForCodeResponse = NetWork.registerCode(userName, email)
+        val status = registerForCodeResponse.status
+        if (status == Constants.SUCCESS_STATUS) {
+            Result.success(registerForCodeResponse)
+        } else {
+            TLogUtil.d("${registerForCodeResponse.status}")
+            Result.failure(RuntimeException("返回值的status的${registerForCodeResponse.status}"))
+        }
+    }
+
+    /**
+     * token过期获取token的方法
+     */
+    fun getAndSetToken() {
+        val tokenResponse = ServiceCreator.create<LoginService>()
+            .login(Repository.MMKV_LOGIN_USER_NAME, Repository.MMKV_LOGIN_PASSWORD)
+        tokenResponse.enqueue(object : Callback<LoginDataResponse> {
+            override fun onResponse(
+                call: Call<LoginDataResponse>,
+                response: retrofit2.Response<LoginDataResponse>
+            ) {
+                val responseBody = response.body()
+                if(responseBody!=null){
+                    mToken =responseBody.data.token
+                }
+            }
+
+            override fun onFailure(call: Call<LoginDataResponse>, t: Throwable) {
+                TLogUtil.d("数据请求失败")
+            }
+        })
+
+    }
+
+
+    /**
+     * 注册
+     */
+    fun register(userName: String, userPass: String, sex: String, email: String, code: String) =
+        fire(Dispatchers.IO) {
+            val registerResponse = NetWork.register(userName, userPass, sex, email, code)
+            val status = registerResponse.status
+            if (status == Constants.SUCCESS_STATUS) {
+                Result.success(registerResponse)
+            } else {
+                TLogUtil.d("${registerResponse.status}")
+                Result.failure(RuntimeException("返回值的status的${registerResponse.status}"))
+            }
+        }
+
+    /**
      * 获取群聊列表
      */
     fun getGroupList(userId: Int) = fire(Dispatchers.IO) {
         val groupListDataResponse = NetWork.getGroupList(userId)
-        if (groupListDataResponse.status == Constants.SUCCESS_STATUS) {
+        val status = groupListDataResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(groupListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${groupListDataResponse.status}"))
@@ -173,7 +255,8 @@ object Repository {
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
         val groupMemberListDataResponse = NetWork.patchRequestHandle(userId)
-        if (groupMemberListDataResponse.status == Constants.SUCCESS_STATUS) {
+        val status = groupMemberListDataResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(groupMemberListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${groupMemberListDataResponse.status}"))
@@ -185,7 +268,8 @@ object Repository {
      */
     fun getGroupInviteList(userId: Int) = fire(Dispatchers.IO) {
         val friendListDataResponse = NetWork.getFriendList(userId)
-        if (friendListDataResponse.status == Constants.SUCCESS_STATUS) {
+        val status = friendListDataResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(friendListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${friendListDataResponse.status}"))
@@ -197,7 +281,8 @@ object Repository {
      */
     fun getFriendList(userId: Int) = fire(Dispatchers.IO) {
         val friendListDataResponse = NetWork.getFriendList(userId)
-        if (friendListDataResponse.status == Constants.SUCCESS_STATUS) {
+        val status = friendListDataResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(friendListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${friendListDataResponse.status}"))
@@ -209,8 +294,8 @@ object Repository {
      */
     fun getSessionList(userId: Int) = fire(Dispatchers.IO) {
         val sessionListDataResponse = NetWork.getSessionList(userId)
-        DLogUtils.i(TAG, NetWork.getSessionList(userId).toString())
-        if (sessionListDataResponse.status == Constants.SUCCESS_STATUS) {
+        val status = sessionListDataResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(sessionListDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${sessionListDataResponse.status}"))
@@ -222,7 +307,8 @@ object Repository {
      */
     fun getSessionHistoryList(userId: Int, sessionId: Int, page: Int) = fire(Dispatchers.IO) {
         val sessionHistoryDataResponse = NetWork.getSessionHistoryList(userId, sessionId, page)
-        if (sessionHistoryDataResponse.status == Constants.SUCCESS_STATUS) {
+        val status = sessionHistoryDataResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(sessionHistoryDataResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${sessionHistoryDataResponse.status}"))
@@ -234,7 +320,8 @@ object Repository {
      */
     fun getRequestBadge() = fire(Dispatchers.IO) {
         val requestBadge = NetWork.getRequestBadge(getUserId())
-        if (requestBadge.status == Constants.SUCCESS_STATUS) {
+        val status = requestBadge.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(requestBadge)
         } else {
             Result.failure(RuntimeException("返回值的status的${requestBadge.status}"))
@@ -246,7 +333,8 @@ object Repository {
      */
     fun getRequestList() = fire(Dispatchers.IO) {
         val requestList = NetWork.getRequestList(getUserId())
-        if (requestList.status == Constants.SUCCESS_STATUS) {
+        val status = requestList.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(requestList)
         } else {
             Result.failure(RuntimeException("返回值的status的${requestList.status}"))
@@ -258,7 +346,9 @@ object Repository {
      */
     fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
         val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
-        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+        val status = defaultResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+
             Result.success(defaultResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
@@ -270,7 +360,8 @@ object Repository {
      */
     fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
         val defaultResponse = NetWork.postRequestGroup(getUserId(), groupId, reqSrc, reqRemark)
-        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+        val status = defaultResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(defaultResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
@@ -280,9 +371,10 @@ object Repository {
     /**
      * 同意或拒绝某用户的申请
      */
-    fun patchRequestHandle(reqId: Int, access: Int) = fire(Dispatchers.IO) {
-        val defaultResponse = NetWork.patchRequestHandle(reqId,access)
-        if (defaultResponse.status == Constants.SUCCESS_STATUS) {
+    fun patchRequestHandle(reqId: Int, access: Boolean) = fire(Dispatchers.IO) {
+        val defaultResponse = NetWork.patchRequestHandle(reqId, access)
+        val status = defaultResponse.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(defaultResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
@@ -338,6 +430,18 @@ object Repository {
     }
 
     /**
+     * 获取好友信息
+     */
+    fun getNickNameSave(nickname: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---$nickname---")
+        //调后台接口上传
+
+        //搜索数据库
+
+        emit(nickname)
+    }
+
+    /**
      * 返回一个liveData(统一处理异常信息)
      */
     private fun <T> fire(context: CoroutineContext, block: suspend () -> Result<T>) =
@@ -351,7 +455,7 @@ object Repository {
             emit(result)
         }
 
-    // WebSocket尝试解决方案==========================================================================
+// WebSocket尝试解决方案==========================================================================
     /**
      * webSocket使用(即将弃用)
      */

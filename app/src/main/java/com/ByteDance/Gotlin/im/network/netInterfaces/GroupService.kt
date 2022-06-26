@@ -4,6 +4,7 @@ import com.ByteDance.Gotlin.im.info.FriendListDataResponse
 import com.ByteDance.Gotlin.im.info.response.GroupMembersDataResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 /**
@@ -19,6 +20,7 @@ interface GroupService {
      */
     @GET("group/list/user")
     fun getGroupMemberList(
+        @Header("token")token:String,
         @Query("groupId") groupId: Int
     ): Call<GroupMembersDataResponse>
 }

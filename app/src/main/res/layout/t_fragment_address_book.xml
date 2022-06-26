@@ -6,13 +6,38 @@
 
     <include
         android:id="@+id/toolbar_rl"
-        layout="@layout/d_include_my_toolbar"/>
+        layout="@layout/d_include_my_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/system_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar_rl"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/sys_new_friend"
+            layout="@layout/d_item_user_info_simple"/>
+
+        <include
+            android:id="@+id/sys_new_group_chat"
+            layout="@layout/d_item_user_info_simple"/>
+
+        <include
+            android:id="@+id/sys_my_group"
+            layout="@layout/d_item_user_info_simple"/>
+
+        <include
+            android:id="@+id/sys_test_add_new"
+            layout="@layout/d_item_user_info_simple"/>
+
+    </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_rl">
+        android:layout_below="@id/system_layout">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/member_rv"

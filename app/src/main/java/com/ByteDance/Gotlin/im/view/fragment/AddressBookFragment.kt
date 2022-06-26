@@ -3,9 +3,8 @@ package com.ByteDance.Gotlin.im.view.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,18 +12,21 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
+import com.ByteDance.Gotlin.im.info.vo.TestUser
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
-import com.ByteDance.Gotlin.im.view.activity.ApplicationInfoActivity
 import com.ByteDance.Gotlin.im.view.activity.FriendInfoActivity
 import com.ByteDance.Gotlin.im.view.activity.MyGroupActivity
 import com.ByteDance.Gotlin.im.view.activity.SearchActivity
+import com.ByteDance.Gotlin.im.view.activity.TestActivity
 import com.ByteDance.Gotlin.im.view.custom.TSideBar
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
 
 /**
  * @Author 唐靖豪
@@ -44,11 +46,6 @@ class AddressBookFragment : Fragment() {
     companion object {
         private const val TAG = "AddressBookFragment"
 
-        // 功能区对应
-        private const val SYSTEM_NEW_FRIEND = 0
-        private const val SYSTEM_NEW_GROUP_CHAT = 1
-        private const val SYSTEM_MY_GROUP_CHAT = 2
-        private const val SYSTEM_APPLICATION_INFO = 3
     }
 
     private val vm: MainViewModel by lazy {
@@ -72,37 +69,13 @@ class AddressBookFragment : Fragment() {
         return b.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        DLogUtils.w("通讯录Fragment","onResume")
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
         vm.friendListObserverDB.observe(requireActivity()) {
-//            val responseData = result.getOrNull()
-//            if (responseData == null) {
-//                DLogUtils.i(TAG, "我的好友列表返回值为NULL")
-//                TPhoneUtil.showToast(BaseApp.getContext(), "我的好友列表返回值为NULL")
-//            } else {
             // 获取好友列表排序后放入适配器
             mFriendList = it
             val titleList = ArrayList<String>()
             val sortFriendList = DSortUtils.sort(mFriendList, titleList)
-            // 假数据充当功能区按键
-            var systemList = ArrayList<UserVO>()
-            val u0 = UserVO(1024, "查找新好友", "女", "查找新好友", "system", null, false)
-            val u1 = UserVO(1024, "查找新群聊", "女", "查找新群聊", "system", null, false)
-            val u2 = UserVO(1024, "我的群聊", "女", "我的群聊", "system", null, false)
-            val u3 = UserVO(1024, "申请通知", "女", "申请通知", "system", null, false)
-            systemList.apply {
-                add(u0)
-                add(u1)
-                add(u2)
-                add(u3)
-            }
-            sortFriendList.add(0, systemList)
-            titleList.add(0, "-")
             mSortFriendList = sortFriendList
             mTitleList = titleList
             // 适配器
@@ -122,57 +95,32 @@ class AddressBookFragment : Fragment() {
                             "   position:" + relativePosition +
                             "   name: " + sortFriendList[groupPosition][relativePosition].nickName
                 )
-                // 功能区跳转
-                if (groupPosition == 0) {
-                    when (relativePosition) {
-                        SYSTEM_NEW_FRIEND -> {
-                            // 查找新好友
-                            SearchActivity.startSearchNewFriendSearch(requireActivity())
-                        }
-                        SYSTEM_NEW_GROUP_CHAT -> {
-                            // 查找新群聊
-                            SearchActivity.startSearchNewGroupSearch(requireActivity())
-                        }
-                        SYSTEM_APPLICATION_INFO -> {
-                            // 好友申请
-                            startActivity(
-                                Intent(requireActivity(), ApplicationInfoActivity::class.java)
-                            )
-                        }
-                        SYSTEM_MY_GROUP_CHAT -> {
-                            // 我的群聊
-                            startActivity(
-                                Intent(requireActivity(), MyGroupActivity::class.java)
-                            )
-                        }
-                    }
-                } else {
-                    // 跳转到好友信息页面
-                    val intent = Intent(this.context, FriendInfoActivity::class.java)
-                    intent.apply {
-                        putExtra(
-                            Constants.FRIEND_TYPE,
-                            Constants.FRIEND_IS
-                        )
-                        putExtra(
-                            Constants.FRIEND_ACCOUNT,
-                            sortFriendList[groupPosition][relativePosition].userId
-                        )
-                        putExtra(
-                            Constants.FRIEND_NAME,
-                            sortFriendList[groupPosition][relativePosition].userName
-                        )
-                        putExtra(
-                            Constants.FRIEND_NICKNAME,
-                            sortFriendList[groupPosition][relativePosition].nickName
-                        )
-                        putExtra(
-                            Constants.FRIEND_GROUPING,
-                            "大学同学"
-                        )
-                    }
-                    startActivity(intent)
+                // 跳转到好友信息页面
+                val intent = Intent(this.context, FriendInfoActivity::class.java)
+                intent.apply {
+                    putExtra(
+                        Constants.FRIEND_TYPE,
+                        Constants.FRIEND_IS
+                    )
+                    putExtra(
+                        Constants.FRIEND_ID,
+                        sortFriendList[groupPosition][relativePosition].userId
+                    )
+                    putExtra(
+                        Constants.FRIEND_NAME,
+                        sortFriendList[groupPosition][relativePosition].userName
+                    )
+                    putExtra(
+                        Constants.FRIEND_NICKNAME,
+                        sortFriendList[groupPosition][relativePosition].nickName
+                    )
+                    putExtra(
+                        Constants.FRIEND_GROUPING,
+                        "大学同学"
+                    )
                 }
+                startActivity(intent)
+
             }
             manager = LinearLayoutManager(requireContext())
             manager.orientation = LinearLayoutManager.VERTICAL
@@ -181,8 +129,78 @@ class AddressBookFragment : Fragment() {
             if (sortFriendList.size != 0 && titleList.size != 0)
                 mAdapter.notifyDataSetChanged()
         }
-//        }
+        // 我的新好友小红点
+        vm.newFriendRedPointObserver.observe(requireActivity()) {
+            if (it > 0)
+                b.sysNewFriend.imgAvatar.viewTreeObserver.addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        BadgeDrawable.create(requireActivity()).apply {
+                            badgeGravity = Gravity.END
+//                            number = it
+                            backgroundColor = AttrColorUtils.getValueOfColorAttr(
+                                requireActivity(),
+                                R.attr.critical_default
+                            )
+                            isVisible = true
+                            BadgeUtils.attachBadgeDrawable(this, b.sysNewFriend.imgAvatar)
+                        }
+                        b.sysNewFriend.imgAvatar.viewTreeObserver.removeOnGlobalLayoutListener(
+                            this
+                        )
+                    }
 
+                })
+        }
+        // 我的新群聊小红点
+        vm.newGroupChatRedPointObserver.observe(requireActivity()) {
+            if (it > 0)
+                b.sysNewGroupChat.imgAvatar.viewTreeObserver.addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        BadgeDrawable.create(requireActivity()).apply {
+                            badgeGravity = Gravity.END
+//                            number = it
+                            backgroundColor = AttrColorUtils.getValueOfColorAttr(
+                                requireActivity(),
+                                R.attr.critical_default
+                            )
+                            isVisible = true
+                            BadgeUtils.attachBadgeDrawable(this, b.sysNewGroupChat.imgAvatar)
+                        }
+                        b.sysNewGroupChat.imgAvatar.viewTreeObserver.removeOnGlobalLayoutListener(
+                            this
+                        )
+                    }
+
+                })
+        }
+        // 展开功能区文字小红点
+        vm.requestRedPointObserver.observe(requireActivity()){
+            val response = it.getOrNull()
+            if (response != null) {
+                val totalUnread = response.data.total
+                if (totalUnread > 0)
+                    b.toolbarRl.tvSys.viewTreeObserver.addOnGlobalLayoutListener(object :
+                        ViewTreeObserver.OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+                            BadgeDrawable.create(requireActivity()).apply {
+                                badgeGravity = BadgeDrawable.TOP_END
+                                backgroundColor = AttrColorUtils.getValueOfColorAttr(
+                                    requireActivity(),
+                                    R.attr.critical_default
+                                )
+                                isVisible = true
+                                BadgeUtils.attachBadgeDrawable(this, b.toolbarRl.tvSys)
+                            }
+                            b.toolbarRl.tvSys.viewTreeObserver.removeOnGlobalLayoutListener(
+                                this
+                            )
+                        }
+
+                    })
+            }
+        }
     }
 
     private fun initData() {
@@ -190,10 +208,27 @@ class AddressBookFragment : Fragment() {
     }
 
     private fun initView() {
+        b.systemLayout.visibility = View.VISIBLE
+        b.toolbarRl.tvSys.visibility = View.VISIBLE
+        b.toolbarRl.tvSys.text = "关闭功能区"
         b.toolbarRl.apply {
             imgChevronLeft.visibility = View.GONE
             title.text = "通讯录"
-            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
+            fLayout.setBackgroundColor(
+                AttrColorUtils.getValueOfColorAttr(
+                    requireActivity(),
+                    R.attr.bg_default
+                )
+            )
+            tvSys.setOnClickListener {
+                if (b.systemLayout.visibility == View.VISIBLE) {
+                    b.toolbarRl.tvSys.text = "展开功能区"
+                    b.systemLayout.visibility = View.GONE
+                } else {
+                    b.toolbarRl.tvSys.text = "关闭功能区"
+                    b.systemLayout.visibility = View.VISIBLE
+                }
+            }
         }
         b.sideBar.apply {
             setScaleSize(1)
@@ -218,7 +253,38 @@ class AddressBookFragment : Fragment() {
                 b.refreshLayout.isRefreshing = false
             })
         }
+        // 查找新好友
+        b.sysNewFriend.apply {
+            tvTitleName.text = "查找新好友"
+            rLayout.setOnClickListener {
+                SearchActivity.startSearchNewFriendSearch(requireActivity())
+            }
+        }
 
+        // 查找新群聊
+        b.sysNewGroupChat.apply {
+            tvTitleName.text = "查找新群聊"
+            rLayout.setOnClickListener {
+                SearchActivity.startSearchNewGroupSearch(requireActivity())
+            }
+        }
+
+        // 我的群聊
+        b.sysMyGroup.apply {
+            tvTitleName.text = "我的群聊"
+            rLayout.setOnClickListener {
+                startActivity(Intent(requireActivity(), MyGroupActivity::class.java))
+            }
+        }
+
+
+        // 测试用，添加新好友
+        b.sysTestAddNew.apply {
+            tvTitleName.text = "添加新好友测试"
+            rLayout.setOnClickListener {
+                startActivity(Intent(requireActivity(), TestActivity::class.java))
+            }
+        }
     }
 
 

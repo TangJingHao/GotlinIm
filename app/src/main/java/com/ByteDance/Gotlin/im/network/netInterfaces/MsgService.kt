@@ -4,6 +4,7 @@ import com.ByteDance.Gotlin.im.info.SessionHistoryDataResponse
 import com.ByteDance.Gotlin.im.info.SessionListDataResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Query
 
 /**
@@ -19,6 +20,7 @@ interface MsgService {
      */
     @GET("session/list")
     fun getSessionList(
+        @Header("token")token:String,
         @Query("userId") userId: Int
     ): Call<SessionListDataResponse>
 
@@ -28,6 +30,7 @@ interface MsgService {
      */
     @GET("session/history")
     fun getSessionHistoryList(
+        @Header("token")token:String,
         @Query("userId") userId: Int,
         @Query("sessionId") sessionId: Int,
         @Query("page") page: Int

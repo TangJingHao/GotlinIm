@@ -61,6 +61,7 @@ class GroupMembersActivity : AppCompatActivity() {
             startActivity<GroupInviteActivity>(this){
                 putExtra(Constants.GROUP_ID,mGroupId)
             }
+            this.overridePendingTransition(R.anim.t_splash_open,R.anim.t_splash_close)
         }
         mViewModel.groupMemberListLiveData.observe(this) { result ->
             val responseData = result.getOrNull()
@@ -88,10 +89,10 @@ class GroupMembersActivity : AppCompatActivity() {
                             mContext,
                             memberUserVO.userName + " userId:" + memberUserVO.userId
                         )
-                        // TODO 跳转到群聊详情页
+                        // TODO 跳转到好友详情页
                         startActivity<FriendInfoActivity>(this.mContext) {
                             putExtra(Constants.FRIEND_TYPE,Constants.FRIEND_IS)
-                            putExtra(Constants.FRIEND_ACCOUNT,
+                            putExtra(Constants.FRIEND_ID,
                                 memberUserVO.userId)
                             putExtra(Constants.FRIEND_NAME,
                                 memberUserVO.userName)
@@ -100,7 +101,8 @@ class GroupMembersActivity : AppCompatActivity() {
                             putExtra(Constants.FRIEND_GROUPING,
                                 "大学同学")
                         }
-//                    startActivity()
+                        this.overridePendingTransition(R.anim.t_splash_close,R.anim.t_splash_open)
+
                     })
                 mBinding.rvMember.adapter = adapter
                 mBinding.rvMember.layoutManager = LinearLayoutManager(mContext)

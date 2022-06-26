@@ -47,16 +47,18 @@ object Constants {
     const val BASE_AVATAR_URL="http://chatspace.iceclean.top"
 
     //suzy：好友类型选择
-    const val FRIEND_ACCOUNT = "FriendAccount"
+    const val FRIEND_ID = "FriendId"
     const val FRIEND_TYPE = "FriendType"
     const val FRIEND_NAME = "FriendName"
     const val FRIEND_NICKNAME = "FriendNickname"
     const val FRIEND_GROUPING = "FriendGrouping"
+    const val FRIEND_EMAIL = "FriendEmail"
     const val FRIEND_IS = 1
     const val FRIEND_NO = 0
 
     //suzy：是否为群主
     const val GROUP_ID = "GroupId"
+    const val GROUP_TYPE = "GroupType"
     const val OWNER_TYPE = "OwnerType"
     const val OWNER_IS = 1
     const val OWNER_NO = 0
@@ -64,6 +66,8 @@ object Constants {
     const val GROUP_NUM = "GroupNum"
     const val GROUP_MY_NAME = "GroupMyName"
     const val GROUP_OWNER = "GroupOwner"
+    const val GROUP_IS = 1
+    const val GROUP_NO = 0
 
     //suzy：全局TAG
     const val TAG_FRIEND_INFO = "FriendInfoActivity"
@@ -81,4 +85,6 @@ object Constants {
 
     //网络类型状态码
     const val SUCCESS_STATUS = 0
+
+    const val TOKEN_EXPIRED=101
 }
