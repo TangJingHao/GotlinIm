@@ -12,6 +12,7 @@ import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.MActivityGroupMembersBinding
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.Constants.FRIEND_IS
 import com.ByteDance.Gotlin.im.util.Constants.TAG_GROUP_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Mutils.startActivity
@@ -102,7 +103,7 @@ class GroupMembersActivity : AppCompatActivity() {
                                 "大学同学")
                         }
                         this.overridePendingTransition(R.anim.t_splash_close,R.anim.t_splash_open)
-
+//                            FriendInfoActivity.startFriendInfoActivity(this, FRIEND_IS,memberUserVO.userId,memberUserVO.userName,memberUserVO.nickName)
                     })
                 mBinding.rvMember.adapter = adapter
                 mBinding.rvMember.layoutManager = LinearLayoutManager(mContext)
