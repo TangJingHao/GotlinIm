@@ -29,8 +29,8 @@ import com.xuexiang.xui.XUI
 class BaseActivity : AppCompatActivity() {
     private var mode=Constants.LIGHT_MODE
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         XUI.initTheme(this)
+        super.onCreate(savedInstanceState)
         QMUIStatusBarHelper.translucent(this)
         initTheme()
         if(mode==Constants.LIGHT_MODE){
@@ -40,6 +40,7 @@ class BaseActivity : AppCompatActivity() {
         }
         Handler(Looper.getMainLooper()).postDelayed({
             if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
+                Repository.mToken=Repository.getToken()
                 val mainIntent = Intent(this,MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
                 startActivity(mainIntent)
                 finish()

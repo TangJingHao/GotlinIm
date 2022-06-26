@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -47,7 +48,7 @@ class MyInformationFragment : Fragment() {
     private lateinit var mMyEditMediaIListener: TMyEditMediaIListener
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
-    private lateinit var mSingleSelectPopupWindow:SingleSelectPopupWindow
+    private lateinit var mSingleSelectPopupWindow: SingleSelectPopupWindow
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,33 +77,31 @@ class MyInformationFragment : Fragment() {
         mBinding.toolbarRl.title.text = "我的"
         mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
         var userData = Repository.getUserData()
-        mBinding.nicknameTv.text=userData.userName
-        mBinding.emailTv.text=userData.email
+        mBinding.nicknameTv.text = userData.userName
+        mBinding.emailTv.text = userData.email
         var avatar = userData.avatar
         //判断用户是否有修改模式
         var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
         mBinding.sbIosBtn.isChecked = flag
-        if(flag){
-            if(Repository.getUserMode()==Constants.USER_LIGHT_MODE){
+        if (flag) {
+            if (Repository.getUserMode() == Constants.USER_LIGHT_MODE) {
                 mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
-            }else{
+            } else {
                 mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
             }
-        }else{
-            if(TPhoneUtil.getPhoneMode(requireContext())==Constants.USER_LIGHT_MODE){
+        } else {
+            if (TPhoneUtil.getPhoneMode(requireContext()) == Constants.USER_LIGHT_MODE) {
                 mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
-            }else{
+            } else {
                 mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
             }
         }
         //头像字符串拼接
-        if(avatar!=null){
+        if (avatar != null) {
             var index = avatar.indexOf(".")
             var substring = avatar.substring(index + 1)
             var s = Constants.BASE_AVATAR_URL + substring
-            Glide.with(requireContext()).
-            load(s).
-            into(mBinding.iconIv)
+            Glide.with(requireContext()).load(s).into(mBinding.iconIv)
         }
     }
 
@@ -124,7 +123,7 @@ class MyInformationFragment : Fragment() {
         mBinding.nicknameIv.setOnClickListener {
             val nicknamePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
                 override fun onConfirm(input: String) {
-                    mBinding.nicknameTv.text=input
+                    mBinding.nicknameTv.text = input
                 }
 
                 override fun onCancel() {
@@ -135,8 +134,9 @@ class MyInformationFragment : Fragment() {
                     mInputPopupWindow.dismiss()
                 }
             }
-            mInputPopupWindow= InputPopupWindow(requireContext(),"昵称修改",nicknamePopupWindowListener)
-            mInputPopupWindow.mPopupWindow.animationStyle= R.style.t_popup_window_style
+            mInputPopupWindow =
+                InputPopupWindow(requireContext(), "昵称修改", nicknamePopupWindowListener)
+            mInputPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
             mInputPopupWindow.show()
         }
         //修改性别
@@ -147,43 +147,45 @@ class MyInformationFragment : Fragment() {
                 }
 
                 override fun onCancel() {
-                   mSingleSelectPopupWindow.dismiss()
+                    mSingleSelectPopupWindow.dismiss()
                 }
 
                 override fun onDismiss() {
                     mSingleSelectPopupWindow.dismiss()
                 }
             }
-            mSingleSelectPopupWindow= SingleSelectPopupWindow(requireContext(),"选择性别",
-            "男","女",sexPopupWindowListener)
+            mSingleSelectPopupWindow = SingleSelectPopupWindow(
+                requireContext(), "选择性别",
+                "男", "女", sexPopupWindowListener
+            )
             mSingleSelectPopupWindow.setOptions(0)
-            mSingleSelectPopupWindow.mPopupWindow.animationStyle=R.style.t_popup_window_style
+            mSingleSelectPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
             mSingleSelectPopupWindow.setConfirmText("确认修改")
             mSingleSelectPopupWindow.setCancelText("取消修改")
             mSingleSelectPopupWindow.show()
         }
         //修改模式
         mBinding.sbIosBtn.setOnCheckedChangeListener { compoundButton, isChecked ->
-            if(isChecked){
+            if (isChecked) {
                 TLogUtil.d("选中")
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 Repository.saveUserMode(Constants.DARK_MODE)
                 Repository.setUserChangeAction(Constants.USER_CHANGE_MODE)
-                TPhoneUtil.showToast(requireContext(),"重启切换夜间模式")
-            }else{
+                TPhoneUtil.showToast(requireContext(), "重启切换夜间模式")
+            } else {
                 TLogUtil.d("未选中")
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 Repository.saveUserMode(Constants.LIGHT_MODE)
                 Repository.setUserChangeAction(Constants.USER_DEFAULT_MODE)
-                TPhoneUtil.showToast(requireContext(),"重启切换正常模式")
+                TPhoneUtil.showToast(requireContext(), "重启切换正常模式")
             }
             Handler(Looper.getMainLooper()).postDelayed({
-                requireActivity().startActivity(Intent(requireActivity(),BaseActivity::class.java))
+                requireActivity().startActivity(Intent(requireActivity(), BaseActivity::class.java))
                 requireActivity().finish()
                 requireActivity().overridePendingTransition(
-                    R.anim.t_enter,R.anim.t_close
+                    R.anim.t_enter, R.anim.t_close
                 )
-            },1000)
+            }, 1000)
         }
     }
 
@@ -225,5 +227,7 @@ class MyInformationFragment : Fragment() {
             }
         }
     }
+
+
 
 }

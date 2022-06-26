@@ -17,6 +17,8 @@ import com.ByteDance.Gotlin.im.info.vo.SessionRequestListVO
 import com.ByteDance.Gotlin.im.info.vo.SessionRequestVO
 import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
+import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel
 import java.sql.Date
@@ -198,6 +200,32 @@ class SearchFragment : Fragment() {
                         )
                         adapter.setMoreOnClickListener { v, groupPosition, relativePosition ->
                             // TODO 弹窗确定是否通过申请
+                            ConfirmPopupWindow(
+                                requireActivity(),
+                                "确认添加其为好友？",
+                                object : PopupWindowListener {
+                                    val reqId = friendRequest[relativePosition].reqId
+                                    override fun onConfirm(input: String?) {
+                                        // TODO "确认逻辑，发送确认消息"
+                                        vm.patchRequestHandle(reqId, true)
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
+                                    }
+
+                                    override fun onCancel() {
+                                        vm.patchRequestHandle(reqId, false)
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
+                                    }
+
+                                    override fun onDismiss() {
+
+                                    }
+                                }).apply {
+                                setConfirmText("确认添加")
+                                setCancelText("取消添加")
+                                show()
+                            }
                             TPhoneUtil.showToast(requireActivity(), "好友申请操作确认弹窗")
                         }
 
@@ -240,7 +268,34 @@ class SearchFragment : Fragment() {
                         )
 
                         adapter.setMoreOnClickListener { v, groupPosition, relativePosition ->
-                            // TODO 弹窗确定是否通过申请
+                            ConfirmPopupWindow(
+                                requireActivity(),
+                                "确认加入该群聊？",
+                                object : PopupWindowListener {
+                                    val reqId = groupRequest[relativePosition].reqId
+                                    override fun onConfirm(input: String?) {
+                                        // TODO "确认逻辑，发送确认消息"
+                                        vm.patchRequestHandle(reqId, true)
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
+                                    }
+
+                                    override fun onCancel() {
+                                        vm.patchRequestHandle(reqId, false)
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
+                                    }
+
+                                    override fun onDismiss() {
+
+                                    }
+                                }).apply {
+                                setConfirmText("确认加入")
+                                setCancelText("取消加入")
+                                show()
+                            }
                             TPhoneUtil.showToast(requireActivity(), "群聊申请操作确认弹窗")
                         }
 

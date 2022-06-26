@@ -15,7 +15,7 @@ import android.widget.Toast
  * @Description
  */
 
-class NetWorkReceiver():BroadcastReceiver() {
+class NetWorkReceiver() : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val manager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT < 23) {

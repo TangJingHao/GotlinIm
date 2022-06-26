@@ -264,7 +264,6 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                         h.b.tvStatue.setText(item.getOnline() ? "在线" : "离线");
 
                     } else if (data instanceof SessionRequestVO) {
-                        // TODO 完善四种各种消息请求相关的
                         SessionRequestVO item = (SessionRequestVO) data;
                         int kind = item.getKind();
                         int type = item.getType();

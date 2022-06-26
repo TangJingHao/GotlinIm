@@ -117,18 +117,18 @@
         android:layout_marginTop="@dimen/im_spacing_huge">
 
         <TextView
-            android:id="@+id/nickname_tv"
+            android:id="@+id/username_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="昵称"
+            android:text="用户名"
             android:textColor="?attr/text_strong"
             android:textSize="@dimen/im_text_medium" />
 
         <EditText
-            android:id="@+id/nickname_et"
+            android:id="@+id/username_et"
             android:layout_width="match_parent"
             android:layout_height="@dimen/im_input_box_height"
-            android:layout_below="@id/nickname_tv"
+            android:layout_below="@id/username_tv"
             android:layout_marginTop="@dimen/im_spacing_medium"
             android:background="@drawable/t_input_bg"
             android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
@@ -140,7 +140,7 @@
             android:id="@+id/email_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/nickname_et"
+            android:layout_below="@id/username_et"
             android:layout_marginTop="@dimen/im_spacing_medium"
             android:text="注册邮箱"
             android:textColor="?attr/text_strong"
@@ -155,41 +155,61 @@
             android:background="@drawable/t_input_bg"
             android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
             android:paddingVertical="@dimen/im_input_box_paddingVertical"
+            android:inputType="textEmailAddress"
             android:textColor="?attr/text_strong"
             android:textSize="@dimen/im_text_medium" />
 
         <TextView
-            android:id="@+id/password_tv"
+            android:id="@+id/verification_code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/et_input"
             android:layout_marginTop="@dimen/im_spacing_medium"
-            android:text="密码"
+            android:text="验证码"
             android:textColor="?attr/text_strong"
             android:textSize="@dimen/im_text_medium" />
 
-        <EditText
-            android:id="@+id/password_et"
+        <RelativeLayout
+            android:id="@+id/verification_code_rl"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/im_input_box_height"
-            android:layout_below="@id/password_tv"
-            android:layout_marginTop="@dimen/im_spacing_medium"
-            android:background="@drawable/t_input_bg"
-            android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
-            android:paddingVertical="@dimen/im_input_box_paddingVertical"
-            android:textColor="?attr/text_strong"
-            android:textSize="@dimen/im_text_medium" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/verification_code_tv">
+
+            <EditText
+                android:id="@+id/verification_code_et"
+                android:layout_width="200dp"
+                android:layout_height="@dimen/im_input_box_height"
+                android:layout_marginTop="@dimen/im_spacing_medium"
+                android:background="@drawable/t_input_bg"
+                android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
+                android:paddingVertical="@dimen/im_input_box_paddingVertical"
+                android:textColor="?attr/text_strong"
+                android:textSize="@dimen/im_text_medium" />
+
+            <com.xuexiang.xui.widget.button.CountDownButton
+                android:id="@+id/bt_countdown"
+                style="@style/Button.Blue"
+                android:layout_width="@dimen/button_weigh"
+                android:layout_height="@dimen/button_high"
+                android:layout_alignEnd="@+id/verification_code_et"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/im_spacing_large"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="@dimen/im_spacing_large"
+                android:layout_marginBottom="@dimen/im_spacing_large"
+                android:text="获取验证码"
+                android:textSize="@dimen/im_text_tiny" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/confirm_password_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/password_et"
+            android:layout_below="@id/verification_code_rl"
             android:layout_marginTop="@dimen/im_spacing_medium"
-            android:text="确定密码"
+            android:text="密码"
             android:textColor="?attr/text_strong"
-            android:textSize="@dimen/im_text_medium"
-            />
+            android:textSize="@dimen/im_text_medium" />
 
         <EditText
             android:id="@+id/confirm_password_et"
@@ -198,10 +218,11 @@
             android:layout_below="@id/confirm_password_tv"
             android:layout_marginTop="@dimen/im_spacing_medium"
             android:background="@drawable/t_input_bg"
+            android:inputType="textPassword"
             android:paddingHorizontal="@dimen/im_input_box_paddingHorizontal"
             android:paddingVertical="@dimen/im_input_box_paddingVertical"
             android:textColor="?attr/text_strong"
-            android:textSize="@dimen/im_text_medium"/>
+            android:textSize="@dimen/im_text_medium" />
     </RelativeLayout>
 
     <RelativeLayout
