@@ -1,6 +1,8 @@
 package com.ByteDance.Gotlin.im.viewmodel
 
 import android.icu.text.SimpleDateFormat
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -20,6 +22,7 @@ import java.sql.Date
  * @Email 1520483847@qq.com
  * @Description 搜索界面相关的ViewModel
  */
+@RequiresApi(Build.VERSION_CODES.Q)
 class SearchViewModel : ViewModel() {
 
     private val TAG: String = "SearchViewModel"
@@ -35,6 +38,7 @@ class SearchViewModel : ViewModel() {
     private val mMsgSearchLiveDate = MutableLiveData<MsgSearchLiveData>()
 
     // 监听搜索参数
+
     private val searchResultData = Transformations.switchMap(mMsgSearchLiveDate) {
         // 判断与上一次搜索内容是否一致
         this.page = it.page

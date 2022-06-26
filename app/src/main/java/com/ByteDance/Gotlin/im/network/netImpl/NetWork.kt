@@ -67,7 +67,7 @@ object NetWork {
     suspend fun postRequestGroup(senderId: Int, groupId: Int, reqSrc: String, reqRemark: String) =
         requestService.postRequestGroup(Repository.mToken,senderId, groupId, reqSrc, reqRemark).await()
 
-    suspend fun patchRequestHandle(reqId: Int, access: Int) =
+    suspend fun patchRequestHandle(reqId: Int, access: Boolean) =
         requestService.patchRequestHandle(Repository.mToken,reqId, access).await()
 
     // 获取websocket并链接
