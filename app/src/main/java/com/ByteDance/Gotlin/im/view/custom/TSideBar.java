@@ -89,7 +89,8 @@ public class TSideBar extends AppCompatTextView {
     }
 
     public void setDataResource(List<String> dataResource) {
-        letters = dataResource.toArray(new String[dataResource.size()]);
+        if (dataResource.size() > 0)
+            letters = dataResource.toArray(new String[dataResource.size()]);
         invalidate();
     }
 

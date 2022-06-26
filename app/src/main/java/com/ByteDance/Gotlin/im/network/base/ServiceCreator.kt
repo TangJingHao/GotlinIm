@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.network.base
 
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
@@ -57,9 +58,17 @@ object ServiceCreator {
 
     // 用于webSocket
     var WebSocketClient = OkHttpClient.Builder()
-        .pingInterval(30,TimeUnit.SECONDS)
+        .addInterceptor(Interceptor {
+            val request: Request = it.request()
+                .newBuilder()
+                .addHeader("token", Repository.mToken)
+                .build()
+            it.proceed(request)
+        })
+        .pingInterval(30, TimeUnit.SECONDS)
         .connectTimeout(10, TimeUnit.SECONDS)
         .build()
+
 
     fun <T> create(serviceClass: Class<T>): T = retrofit.create(serviceClass)
 
