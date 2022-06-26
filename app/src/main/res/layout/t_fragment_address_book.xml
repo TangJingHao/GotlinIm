@@ -27,6 +27,10 @@
             android:id="@+id/sys_my_group"
             layout="@layout/d_item_user_info_simple"/>
 
+        <include
+            android:id="@+id/sys_test_add_new"
+            layout="@layout/d_item_user_info_simple"/>
+
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
+import com.ByteDance.Gotlin.im.info.vo.TestUser
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
@@ -21,6 +22,7 @@ import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.FriendInfoActivity
 import com.ByteDance.Gotlin.im.view.activity.MyGroupActivity
 import com.ByteDance.Gotlin.im.view.activity.SearchActivity
+import com.ByteDance.Gotlin.im.view.activity.TestActivity
 import com.ByteDance.Gotlin.im.view.custom.TSideBar
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.android.material.badge.BadgeDrawable
@@ -65,11 +67,6 @@ class AddressBookFragment : Fragment() {
         initView()
 
         return b.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        DLogUtils.w("通讯录Fragment", "onResume")
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -135,20 +132,20 @@ class AddressBookFragment : Fragment() {
         // 我的新好友小红点
         vm.newFriendRedPointObserver.observe(requireActivity()) {
             if (it > 0)
-                b.sysNewFriend.tvTitleName.viewTreeObserver.addOnGlobalLayoutListener(object :
+                b.sysNewFriend.imgAvatar.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
                         BadgeDrawable.create(requireActivity()).apply {
                             badgeGravity = Gravity.END
-                            number = it
+//                            number = it
                             backgroundColor = AttrColorUtils.getValueOfColorAttr(
                                 requireActivity(),
                                 R.attr.critical_default
                             )
                             isVisible = true
-                            BadgeUtils.attachBadgeDrawable(this, b.sysNewFriend.tvTitleName)
+                            BadgeUtils.attachBadgeDrawable(this, b.sysNewFriend.imgAvatar)
                         }
-                        b.sysNewFriend.tvTitleName.viewTreeObserver.removeOnGlobalLayoutListener(
+                        b.sysNewFriend.imgAvatar.viewTreeObserver.removeOnGlobalLayoutListener(
                             this
                         )
                     }
@@ -158,20 +155,20 @@ class AddressBookFragment : Fragment() {
         // 我的新群聊小红点
         vm.newGroupChatRedPointObserver.observe(requireActivity()) {
             if (it > 0)
-                b.sysNewGroupChat.tvTitleName.viewTreeObserver.addOnGlobalLayoutListener(object :
+                b.sysNewGroupChat.imgAvatar.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
                         BadgeDrawable.create(requireActivity()).apply {
                             badgeGravity = Gravity.END
-                            number = it
+//                            number = it
                             backgroundColor = AttrColorUtils.getValueOfColorAttr(
                                 requireActivity(),
                                 R.attr.critical_default
                             )
                             isVisible = true
-                            BadgeUtils.attachBadgeDrawable(this, b.sysNewGroupChat.tvTitleName)
+                            BadgeUtils.attachBadgeDrawable(this, b.sysNewGroupChat.imgAvatar)
                         }
-                        b.sysNewGroupChat.tvTitleName.viewTreeObserver.removeOnGlobalLayoutListener(
+                        b.sysNewGroupChat.imgAvatar.viewTreeObserver.removeOnGlobalLayoutListener(
                             this
                         )
                     }
@@ -204,7 +201,6 @@ class AddressBookFragment : Fragment() {
                     })
             }
         }
-
     }
 
     private fun initData() {
@@ -212,8 +208,9 @@ class AddressBookFragment : Fragment() {
     }
 
     private fun initView() {
-        b.systemLayout.visibility = View.GONE
+        b.systemLayout.visibility = View.VISIBLE
         b.toolbarRl.tvSys.visibility = View.VISIBLE
+        b.toolbarRl.tvSys.text = "关闭功能区"
         b.toolbarRl.apply {
             imgChevronLeft.visibility = View.GONE
             title.text = "通讯录"
@@ -280,6 +277,14 @@ class AddressBookFragment : Fragment() {
             }
         }
 
+
+        // 测试用，添加新好友
+        b.sysTestAddNew.apply {
+            tvTitleName.text = "添加新好友测试"
+            rLayout.setOnClickListener {
+                startActivity(Intent(requireActivity(), TestActivity::class.java))
+            }
+        }
     }
 
 
