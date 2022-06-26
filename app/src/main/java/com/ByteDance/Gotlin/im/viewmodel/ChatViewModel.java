@@ -2,6 +2,7 @@ package com.ByteDance.Gotlin.im.viewmodel;
 
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_IMG;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
+import static com.ByteDance.Gotlin.im.util.Constants.SEND_MESSAGE;
 import static com.ByteDance.Gotlin.im.util.Constants.WS_SEND_MESSAGE;
 
 import android.os.Build;

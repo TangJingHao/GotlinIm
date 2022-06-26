@@ -87,4 +87,7 @@ object Constants {
     const val SUCCESS_STATUS = 0
 
     const val TOKEN_EXPIRED=101
+
+    //发送
+    const val SEND_MESSAGE = "SEND_MESSAGE"
 }
