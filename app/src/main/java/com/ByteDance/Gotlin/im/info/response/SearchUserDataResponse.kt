@@ -17,11 +17,11 @@ data class SearchUserDataResponse(
     var msg: String,
 
     @SerializedName("data")
-    var data: NewGroupData
+    var data: SearchUserData
 
 )
 
-data class DataBean(
+data class SearchUserData(
     @SerializedName("result")
     var result: List<UserVO>,
 

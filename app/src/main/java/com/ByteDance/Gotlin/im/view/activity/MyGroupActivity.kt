@@ -76,7 +76,9 @@ class MyGroupActivity : AppCompatActivity() {
                         override fun onDismiss() {
                         }
 
-                    })
+                    }).apply {
+                        show()
+                    }
                 }
             }
         }
@@ -130,6 +132,7 @@ class MyGroupActivity : AppCompatActivity() {
             val response = it.getOrNull()
             if (response != null) {
                 TPhoneUtil.showToast(this, response.msg)
+                vm.getGroupList()
             }
         }
     }
