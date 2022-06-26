@@ -67,6 +67,6 @@ interface RequestService {
     @PATCH("request/handle")
     fun patchRequestHandle(
         @Query("reqId") reqId: Int,
-        @Query("access") access: Int
+        @Query("access") access: Boolean
     ): Call<DefaultResponse>
 }

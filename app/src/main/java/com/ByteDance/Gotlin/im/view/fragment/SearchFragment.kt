@@ -204,16 +204,18 @@ class SearchFragment : Fragment() {
                                 requireActivity(),
                                 "确认添加其为好友？",
                                 object : PopupWindowListener {
+                                    val reqId = friendRequest[relativePosition].reqId
                                     override fun onConfirm(input: String?) {
                                         // TODO "确认逻辑，发送确认消息"
-                                        val reqId = friendRequest[relativePosition].reqId
-//                                        vm.patchRequestHandle(reqId,)
+                                        vm.patchRequestHandle(reqId, true)
                                         // 发送确认后刷新页面
                                         vm.getAllRequestData()
                                     }
 
                                     override fun onCancel() {
-
+                                        vm.patchRequestHandle(reqId, false)
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
                                     }
 
                                     override fun onDismiss() {
@@ -270,16 +272,20 @@ class SearchFragment : Fragment() {
                                 requireActivity(),
                                 "确认加入该群聊？",
                                 object : PopupWindowListener {
+                                    val reqId = groupRequest[relativePosition].reqId
                                     override fun onConfirm(input: String?) {
                                         // TODO "确认逻辑，发送确认消息"
-                                        val reqId = groupRequest[relativePosition].reqId
-//                                        vm.patchRequestHandle(reqId,)
+                                        vm.patchRequestHandle(reqId, true)
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
                                         // 发送确认后刷新页面
                                         vm.getAllRequestData()
                                     }
 
                                     override fun onCancel() {
-
+                                        vm.patchRequestHandle(reqId, false)
+                                        // 发送确认后刷新页面
+                                        vm.getAllRequestData()
                                     }
 
                                     override fun onDismiss() {

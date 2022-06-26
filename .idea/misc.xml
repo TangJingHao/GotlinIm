@@ -18,7 +18,6 @@
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2345" />
         <entry key="..\:/ByteDanceDemo/GotlinIm/app/src/main/res/xml/net_work_config.xml" value="0.40217391304347827" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_activity_init.xml" value="0.171875" />
-        <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_activity_init_night.xml" value="0.3880208333333333" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_fragment_my_infomation.xml" value="0.266304347826087" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1235" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_anim_pop_window.xml" value="0.246" />
@@ -29,12 +28,19 @@
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_img_useravatar1.xml" value="0.252" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_img_useravatar2.xml" value="0.252" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_img_useravatar3.xml" value="0.252" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_radio_item_checked.xml" value="0.244" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_radio_item_unchecked.xml" value="0.244" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_radio_select.xml" value="0.244" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/d_time_select_bg.xml" value="0.2475" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/h_chat_left_item.xml" value="0.1645" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/h_chat_right_item.xml" value="0.1645" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/h_chat_send.xml" value="0.1645" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/ic_28_chevron_left.xml" value="0.2395" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/ic_app_title_yanshu.xml" value="0.363" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/ic_app_title_yanshu_night.xml" value="0.1905" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/ic_img_default.xml" value="0.2395" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/ic_title_yanshu.xml" value="0.363" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_checkbox_selector.xml" value="0.244" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_close_thumb.xml" value="0.1945" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_gray_track.xml" value="0.1945" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/m_green_track.xml" value="0.1945" />
@@ -52,7 +58,7 @@
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_ps_preview_gallery_bg.xml" value="0.2475" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_ps_select_complete_bg.xml" value="0.2475" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/drawable/t_view_slice_bg.xml" value="0.252" />
-        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_application_info.xml" value="0.29936594202898553" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_application_info.xml" value="0.25" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_friend_application.xml" value="0.16485507246376813" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_my_group.xml" value="0.14175724637681159" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/d_activity_search.xml" value="0.2776268115942029" />
@@ -103,6 +109,8 @@
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/m_my_toolbar.xml" value="0.29936594202898553" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/m_recycle_item_gtouping.xml" value="0.29936594202898553" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/m_recycle_item_shearch_result.xml" value="0.26992753623188404" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_init.xml" value="0.1961736150770988" />
+        <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_init_night.xml" value="0.3211050724637681" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_login.xml" value="0.33" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_main.xml" value="0.3134057971014493" />
         <entry key="..\:/GitHub repository/GotlinIm/app/src/main/res/layout/t_activity_register.xml" value="0.4" />

@@ -166,7 +166,7 @@ class SearchViewModel : ViewModel() {
     }
 
     // 新群聊搜索【群聊申请】============================================================================
-    /
+
 //    private val mMyGroupChatApplicationData = MutableLiveData<Int>()
 //    fun getMyGroupChatApplicationData() {
 //        mMyGroupChatApplicationData.postValue(0)// 数字无意义
@@ -178,7 +178,7 @@ class SearchViewModel : ViewModel() {
 //    }
 
     // 确认通过申请
-    fun patchRequestHandle(reqId: Int, access: Int) = Repository.patchRequestHandle(reqId, access)
+    fun patchRequestHandle(reqId: Int, access: Boolean) = Repository.patchRequestHandle(reqId, access)
 
 
     // 其他==========================================================================================

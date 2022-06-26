@@ -280,7 +280,7 @@ object Repository {
     /**
      * 同意或拒绝某用户的申请
      */
-    fun patchRequestHandle(reqId: Int, access: Int) = fire(Dispatchers.IO) {
+    fun patchRequestHandle(reqId: Int, access: Boolean) = fire(Dispatchers.IO) {
         val defaultResponse = NetWork.patchRequestHandle(reqId,access)
         if (defaultResponse.status == Constants.SUCCESS_STATUS) {
             Result.success(defaultResponse)
