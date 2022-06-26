@@ -77,4 +77,6 @@ object Constants {
 
     //网络类型状态码
     const val SUCCESS_STATUS = 0
+
+    const val TOKEN_EXPIRED=101
 }

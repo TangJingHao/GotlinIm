@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.TActivityLoginBinding
 import com.ByteDance.Gotlin.im.model.LoginLiveData
@@ -40,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
     private var mPasswordFlag: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        XUI.initTheme(this)
         mBinding = TActivityLoginBinding.inflate(layoutInflater)
         mViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         mContext = this
@@ -73,10 +75,16 @@ class LoginActivity : AppCompatActivity() {
                 if (responseData.msg == "登录成功") {
                     Repository.saveUserId(responseData.data.user.userId)
                     Repository.setUserData(responseData.data.user)
-                    Repository.token=responseData.data.token
+                    Repository.setToken(responseData.data.token)
+                    Repository.setUserLoginPassword(mPassword)
+                    Repository.setUserLoginUserName(mUserName)
+                    Repository.mToken = responseData.data.token
                     var intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
+                    this.overridePendingTransition(
+                        R.anim.t_splash_open, R.anim.t_splash_close
+                    )
                 }
             }
         }
@@ -107,6 +115,10 @@ class LoginActivity : AppCompatActivity() {
         }
         mBinding.registerTv.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
+            finish()
+            this.overridePendingTransition(
+                R.anim.t_splash_open, R.anim.t_splash_close
+            )
         }
 
     }
@@ -115,7 +127,6 @@ class LoginActivity : AppCompatActivity() {
      * 配置相应的界面信息
      */
     private fun initConfig() {
-        XUI.initTheme(this)
         QMUIStatusBarHelper.translucent(this)
         initTheme()
         mSelectorStyle = TMyPictureSelectorStyle.getSelectorStyle(this)
@@ -131,20 +142,30 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun initTheme() {
         //用户设置了模式
-        if(Repository.getUserChangeAction()==Constants.USER_DEFAULT_MODE){
+        if (Repository.getUserChangeAction() == Constants.USER_DEFAULT_MODE) {
             var phoneMode = TPhoneUtil.getPhoneMode(this)
-            if(phoneMode==Constants.LIGHT_MODE){
+            if (phoneMode == Constants.LIGHT_MODE) {
                 QMUIStatusBarHelper.setStatusBarLightMode(this)
-            }else{
+            } else {
                 QMUIStatusBarHelper.setStatusBarDarkMode(this)
             }
-        }else{
+        } else {
             //用户没有设置模式
             var userStatus = Repository.getUserMode()
-            if(userStatus==Constants.USER_LIGHT_MODE){
+            if (userStatus == Constants.USER_LIGHT_MODE) {
                 QMUIStatusBarHelper.setStatusBarLightMode(this)
-            }else{
+            } else {
                 QMUIStatusBarHelper.setStatusBarDarkMode(this)
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode==100){
+            if(data!=null){
+                mBinding.emailEt.setText(data.getStringExtra("username"))
+                mBinding.passwordEt.setText(data.getStringExtra("password"))
             }
         }
     }
