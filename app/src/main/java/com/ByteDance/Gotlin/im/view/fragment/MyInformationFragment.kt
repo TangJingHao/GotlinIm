@@ -1,6 +1,5 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -29,6 +28,7 @@ import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TMyEditMediaIListener
+import com.ByteDance.Gotlin.im.view.activity.LoginActivity
 import com.bumptech.glide.Glide
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
@@ -49,6 +49,7 @@ class MyInformationFragment : Fragment() {
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
     private lateinit var mSingleSelectPopupWindow: SingleSelectPopupWindow
+    private lateinit var mConfirmPopupWindow: ConfirmPopupWindow
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,8 +78,8 @@ class MyInformationFragment : Fragment() {
         mBinding.toolbarRl.title.text = "我的"
         mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
         var userData = Repository.getUserData()
-        mBinding.nicknameTv.text = userData.userName
-        mBinding.emailTv.text = userData.email
+        mBinding.nicknameTv.text = Repository.getUserLoginNickname()
+        mBinding.emailTv.text =userData.email
         var avatar = userData.avatar
         //判断用户是否有修改模式
         var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
@@ -187,6 +188,30 @@ class MyInformationFragment : Fragment() {
                 )
             }, 1000)
         }
+        mBinding.loginConfigIv.setOnClickListener {
+            val popupWindowListener: PopupWindowListener = object : PopupWindowListener {
+                override fun onConfirm(input: String) {
+                    Thread(){
+                        Repository.deleteAllTable()
+                        Repository.deleteUserId()
+                        requireActivity().startActivity(Intent(requireActivity(),LoginActivity::class.java))
+                        requireActivity().finish()
+                    }.start()
+                }
+                override fun onCancel() {
+                    mConfirmPopupWindow.dismiss()
+                }
+
+                override fun onDismiss() {
+                    mConfirmPopupWindow.dismiss()
+                }
+            }
+            mConfirmPopupWindow = ConfirmPopupWindow(requireContext(), "确定要退出吗", popupWindowListener)
+            mConfirmPopupWindow.setConfirmText("确认")
+            mConfirmPopupWindow.setCancelText("我在想想")
+            mConfirmPopupWindow.setWarnTextColorType()
+            mConfirmPopupWindow.show()
+        }
     }
 
     /**
@@ -227,7 +252,6 @@ class MyInformationFragment : Fragment() {
             }
         }
     }
-
 
 
 }

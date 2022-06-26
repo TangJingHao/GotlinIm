@@ -73,14 +73,18 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 TPhoneUtil.showToast(mContext, responseData.msg)
                 if (responseData.msg == "登录成功") {
+                    //数据存储
                     Repository.saveUserId(responseData.data.user.userId)
                     Repository.setUserData(responseData.data.user)
                     Repository.setToken(responseData.data.token)
+                    Repository.setUserLoginNickname(responseData.data.user.nickName.toString())
+                    Repository.setUserLoginSex(responseData.data.user.sex.toString())
                     Repository.setUserLoginPassword(mPassword)
                     Repository.setUserLoginUserName(mUserName)
                     Repository.mToken = responseData.data.token
                     var intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivityForResult(intent,100)
+                    startActivity(intent)
+                    finish()
                     this.overridePendingTransition(
                         R.anim.t_splash_open, R.anim.t_splash_close
                     )
@@ -158,14 +162,5 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==100){
-            if(data!=null){
-                mBinding.emailEt.setText(data.getStringExtra("username"))
-                mBinding.passwordEt.setText(data.getStringExtra("password"))
-            }
-        }
-    }
 
 }

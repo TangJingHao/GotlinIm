@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.TActivityRegisterBinding
+import com.ByteDance.Gotlin.im.model.LoginLiveData
 import com.ByteDance.Gotlin.im.model.RegisterCodeLiveData
 import com.ByteDance.Gotlin.im.model.RegisterForUserLiveData
 import com.ByteDance.Gotlin.im.util.Constants
@@ -83,17 +84,30 @@ class RegisterActivity : AppCompatActivity() {
                 if(responseData.msg=="注册成功"){
                     Repository.setUserLoginUserName(mUserName)
                     Repository.setUserLoginPassword(mPassword)
-                    TPhoneUtil.showToast(this,"注册成功")
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.putExtra("username",mUserName)
-                    intent.putExtra("password",mPassword)
-                    setResult(100,intent)
-                    finish()
-                    this.overridePendingTransition(
-                        R.anim.t_splash_open, R.anim.t_splash_close
-                    )
-                    TLogUtil.d("注册成功")
+                    mViewModel.login(LoginLiveData(mUserName,mPassword))
                 }
+            }
+        }
+        mViewModel.loginObserverData.observe(this){result->
+            val responseData = result.getOrNull()
+            if(responseData!=null){
+                //数据存储
+                Repository.saveUserId(responseData.data.user.userId)
+                Repository.setUserData(responseData.data.user)
+                Repository.setToken(responseData.data.token)
+                Repository.setUserLoginNickname(responseData.data.user.nickName.toString())
+                Repository.setUserLoginSex(responseData.data.user.sex.toString())
+                Repository.setUserLoginPassword(mPassword)
+                Repository.setUserLoginUserName(mUserName)
+                Repository.mToken = responseData.data.token
+                TPhoneUtil.showToast(this,"注册成功")
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+                this.overridePendingTransition(
+                    R.anim.t_splash_open, R.anim.t_splash_close
+                )
+                TLogUtil.d("注册成功")
             }
         }
     }
