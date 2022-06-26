@@ -43,11 +43,12 @@ object Constants {
     const val BASE_AVATAR_URL="http://chatspace.iceclean.top"
 
     //suzy：好友类型选择
-    const val FRIEND_ACCOUNT = "FriendAccount"
+    const val FRIEND_ID = "FriendId"
     const val FRIEND_TYPE = "FriendType"
     const val FRIEND_NAME = "FriendName"
     const val FRIEND_NICKNAME = "FriendNickname"
     const val FRIEND_GROUPING = "FriendGrouping"
+    const val FRIEND_EMAIL = "FriendEmail"
     const val FRIEND_IS = 1
     const val FRIEND_NO = 0
 

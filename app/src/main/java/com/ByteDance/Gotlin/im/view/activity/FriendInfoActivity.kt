@@ -1,7 +1,6 @@
 package com.ByteDance.Gotlin.im.view.activity
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Switch
@@ -14,7 +13,7 @@ import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.Constants
-import com.ByteDance.Gotlin.im.util.Constants.FRIEND_ACCOUNT
+import com.ByteDance.Gotlin.im.util.Constants.FRIEND_ID
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_GROUPING
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_IS
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NAME
@@ -22,6 +21,8 @@ import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NICKNAME
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NO
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_TYPE
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
+import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
+import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.i
 import com.ByteDance.Gotlin.im.util.Mutils.MToastUtil.showToast
@@ -40,7 +41,7 @@ class FriendInfoActivity : AppCompatActivity() {
 
     private lateinit var mBinding: MActivityFriendInfoBinding
     private val mViewModel by lazy { ViewModelProvider(this).get(FriendInfoViewModel::class.java) }
-    private var mFriendType = 0
+    private var mFriendType = 1
     private lateinit var tvNickname: TextView
     private lateinit var tvSex: TextView
     private lateinit var tvAccount: TextView
@@ -48,6 +49,8 @@ class FriendInfoActivity : AppCompatActivity() {
     private lateinit var switchIsCared: Switch
     private lateinit var userName:String
     private lateinit var session:SessionVO
+    private lateinit var mDeletePopupWindow:ConfirmPopupWindow
+    private val friendId by lazy { intent.getIntExtra(Constants.FRIEND_ID,0) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +59,31 @@ class FriendInfoActivity : AppCompatActivity() {
 
         initView()
         setListener()
+        setPopupWindow()
         setFriendData()
+    }
+
+    private fun setPopupWindow() {
+        if(mFriendType == FRIEND_IS){
+            mDeletePopupWindow = ConfirmPopupWindow(this,"确定删除好友${userName}?",object :PopupWindowListener{
+                override fun onConfirm(input: String?) {
+                    "删除成功".showToast(this@FriendInfoActivity)
+                }
+                override fun onCancel() { mDeletePopupWindow.dismiss() }
+
+                override fun onDismiss() { mDeletePopupWindow.dismiss() }
+            })
+        }else{
+            mDeletePopupWindow = ConfirmPopupWindow(this,"确定向${userName}发送好友申请?",object: PopupWindowListener{
+                override fun onConfirm(input: String?) {
+                    Repository.postRequestFriend(friendId,"通过ID"," ")
+                }
+                override fun onCancel() { mDeletePopupWindow.dismiss() }
+
+                override fun onDismiss() {mDeletePopupWindow.dismiss() }
+
+            })
+        }
     }
 
     /**
@@ -65,7 +92,7 @@ class FriendInfoActivity : AppCompatActivity() {
     private fun startFriendInfo(context: Context, friendType:Int,friendAccount: Int,friendName:String) {
         startActivity<FriendInfoActivity>(context){
             putExtra(FRIEND_TYPE, friendType)
-            putExtra(FRIEND_ACCOUNT,friendAccount)
+            putExtra(FRIEND_ID,friendAccount)
             putExtra(FRIEND_NAME,friendName)
         }
         this.overridePendingTransition(R.anim.t_splash_open,R.anim.t_splash_close)
@@ -114,15 +141,16 @@ class FriendInfoActivity : AppCompatActivity() {
                 //TODO:跳转到聊天页面
                 ChatActivity.startChat(this@FriendInfoActivity,session)
 
-
             }else if (mFriendType == FRIEND_NO){
                 MLogUtil.v(TAG_FRIEND_INFO,"--添加好友--")
                 //TODO:弹窗添加好友
+                mDeletePopupWindow.show()
             }
         }
         mBinding.tabDeleteFriend.root.onClick {
             MLogUtil.v(TAG_FRIEND_INFO,"--删除好友--")
             //TODO:弹窗删除好友
+            mDeletePopupWindow.show()
         }
         mBinding.tabItemInfoSearch.root.onClick {
             MLogUtil.v(TAG_FRIEND_INFO,"--消息搜索--")
@@ -143,7 +171,7 @@ class FriendInfoActivity : AppCompatActivity() {
         switchIsCared = mBinding.switchIsCared
         //获取类型并设置账号获取信息
         mFriendType = intent.getIntExtra(FRIEND_TYPE, 0)
-        mViewModel.getFriendInfo(intent.getIntExtra(FRIEND_ACCOUNT,0))
+        mViewModel.getFriendInfo(intent.getIntExtra(FRIEND_ID,0))
         userName = intent.getStringExtra(FRIEND_NAME).toString()
         //控件初始化
         mBinding.toolbarFriendInfo.title.text = this.resources.getString(R.string.title_info_friend)
@@ -164,16 +192,12 @@ class FriendInfoActivity : AppCompatActivity() {
             switchIsCared.isClickable = false
         }
 
-        //获取好友session
-        thread{
-            session = Repository.querySessionByName(userName)
-            if(session!=null){
-                i(TAG_FRIEND_INFO,"好友会话信息：${session.sessionId.toString()+session.name}")
-            }else{
-                "无次会话".showToast(this)
-            }
-
-        }
+//        //获取好友session
+//        thread{
+//            session = Repository.querySessionByName(userName)
+//            i(TAG_FRIEND_INFO,"好友会话信息：${session.sessionId.toString()+session.name}")
+//
+//        }
     }
 
 }

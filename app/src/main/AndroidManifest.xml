@@ -60,12 +60,7 @@
         <activity
             android:name=".view.activity.GroupInfoActivity"
             android:configChanges="uiMode"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".view.activity.GroupMembersActivity"
             android:configChanges="uiMode"
@@ -73,7 +68,12 @@
         <activity
             android:name=".view.activity.FriendInfoActivity"
             android:configChanges="uiMode"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".view.activity.MainActivity"
             android:configChanges="uiMode"

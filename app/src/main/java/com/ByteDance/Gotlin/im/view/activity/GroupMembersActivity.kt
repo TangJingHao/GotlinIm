@@ -92,7 +92,7 @@ class GroupMembersActivity : AppCompatActivity() {
                         // TODO 跳转到好友详情页
                         startActivity<FriendInfoActivity>(this.mContext) {
                             putExtra(Constants.FRIEND_TYPE,Constants.FRIEND_IS)
-                            putExtra(Constants.FRIEND_ACCOUNT,
+                            putExtra(Constants.FRIEND_ID,
                                 memberUserVO.userId)
                             putExtra(Constants.FRIEND_NAME,
                                 memberUserVO.userName)

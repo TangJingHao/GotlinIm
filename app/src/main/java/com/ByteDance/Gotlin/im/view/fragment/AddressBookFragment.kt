@@ -151,7 +151,7 @@ class AddressBookFragment : Fragment() {
                     context?.let { it1 ->
                         com.ByteDance.Gotlin.im.util.Mutils.startActivity<FriendInfoActivity>(it1) {
                             putExtra(Constants.FRIEND_TYPE, Constants.FRIEND_IS)
-                            putExtra(Constants.FRIEND_ACCOUNT, sortFriendList[groupPosition][relativePosition].userId)
+                            putExtra(Constants.FRIEND_ID, sortFriendList[groupPosition][relativePosition].userId)
                             putExtra(Constants.FRIEND_NAME, sortFriendList[groupPosition][relativePosition].userName)
                             putExtra(Constants.FRIEND_NICKNAME, sortFriendList[groupPosition][relativePosition].nickName)
                             putExtra(Constants.FRIEND_GROUPING, "大学同学")

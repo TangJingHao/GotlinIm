@@ -298,29 +298,6 @@ object Repository {
         //emit(groupId)
     }
 
-    /**
-     * 获取分组
-     */
-    fun getAllGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
-
-    /**
-     * 获取分组
-     */
-    fun getSelectedGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
-
-    /**
-     * 保存分组
-     */
-    fun saveGrouping(myId: String, grouping: List<Map<String, Boolean>>) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---保存分组---")
-        emit(myId)
-    }
 
     /**
      * 获取群聊信息
