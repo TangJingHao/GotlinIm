@@ -116,7 +116,7 @@ object Repository {
     /**
      * 获取当前用户头像
      */
-    fun getUserAvatar() = mmkv.decodeInt(MMKV_USER_AVATAR, Constants.DEFAULT_IMG)
+    fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, "../img/home.png")
 
     fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
 
@@ -138,6 +138,7 @@ object Repository {
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
     fun deleteAllSession() = db.sessionDao().deleteAllSession()
+    fun querySessionByName(name:String) = db.sessionDao().querySessionByName(name)
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
@@ -354,6 +355,7 @@ object Repository {
         val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
         val status = defaultResponse.status
         if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+
             Result.success(defaultResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
@@ -432,6 +434,18 @@ object Repository {
     fun getFriendInfo(account: String) = liveData<String> {
         i(TAG_FRIEND_INFO, "---$account---")
         emit(account)
+    }
+
+    /**
+     * 获取好友信息
+     */
+    fun getNickNameSave(nickname: String) = liveData<String> {
+        i(TAG_FRIEND_INFO, "---$nickname---")
+        //调后台接口上传
+
+        //搜索数据库
+
+        emit(nickname)
     }
 
     /**

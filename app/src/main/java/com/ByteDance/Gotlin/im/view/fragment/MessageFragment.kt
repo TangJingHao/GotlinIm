@@ -83,7 +83,7 @@ class MessageFragment : Fragment() {
 
                     override fun onClick(view: View, position: Int, badge: BGABadgeView) {
                         //跳转到聊天界面
-                        val session: SessionVO = messageList.get(position).session
+                        val session: SessionVO = messageList[position].session
                         badge.hiddenBadge()
                         startChat(context, session)
                     }
@@ -92,15 +92,15 @@ class MessageFragment : Fragment() {
                 mAdapter.setRedPonitInterface(redPointListener)
                 b.rvLayout.adapter = mAdapter
                 b.rvLayout.layoutManager = LinearLayoutManager(requireActivity())
-                if (messageList.size != 0)
+                if (messageList != null && messageList.size != 0){
                     mAdapter.notifyDataSetChanged()
-
-                // 小红点数据变化
-                var count = 0
-                for (msg in messageList) {
-                    count += msg.session.badgeNum
+                    // 小红点数据变化
+                    var count = 0
+                    for (msg in messageList) {
+                        count += msg.session.badgeNum
+                    }
+                    vm.setMsgRedPointNum(count)
                 }
-                vm.setMsgRedPointNum(count)
             }
         }
 
@@ -152,7 +152,7 @@ class MessageFragment : Fragment() {
 
         val any = s.toAny(WebSocketType::class.java)
 
-        DLogUtils.i(TAG+ "类型测试",any?.wsType + "  ")
+        DLogUtils.i(TAG + "类型测试", any?.wsType + "  ")
     }
 
     override fun onResume() {
@@ -165,7 +165,12 @@ class MessageFragment : Fragment() {
         b.myToolbar.apply {
             imgChevronLeft.visibility = View.GONE
             title.text = "消息列表"
-            fLayout.setBackgroundColor(AttrColorUtils.getValueOfColorAttr(requireActivity(),R.attr.bg_default))
+            fLayout.setBackgroundColor(
+                AttrColorUtils.getValueOfColorAttr(
+                    requireActivity(),
+                    R.attr.bg_default
+                )
+            )
         }
         // 下拉刷新
         b.refreshLayout.apply {

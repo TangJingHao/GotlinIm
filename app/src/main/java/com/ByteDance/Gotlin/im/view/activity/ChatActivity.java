@@ -23,14 +23,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ByteDance.Gotlin.im.application.BaseApp;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
+import com.ByteDance.Gotlin.im.util.Constants;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
+import com.ByteDance.Gotlin.im.util.Hutils.HLog;
+import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
+import com.bumptech.glide.Glide;
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.config.SelectModeConfig;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -40,7 +51,6 @@ import java.util.LinkedList;
 @RequiresApi(api = Build.VERSION_CODES.Q)
 public class ChatActivity extends AppCompatActivity {
 
-    private static final String TAG = "ChatActivity";
     private static SessionVO session;
     private HActivityChatBinding view;
     private DIncludeMyToolbarBinding toolbar;
@@ -149,14 +159,25 @@ public class ChatActivity extends AppCompatActivity {
         send.setOnClickListener(view -> send());
         //返回
         back.setOnClickListener(view -> back());
-        //打开图片选择器
-        image.setOnClickListener(view -> {
-
-        });
+        //打开图片选择器,发送照片
+        image.setOnClickListener(view -> openImgSelector());
         //刷新
         refresh.setOnRefreshListener(() -> {
             model.refresh();
             refresh.setRefreshing(false);
+        });
+
+        //跳转到
+        toolbar.imgMore.setOnClickListener(v -> {
+            int chatType = session.getType();
+            //跳转到群聊信息页面
+            if (chatType == Constants.CHAT_GROUP) {
+                //TODO 跳转群聊信息页面
+            }
+            //跳转到好友信息页面
+            else if (chatType == Constants.CHAT_PRIVATE) {
+                //TODO 跳转好友信息页面
+            }
         });
     }
 
@@ -187,6 +208,29 @@ public class ChatActivity extends AppCompatActivity {
      */
     private void back() {
         finish();
+    }
+
+    /**
+     * 启动照片选择器
+     */
+    private void openImgSelector() {
+        PictureSelector.create(this)
+                .openGallery(SelectMimeType.ofImage())
+                .setImageEngine(TGlideEngine.createGlideEngine())
+                .setSelectionMode(SelectModeConfig.SINGLE)
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(ArrayList<LocalMedia> result) {
+                        String path = result.get(0).getPath();
+                        //发送图片
+                        model.sendImg(path);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        //ignore
+                    }
+                });
     }
 
     @Override

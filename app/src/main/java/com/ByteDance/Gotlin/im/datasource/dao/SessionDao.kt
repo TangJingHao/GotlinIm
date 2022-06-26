@@ -34,4 +34,10 @@ interface SessionDao {
 
     @Query("delete from SessionTable ")
     fun deleteAllSession()
+
+    @Query(
+        "select * from SessionTable " +
+                "where name = :name"
+    )
+    fun querySessionByName(name:String): SessionVO
 }

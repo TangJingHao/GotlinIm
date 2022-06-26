@@ -62,6 +62,8 @@ class MyInformationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        mViewModel=ViewModelProvider(requireActivity()).get(StatusViewModel::class.java)
+//        mViewModel.mStatus.value=Repository.getUserStatus()
         initConfig()
     }
 
