@@ -20,10 +20,6 @@ object Constants {
 
     //用户默认设置
     const val USER_DEFAULT_ID = -1
-    const val USER_DEFAULT_NAME = "name"
-    const val USER_DEFAULT_NICKNAME = "nickname"
-    const val USER_DEFAULT_EMAIL = "email"
-    const val USER_DEFAULT_SEX = "sex"
 
     //消息类型
     const val MESSAGE_TEXT = 0
@@ -89,7 +85,4 @@ object Constants {
     const val SUCCESS_STATUS = 0
 
     const val TOKEN_EXPIRED=101
-
-    //发送
-    const val SEND_MESSAGE = "SEND_MESSAGE"
 }

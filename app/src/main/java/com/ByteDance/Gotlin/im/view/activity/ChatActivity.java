@@ -1,5 +1,8 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
+import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_IMG;
+import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
+import static com.ByteDance.Gotlin.im.util.Constants.WS_SEND_MESSAGE;
 import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
 
 import android.content.Context;
@@ -23,15 +26,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
+import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.util.Constants;
+import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
+import com.ByteDance.Gotlin.im.util.Hutils.HLog;
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModel;
 import com.ByteDance.Gotlin.im.viewmodel.ChatViewModelFactory;
+import com.google.gson.Gson;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.config.SelectModeConfig;
@@ -49,6 +57,7 @@ import java.util.LinkedList;
 public class ChatActivity extends AppCompatActivity {
 
     private static SessionVO session;
+    Gson gson = new Gson();
     private HActivityChatBinding view;
     private DIncludeMyToolbarBinding toolbar;
     private EditText input;
@@ -106,6 +115,8 @@ public class ChatActivity extends AppCompatActivity {
         manager.setOrientation(RecyclerView.VERTICAL);
         manager.setSmoothScrollbarEnabled(true);
         chatList.setLayoutManager(manager);
+        model.getAdapter().setCallBack((view, userId) ->
+                FriendInfoActivity.Companion.startFriendInfoActivity(ChatActivity.this, userId));
         chatList.setAdapter(model.getAdapter());
     }
 
@@ -125,6 +136,28 @@ public class ChatActivity extends AppCompatActivity {
 
             if (refresh.isRefreshing())
                 refresh.setRefreshing(false);
+        });
+
+        //开启链接
+        model.getWsOpenObserverData().observe(this, response -> HLog.i("[开启链接] " + response.toString()));
+        //接收消息
+        model.getWsMessageObserverData().observe(this, s -> {
+            HLog.i("[回调] " + s);
+            WebSocketReceiveChatMsg msg = gson.fromJson(s, WebSocketReceiveChatMsg.class);
+            if (msg.getWsType().equals(WS_SEND_MESSAGE)) {
+                ThreadManager.getDefFixThreadPool().execute(() -> {
+                    int type = msg.getWsContent().getType();
+                    if (type == MESSAGE_TEXT) {
+                        model.receivedText(msg);
+                    } else if (type == MESSAGE_IMG) {
+                        //TODO:处理图片信息
+                    }
+                });
+            }
+        });
+        //关闭链接
+        model.getFailureObserverData().observe(this, throwable -> {
+            HLog.e("[链接关闭]" + (throwable == null ? null : throwable.getMessage()));
         });
 
         //输入文本监测
@@ -168,11 +201,14 @@ public class ChatActivity extends AppCompatActivity {
             int chatType = session.getType();
             //跳转到群聊信息页面
             if (chatType == Constants.CHAT_GROUP) {
-                //TODO 跳转群聊信息页面
+                //跳转群聊信息页面
+                GroupInfoActivity.Companion.startGroupInfoActivity(this, session.getType(),
+                        session.getSessionId(), session.getName());
             }
             //跳转到好友信息页面
             else if (chatType == Constants.CHAT_PRIVATE) {
-                //TODO 跳转好友信息页面
+                //跳转好友信息页面
+                FriendInfoActivity.Companion.startFriendInfoActivity(this, session.getSessionId());
             }
         });
     }

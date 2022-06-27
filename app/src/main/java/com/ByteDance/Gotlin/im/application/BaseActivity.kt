@@ -9,15 +9,12 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
-import com.ByteDance.Gotlin.im.databinding.TActivityInitBinding
-import com.ByteDance.Gotlin.im.databinding.TActivityInitNightBinding
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.LoginActivity
 import com.ByteDance.Gotlin.im.view.activity.MainActivity
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
-import com.ByteDance.Gotlin.im.view.activity.MainActivity
 
 /**
  * @Author 唐靖豪
@@ -42,9 +39,9 @@ class BaseActivity : AppCompatActivity() {
         }
         Handler(Looper.getMainLooper()).postDelayed({
 
-            if(Repository.getUserId()!=Constants.USER_DEFAULT_ID){
-                Repository.mToken=Repository.getToken()
-                val mainIntent = Intent(this,MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
+            if (Repository.getUserId() != Constants.USER_DEFAULT_ID) {
+                Repository.mToken = Repository.getToken()
+                val mainIntent = Intent(this, MainActivity::class.java) //前者为跳转前页面，后者为跳转后页面
                 startActivity(mainIntent)
                 finish()
                 this.overridePendingTransition(

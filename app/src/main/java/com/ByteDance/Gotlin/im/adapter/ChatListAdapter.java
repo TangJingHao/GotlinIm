@@ -47,6 +47,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     private final int max_width;
     private final int max_height;
     private LinkedList<MessageVO> list;
+    private AvatarCallBack callBack;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public ChatListAdapter(LinkedList<MessageVO> list) {
@@ -57,6 +58,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         max_height = (int) (dm.heightPixels * IMAGE_H_SCALE);
         HLog.d("屏幕长度" + dm.heightPixels + "屏幕宽度" + dm.widthPixels);
         HLog.i("图片最大长度:" + max_height + "图片最大宽度" + max_width);
+    }
+
+    public void setCallBack(AvatarCallBack callBack) {
+        this.callBack = callBack;
     }
 
     /**
@@ -100,6 +105,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.left.setVisibility(View.GONE);
             binding.nameRight.setText(userVO.getNickName());
             loadPic(avatarImg, binding.headerRight.img);
+            //设置头像点击回调
+            binding.headerRight.img.setOnClickListener(v -> callBack.onClick(binding.headerRight.img, userVO.getUserId()));
 
             if (message.getType() == Constants.MESSAGE_TEXT) {
                 binding.msgRight.setText(message.getContent());
@@ -113,6 +120,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.right.setVisibility(View.GONE);
             binding.nameLeft.setText(userVO.getNickName());
             loadPic(avatarImg, binding.headerLeft.img);
+            //设置头像点击回调
+            binding.headerLeft.img.setOnClickListener(v -> callBack.onClick(binding.headerLeft.img, userVO.getUserId()));
 
             if (message.getType() == Constants.MESSAGE_TEXT) {
                 binding.msgLeft.setText(message.getContent());
@@ -178,6 +187,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             }
         };
         Glide.with(context).load(path).into(target);
+    }
+
+    public interface AvatarCallBack {
+        void onClick(View view, int userId);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
