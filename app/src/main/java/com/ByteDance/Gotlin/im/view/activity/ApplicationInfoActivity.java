@@ -61,6 +61,11 @@ public class ApplicationInfoActivity extends AppCompatActivity {
             public void onMoreClick(View v, int groupPosition, int relativePosition) {
                 DLogUtils.i(TAG,"do something");
             }
+
+            @Override
+            public void onCancelClick(View v, int groupPosition, int relativePosition) {
+
+            }
         });
         if (mDateList.size() != 0 && mDateTitleList.length != 0)
             adapter.notifyDataSetChanged();

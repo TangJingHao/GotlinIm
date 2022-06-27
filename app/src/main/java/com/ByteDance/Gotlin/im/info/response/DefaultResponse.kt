@@ -1,5 +1,7 @@
 package com.ByteDance.Gotlin.im.info.response
 
+import com.ByteDance.Gotlin.im.info.FriendListData
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -12,5 +14,5 @@ data class DefaultResponse(
     @SerializedName("status")
     val status: Int,
     @SerializedName("msg")
-    val msg: String
+    val msg: String,
 )

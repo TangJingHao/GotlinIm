@@ -16,11 +16,18 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseActivity
+import com.ByteDance.Gotlin.im.bean.ChangeUserInfoBean
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
+import com.ByteDance.Gotlin.im.info.response.DefaultResponse
 import com.ByteDance.Gotlin.im.info.response.ImageData
+import com.ByteDance.Gotlin.im.model.ChangeUserInfo
+import com.ByteDance.Gotlin.im.network.base.ServiceCreator
+import com.ByteDance.Gotlin.im.network.netInterfaces.ChangeUserDataService
+import com.ByteDance.Gotlin.im.network.netInterfaces.RequestService
 import com.ByteDance.Gotlin.im.network.netInterfaces.SendImageService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
@@ -32,6 +39,7 @@ import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TMyEditMediaIListener
 import com.ByteDance.Gotlin.im.view.activity.LoginActivity
+import com.ByteDance.Gotlin.im.viewmodel.ChangeUserDataViewModel
 import com.bumptech.glide.Glide
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
@@ -63,6 +71,7 @@ class MyInformationFragment : Fragment() {
     private lateinit var mInputPopupWindow: InputPopupWindow
     private lateinit var mSingleSelectPopupWindow: SingleSelectPopupWindow
     private lateinit var mConfirmPopupWindow: ConfirmPopupWindow
+    private lateinit var mViewModel: ChangeUserDataViewModel
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +79,7 @@ class MyInformationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         mBinding = TFragmentMyInfomationBinding.inflate(inflater, container, false)
+        mViewModel = ViewModelProvider(requireActivity()).get(ChangeUserDataViewModel::class.java)
         return mBinding.root
     }
 
@@ -82,6 +92,11 @@ class MyInformationFragment : Fragment() {
         super.onStart()
         initView()
         initListener()
+        initCallBack()
+    }
+
+    private fun initCallBack() {
+
     }
 
     /**
@@ -132,7 +147,33 @@ class MyInformationFragment : Fragment() {
             val nicknamePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
                 override fun onConfirm(input: String) {
                     mBinding.nicknameTv.text = input
-                    Repository.setUserLoginNickname(input)
+                    val changeUserInfo = ServiceCreator.create<ChangeUserDataService>()
+                        .changeUserInfo(
+                            Repository.getToken(),
+                            Repository.getUserId(),
+                            Repository.getUserLoginSex(),
+                            input
+                        )
+                    changeUserInfo.enqueue(object : Callback<DefaultResponse> {
+                        override fun onResponse(
+                            call: Call<DefaultResponse>,
+                            response: Response<DefaultResponse>
+                        ) {
+                            val body = response.body()
+                            if (body != null) {
+                                if (body?.status == Constants.SUCCESS_STATUS) {
+                                    TPhoneUtil.showToast(requireContext(), "修改成功")
+                                    Repository.setUserLoginNickname(input)
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                            t.printStackTrace()
+                            TLogUtil.d("修改失败")
+                        }
+
+                    })
                 }
 
                 override fun onCancel() {
@@ -152,7 +193,33 @@ class MyInformationFragment : Fragment() {
         mBinding.sexIv.setOnClickListener {
             val sexPopupWindowListener: PopupWindowListener = object : PopupWindowListener {
                 override fun onConfirm(input: String) {
+                    val changeUserInfo = ServiceCreator.create<ChangeUserDataService>()
+                        .changeUserInfo(
+                            Repository.getToken(),
+                            Repository.getUserId(),
+                            input,
+                            Repository.getUserLoginNickname()
+                        )
+                    changeUserInfo.enqueue(object : Callback<DefaultResponse> {
+                        override fun onResponse(
+                            call: Call<DefaultResponse>,
+                            response: Response<DefaultResponse>
+                        ) {
+                            val body = response.body()
+                            if (body != null) {
+                                if (body?.status == Constants.SUCCESS_STATUS) {
+                                    TPhoneUtil.showToast(requireContext(), "修改成功")
+                                    Repository.setUserLoginSex(input)
+                                }
+                            }
+                        }
 
+                        override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                            t.printStackTrace()
+                            TLogUtil.d("修改失败")
+                        }
+
+                    })
                 }
 
                 override fun onCancel() {
@@ -167,7 +234,11 @@ class MyInformationFragment : Fragment() {
                 requireContext(), "选择性别",
                 "男", "女", sexPopupWindowListener
             )
-            mSingleSelectPopupWindow.setOptions(0)
+            if (Repository.getUserLoginSex() == "男") {
+                mSingleSelectPopupWindow.setOptions(0)
+            } else if (Repository.getUserLoginSex() == "女") {
+                mSingleSelectPopupWindow.setOptions(1)
+            }
             mSingleSelectPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
             mSingleSelectPopupWindow.setConfirmText("确认修改")
             mSingleSelectPopupWindow.setCancelText("取消修改")
