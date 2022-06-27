@@ -1,8 +1,8 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
@@ -20,14 +20,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseActivity
-import com.ByteDance.Gotlin.im.bean.ChangeUserInfoBean
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
 import com.ByteDance.Gotlin.im.info.response.DefaultResponse
 import com.ByteDance.Gotlin.im.info.response.ImageData
-import com.ByteDance.Gotlin.im.model.ChangeUserInfo
+import com.ByteDance.Gotlin.im.info.response.UserIconResponse
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netInterfaces.ChangeUserDataService
-import com.ByteDance.Gotlin.im.network.netInterfaces.RequestService
 import com.ByteDance.Gotlin.im.network.netInterfaces.SendImageService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
@@ -36,24 +34,23 @@ import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.DUtils.diy.SingleSelectPopupWindow
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
-import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TMyEditMediaIListener
 import com.ByteDance.Gotlin.im.view.activity.LoginActivity
 import com.ByteDance.Gotlin.im.viewmodel.ChangeUserDataViewModel
 import com.bumptech.glide.Glide
 import com.luck.picture.lib.basic.PictureSelector
-import com.luck.picture.lib.config.SelectMimeType
-import com.luck.picture.lib.config.SelectModeConfig
 import com.luck.picture.lib.style.PictureSelectorStyle
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.*
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
+import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -134,13 +131,9 @@ class MyInformationFragment : Fragment() {
     private fun initListener() {
         //头像监听
         mBinding.iconIv.setOnClickListener {
-            PictureSelector.create(this)
-                .openGallery(SelectMimeType.ofImage())
-                .setSelectorUIStyle(mSelectorStyle)
-                .setImageEngine(TGlideEngine.createGlideEngine())
-                .setSelectionMode(SelectModeConfig.SINGLE)
-                .setEditMediaInterceptListener(mMyEditMediaIListener)
-                .forResult(mLauncherResult)
+            val intent = Intent(Intent.ACTION_PICK, null)
+            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+            mPictureLauncher.launch(intent)
         }
         //修改昵称
         mBinding.nicknameIv.setOnClickListener {
@@ -369,6 +362,142 @@ class MyInformationFragment : Fragment() {
             }
         }
     }
+
+
+    // 调用系统的裁剪
+    private fun cropPhoto(uri: Uri?) {
+        val intent = Intent("com.android.camera.action.CROP")
+        intent.setDataAndType(uri, "image/*")
+        intent.putExtra("crop", "true")
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1)
+        intent.putExtra("aspectY", 1)
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 127)
+        intent.putExtra("outputY", 127)
+        intent.putExtra("scale", true)
+        intent.putExtra("noFaceDetection", false) //不启用人脸识别
+        intent.putExtra("return-data", true)
+        mCropLauncher.launch(intent)
+    }
+
+    private val mPictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult ->
+        if(activityResult.resultCode == Activity.RESULT_OK){
+            val data = activityResult.data?.data
+            cropPhoto(data)
+        }
+    }
+
+    private val mCropLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult ->
+        if(activityResult.resultCode == Activity.RESULT_OK){
+            val data = activityResult.data?.extras
+            if(data!=null){
+                val imageBitmap= data.getParcelable<Bitmap>("data")
+                val file = imageBitmap?.let { compressImage(it) }
+                Glide.with(requireContext()).load(imageBitmap).into(mBinding.iconIv)
+                imageBitmap?.let { setPicToView(it) }
+                val retrofitHead = Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+                val createFormData =
+                    MultipartBody.Part.createFormData("avatar", file?.name, requestBody)
+                val mSender = retrofitHead.create(SendImageService::class.java)
+                val sendImage = mSender.sendImage(Repository.getToken(), Repository.getUserId(), createFormData)
+                sendImage.enqueue(object : Callback<ImageData> {
+                    override fun onResponse(call: Call<ImageData>, response: Response<ImageData>) {
+                        if(response==null){
+                            TLogUtil.d("null")
+                        }
+                        if (response?.body() != null) {
+                            val status = response.body()!!.status
+                            if (status == Constants.SUCCESS_STATUS) {
+                                TLogUtil.d("头像上传成功")
+                                TPhoneUtil.showToast(requireContext(), "头像上传成功")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ImageData>, t: Throwable) {
+                        t.printStackTrace()
+                        TLogUtil.d("头像上传失败")
+                    }
+                })
+            }
+        }
+    }
+
+    /**
+     * bitmap转File
+     */
+    private fun compressImage(bitmap: Bitmap): File? {
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        var options = 100
+        while (baos.toByteArray().size / 1024 > 20) {  //循环判断如果压缩后图片是否大于20kb,大于继续压缩 友盟缩略图要求不大于18kb
+            baos.reset() //重置baos即清空baos
+            options -= 10 //每次都减少10
+            bitmap.compress(
+                Bitmap.CompressFormat.JPEG,
+                options,
+                baos
+            ) //这里压缩options%，把压缩后的数据存放到baos中
+            val length: Long = baos.toByteArray().size as Long
+        }
+        val format = SimpleDateFormat("yyyyMMddHHmmss")
+        val date = Date(System.currentTimeMillis())
+        //图片名
+        val filename: String = format.format(date)
+        val file = File(
+            Environment.getExternalStorageDirectory(),
+            "$filename.png"
+        )
+        try {
+            val fos = FileOutputStream(file)
+            try {
+                fos.write(baos.toByteArray())
+                fos.flush()
+                fos.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        return file
+    }
+
+
+    //储存到sd卡的方法
+    private fun setPicToView(mBitmap: Bitmap) {
+        val tempImage="head.png"
+        val path=Environment.getExternalStorageDirectory().toString()
+        val sdStatus = Environment.getExternalStorageState()
+        if (sdStatus != Environment.MEDIA_MOUNTED) { // 检测sd是否可用
+            return
+        }
+        var b: FileOutputStream? = null
+        val file = File(path)
+        file.mkdirs() // 创建文件夹
+        val fileName = "$path/$tempImage" //图片名字
+        Repository.setUserLoginAvatar(fileName)
+        try {
+            b = FileOutputStream(fileName)
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, b) // 把数据写入文件
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                //关闭流
+                b!!.flush()
+                b.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 
 }
 
