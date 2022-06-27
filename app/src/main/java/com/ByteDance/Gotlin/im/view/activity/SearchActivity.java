@@ -154,19 +154,19 @@ public class SearchActivity extends AppCompatActivity {
     private void initFragments(int curSearchType) {
         switch (curSearchType) {
             case SEARCH_TYPE_FRIEND: {
-                // 邮箱搜索界面
+                // 好友搜索界面
                 mFragments.add(SearchFragment.newInstance(SEARCH_MAILBOX, 0));
-                // 昵称搜索界面
-                mFragments.add(SearchFragment.newInstance(SEARCH_NICKNAME, 0));
+//                // 昵称搜索界面
+//                mFragments.add(SearchFragment.newInstance(SEARCH_NICKNAME, 0));
                 // 我的申请界面
                 mFragments.add(SearchFragment.newInstance(MY_APPLICATION, 0));
                 break;
             }
             case SEARCH_TYPE_GROUP_CHAT: {
-                // 群号搜索界面
+                // 群聊搜索界面
                 mFragments.add(SearchFragment.newInstance(SEARCH_GROUP_CHAT_ID, 0));
-                // 群昵称搜索界面
-                mFragments.add(SearchFragment.newInstance(SEARCH_GROUP_CHAT_NICKNAME, 0));
+//                // 群昵称搜索界面
+//                mFragments.add(SearchFragment.newInstance(SEARCH_GROUP_CHAT_NICKNAME, 0));
                 // 我的群聊申请界面
                 mFragments.add(SearchFragment.newInstance(MY_GROUP_CHAR_APPLICATION, 0));
                 break;

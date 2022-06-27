@@ -1,11 +1,11 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
-import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.net.Uri
+import android.os.*
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +20,8 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseActivity
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
+import com.ByteDance.Gotlin.im.info.response.ImageData
+import com.ByteDance.Gotlin.im.network.netInterfaces.SendImageService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
@@ -29,11 +31,22 @@ import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TMyEditMediaIListener
+import com.ByteDance.Gotlin.im.view.activity.LoginActivity
 import com.bumptech.glide.Glide
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.config.SelectModeConfig
 import com.luck.picture.lib.style.PictureSelectorStyle
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
+
 
 /**
  * @Author 唐靖豪
@@ -49,6 +62,7 @@ class MyInformationFragment : Fragment() {
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
     private lateinit var mSingleSelectPopupWindow: SingleSelectPopupWindow
+    private lateinit var mConfirmPopupWindow: ConfirmPopupWindow
     private var mSelectorStyle = PictureSelectorStyle()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,9 +91,9 @@ class MyInformationFragment : Fragment() {
         mBinding.toolbarRl.title.text = "我的"
         mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
         var userData = Repository.getUserData()
-        mBinding.nicknameTv.text = userData.userName
+        mBinding.nicknameTv.text = Repository.getUserLoginNickname()
         mBinding.emailTv.text = userData.email
-        var avatar = userData.avatar
+
         //判断用户是否有修改模式
         var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
         mBinding.sbIosBtn.isChecked = flag
@@ -96,13 +110,7 @@ class MyInformationFragment : Fragment() {
                 mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
             }
         }
-        //头像字符串拼接
-        if (avatar != null) {
-            var index = avatar.indexOf(".")
-            var substring = avatar.substring(index + 1)
-            var s = Constants.BASE_AVATAR_URL + substring
-            Glide.with(requireContext()).load(s).into(mBinding.iconIv)
-        }
+        Glide.with(requireContext()).load(Repository.getUserLoginAvatar()).into(mBinding.iconIv)
     }
 
     /**
@@ -124,6 +132,7 @@ class MyInformationFragment : Fragment() {
             val nicknamePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
                 override fun onConfirm(input: String) {
                     mBinding.nicknameTv.text = input
+                    Repository.setUserLoginNickname(input)
                 }
 
                 override fun onCancel() {
@@ -187,6 +196,37 @@ class MyInformationFragment : Fragment() {
                 )
             }, 1000)
         }
+        mBinding.loginConfigIv.setOnClickListener {
+            val popupWindowListener: PopupWindowListener = object : PopupWindowListener {
+                override fun onConfirm(input: String) {
+                    Thread() {
+                        Repository.deleteAllTable()
+                        Repository.deleteUserId()
+                        requireActivity().startActivity(
+                            Intent(
+                                requireActivity(),
+                                LoginActivity::class.java
+                            )
+                        )
+                        requireActivity().finish()
+                    }.start()
+                }
+
+                override fun onCancel() {
+                    mConfirmPopupWindow.dismiss()
+                }
+
+                override fun onDismiss() {
+                    mConfirmPopupWindow.dismiss()
+                }
+            }
+            mConfirmPopupWindow =
+                ConfirmPopupWindow(requireContext(), "确定要退出吗", popupWindowListener)
+            mConfirmPopupWindow.setConfirmText("确认")
+            mConfirmPopupWindow.setCancelText("我在想想")
+            mConfirmPopupWindow.setWarnTextColorType()
+            mConfirmPopupWindow.show()
+        }
     }
 
     /**
@@ -216,18 +256,48 @@ class MyInformationFragment : Fragment() {
                 val selectList = PictureSelector.obtainSelectorList(result.data)
                 val media = selectList[0]
                 val cut = media.isCut
+                TLogUtil.d(media.realPath)
+                var filepath = media.availablePath
                 if (cut) {
                     //是裁剪过的
                     Glide.with(requireContext()).load(media.cutPath).into(mBinding.iconIv)
+                    Repository.setUserLoginAvatar(media.cutPath)
                 } else { //没有裁剪过的
                     Glide.with(requireContext()).load(media.path).into(mBinding.iconIv)
+                    Repository.setUserLoginAvatar(media.path)
                 }
+                val retrofitHead = Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                val file = File(Environment.getExternalStorageDirectory().absolutePath + filepath)
+                val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+                val createFormData =
+                    MultipartBody.Part.createFormData("avatar", file.name, requestBody)
+                val mSender = retrofitHead.create(SendImageService::class.java)
+                val sendImage =
+                    mSender.sendImage(Repository.getToken(), Repository.getUserId(), createFormData)
+                sendImage.enqueue(object : Callback<ImageData> {
+                    override fun onResponse(call: Call<ImageData>, response: Response<ImageData>) {
+                        if (response?.body() != null) {
+                            val status = response.body()!!.status
+                            if (status == Constants.SUCCESS_STATUS) {
+                                TLogUtil.d("头像上传成功")
+                                TPhoneUtil.showToast(requireContext(), "头像上传成功")
+                            }
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ImageData>, t: Throwable) {
+                        t.printStackTrace()
+                        TLogUtil.d("头像上传失败")
+                    }
+                })
             } else if (resultCode == AppCompatActivity.RESULT_CANCELED) {
                 TLogUtil.d("点击取消")
             }
         }
     }
 
-
-
 }
+

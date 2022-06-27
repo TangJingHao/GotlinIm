@@ -21,15 +21,13 @@ public class InputPopupWindow extends BasePopupWindow {
     private static DPopupWindowInputBinding b;
 
     public InputPopupWindow(Context context, String title, PopupWindowListener listener) {
-        super(
-                context,
+        super(context,
                 new PopupWindow(
                         getBinding(context).getRoot(),
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT, true),
                 listener);
-
-        b.tvPopTitle.setText(title);
+        setTitleText(title);
     }
 
     public static DPopupWindowInputBinding getBinding(Context context) {
@@ -70,6 +68,11 @@ public class InputPopupWindow extends BasePopupWindow {
                 mListener.onDismiss();
             });
         }
+    }
+
+    @Override
+    void setTitleText(String text) {
+        b.tvPopTitle.setText(text);
     }
 
     @Override

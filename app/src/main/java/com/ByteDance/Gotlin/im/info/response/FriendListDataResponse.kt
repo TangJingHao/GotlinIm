@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName
  * @Description 好友列表
  * 当前用户所有的好友
  */
-data class FriendListDataResponse (
+data class FriendListDataResponse(
     @SerializedName("status")
     val status: Int,
     @SerializedName("msg")
@@ -19,7 +19,25 @@ data class FriendListDataResponse (
     val data: FriendListData
 )
 
-data class FriendListData (
+data class FriendListData(
     @SerializedName("friendList")
-    val friendList: List<UserVO>
+    val friendList: List<FriendListBean>
+)
+
+data class FriendListBean(
+    @SerializedName("user")
+    var user: UserVO,
+
+    @SerializedName("sessionId")
+    var sessionId: Int,
+
+    @SerializedName("markName")
+    var markName: Any,
+
+    @SerializedName("startTime")
+    var startTime: String,
+
+    @SerializedName("lastMsgId")
+    var lastMsgId: Int
+
 )

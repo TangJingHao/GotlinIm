@@ -45,7 +45,8 @@ object Constants {
     const val BASE_WS_URL = "ws://chatspace.iceclean.top/space/ws/chat/"
     const val WS_SEND_MESSAGE = "SEND_MESSAGE"
     const val WS_USER_ONLINE = "USER_ONLINE"
-    const val BASE_AVATAR_URL = "http://chatspace.iceclean.top"
+    const val WS_TOKEN_EXPIRED = "TOKEN_EXPIRED"
+    const val BASE_AVATAR_URL="http://chatspace.iceclean.top"
 
     //suzy：好友类型选择
     const val FRIEND_ID = "FriendId"
@@ -71,8 +72,8 @@ object Constants {
     const val GROUP_NO = 0
 
     //suzy：全局TAG
-    const val TAG_FRIEND_INFO = "FriendInfoActivity"
-    const val TAG_GROUP_INFO = "GroupInfoActivity"
+    const val TAG_FRIEND_INFO = "---FriendInfoActivity---"
+    const val TAG_GROUP_INFO = "---GroupInfoActivity---"
     const val TAG_SET_FRIEND_INFO = "SetFriendInfoActivity"
 
     //suzy：跳转
@@ -88,4 +89,7 @@ object Constants {
     const val SUCCESS_STATUS = 0
 
     const val TOKEN_EXPIRED=101
+
+    //发送
+    const val SEND_MESSAGE = "SEND_MESSAGE"
 }

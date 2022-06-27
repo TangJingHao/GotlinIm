@@ -7,6 +7,7 @@ import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
@@ -62,10 +63,15 @@ object Repository {
     private const val MMKV_USER_SEX = "user_sex"
     private const val MMKV_USER_EMAIL = "user_email"
     private const val MMKV_USER_DATA = "user_data"
-    private const val MMKV_USER_TOKEN="user_token"
+    private const val MMKV_USER_TOKEN = "user_token"
+
+    private const val MMKV_LOGIN_USER_NICKNAME="login_user_name"
+    private const val MMKV_LOGIN_USER_SEX="login_user_sex"
 
     private const val MMKV_LOGIN_USER_NAME = "login_user_name"//用户账户
     private const val MMKV_LOGIN_PASSWORD = "login_user_password"//用户密码
+    private const val MMKV_LOGIN_AVATAR="login_user_avatar"
+    private const val MMKV_LOGIN_NICKNAME="login_user_nickname"
 
     //用户数据
     fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
@@ -74,6 +80,13 @@ object Repository {
     fun setToken(token:String)= mmkv.encode(MMKV_USER_TOKEN,token)
     fun getToken():String= mmkv.decodeString(MMKV_USER_TOKEN)
     fun deleteToken()= mmkv.removeValueForKey(MMKV_USER_TOKEN)
+    fun setUserLoginAvatar(avatar:String)= mmkv.encode(MMKV_LOGIN_AVATAR,avatar)
+    fun getUserLoginAvatar():String= mmkv.decodeString(MMKV_LOGIN_AVATAR,"ABC")
+    //用户昵称和性别（保存本地）
+    fun setUserLoginNickname(userName: String)= mmkv.encode(MMKV_LOGIN_USER_NAME,userName)
+    fun getUserLoginNickname():String= mmkv.decodeString(MMKV_LOGIN_USER_NAME)
+    fun setUserLoginSex(sex: String)= mmkv.encode(MMKV_LOGIN_PASSWORD,sex)
+    fun getUserLoginSex():String= mmkv.decodeString(MMKV_LOGIN_PASSWORD)
     //用户密码和账户(保存在本地的)
     fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")
     fun setUserLoginUserName(loginUserName: String) =
@@ -108,13 +121,12 @@ object Repository {
     private val db = SQLDatabase.getDatabase(BaseApp.getContext())
 
     // 会话数据表
-    fun queryAllSessions() = db.sessionDao().queryAllSession()
-    fun querySessionById(sessionId: Int) = db.sessionDao().querySessionById(sessionId)
+    /** 根据用户id返回sessionVO 的 LiveData */
+    fun querySessionByUid(uid: Int) = db.sessionDao().querySessionByUid(uid)
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
     fun deleteAllSession() = db.sessionDao().deleteAllSession()
-    fun querySessionByName(name:String) = db.sessionDao().querySessionByName(name)
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
@@ -125,14 +137,7 @@ object Repository {
     fun deleteAllUser() = db.userDao().deleteAllUser()
 
     // 消息数据表
-    /**
-     * 根据会话id查找
-     */
-    fun queryMsgBySid(sid: Int) = db.messageDao().queryMsgBySid(sid)
-
-    /**
-     * 根据会话id，发送者id,时间范围以及消息模糊查找
-     */
+    /** 根据会话id，发送者id,时间范围以及消息模糊查找 */
     fun queryMessage(sid: Int, from: Date, to: Date, content: String, limit: Int) =
         db.messageDao().queryMessage(sid, from, to, content, limit)
 
@@ -143,10 +148,23 @@ object Repository {
     fun deleteAllMessage() = db.messageDao().deleteAllMessage()
 
 
+    // session - user 关系表
+    fun insertSU(su: SessionUserEntity) = db.suDao().insertSU(su)
+
     fun deleteAllTable() {
         deleteAllUser()
         deleteAllSession()
         deleteAllMessage()
+    }
+
+    /** 根据uid检索并切换线程返回Session的LiveDat*/
+    fun getSessionByUid(uid: Int) = fire(Dispatchers.IO) {
+        val session = querySessionByUid(uid)
+        if (session != null) {
+            Result.success(session)
+        } else {
+            Result.failure(RuntimeException("数据库检索不到对应session"))
+        }
     }
 
     /*
@@ -192,8 +210,8 @@ object Repository {
                 response: retrofit2.Response<LoginDataResponse>
             ) {
                 val responseBody = response.body()
-                if(responseBody!=null){
-                    mToken =responseBody.data.token
+                if (responseBody != null) {
+                    mToken = responseBody.data.token
                 }
             }
 
@@ -223,6 +241,19 @@ object Repository {
     /**
      * 获取群聊列表
      */
+    fun newGroup(groupName: String) = fire(Dispatchers.IO) {
+        val newGroup = NetWork.newGroup(getUserId(), groupName)
+        val status = newGroup.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+            Result.success(newGroup)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${newGroup.status}"))
+        }
+    }
+
+    /**
+     * 获取群聊列表
+     */
     fun getGroupList(userId: Int) = fire(Dispatchers.IO) {
         val groupListDataResponse = NetWork.getGroupList(userId)
         val status = groupListDataResponse.status
@@ -237,7 +268,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = NetWork.patchRequestHandle(userId)
+        val groupMemberListDataResponse = NetWork.getGroupMemberList(userId)
         val status = groupMemberListDataResponse.status
         if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(groupMemberListDataResponse)
@@ -364,56 +395,20 @@ object Repository {
         }
     }
 
-    /**
-     * 保存备注
-     */
-    fun saveNickName(friendId: String, nickname: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---保存${friendId}的新备注${nickname}---")
-        //emit(groupId)
+    /** 搜索新好友接口 */
+    fun searchUser(key: String) = fire(Dispatchers.IO) {
+        val searchUserList = NetWork.searchUser(key)
+        val status = searchUserList.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+            Result.success(searchUserList)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${searchUserList.status}"))
+        }
     }
 
-    /**
-     * 获取分组
-     */
-    fun getAllGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
 
     /**
-     * 获取分组
-     */
-    fun getSelectedGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
-
-    /**
-     * 保存分组
-     */
-    fun saveGrouping(myId: String, grouping: List<Map<String, Boolean>>) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---保存分组---")
-        emit(myId)
-    }
-
-    /**
-     * 获取群聊信息
-     */
-    fun getGroupInfo(groupId: Int) = liveData<Int> {
-        i(TAG_FRIEND_INFO, "---$groupId---")
-        emit(groupId)
-    }
-
-    /**
-     * 获取好友信息
-     */
-    fun getFriendInfo(account: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---$account---")
-        emit(account)
-    }
-
-    /**
-     * 获取好友信息
+     * 保存备注修改
      */
     fun getNickNameSave(nickname: String) = liveData<String> {
         i(TAG_FRIEND_INFO, "---$nickname---")
@@ -499,14 +494,17 @@ object Repository {
 
         override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
             DLogUtils.i(TAG, "链接关闭中")
+            getWebSocket()
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             DLogUtils.i(TAG, "链接已关闭")
+            getWebSocket()
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             DLogUtils.i(TAG, "链接失败\t$t\n$response")
+            getWebSocket()
             onWsFailureObserverData.postValue(t)
         }
     }

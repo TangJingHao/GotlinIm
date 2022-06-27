@@ -6,13 +6,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.DActivityMyGroupBinding
 import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
+import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.viewmodel.MyGroupViewModel
@@ -54,9 +58,30 @@ class MyGroupActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        b.myToolbar.title.text = "我的群聊"
-        b.myToolbar.imgChevronLeft.setOnClickListener { onBackPressed() }
+        b.myToolbar.apply {
+            title.text = "我的群聊"
+            imgChevronLeft.setOnClickListener { onBackPressed() }
+            tvSys.apply {
+                visibility = View.VISIBLE
+                tvSys.text = "新建群聊"
+                setOnClickListener {
+                    InputPopupWindow(this@MyGroupActivity, "新建群聊名称", object : PopupWindowListener {
+                        override fun onConfirm(input: String) {
+                            vm.newGroup(input)
+                        }
 
+                        override fun onCancel() {
+                        }
+
+                        override fun onDismiss() {
+                        }
+
+                    }).apply {
+                        show()
+                    }
+                }
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -87,12 +112,12 @@ class MyGroupActivity : AppCompatActivity() {
                         groupVO.groupName + " gid:" + groupVO.groupId
                     )
                     // TODO 跳转到群聊详情页
-                    startActivity<GroupInfoActivity>(this.mContext){
-                        putExtra(Constants.GROUP_ID,groupVO.groupId)
-                        putExtra(Constants.GROUP_NAME,groupVO.groupName)
-                        putExtra(Constants.GROUP_NUM,groupVO.number)
-                        putExtra(Constants.GROUP_MY_NAME,groupVO.markName)
-                        putExtra(Constants.GROUP_OWNER,groupVO.creatorId)
+                    startActivity<GroupInfoActivity>(this.mContext) {
+                        putExtra(Constants.GROUP_ID, groupVO.groupId)
+                        putExtra(Constants.GROUP_NAME, groupVO.groupName)
+                        putExtra(Constants.GROUP_NUM, groupVO.number)
+                        putExtra(Constants.GROUP_MY_NAME, groupVO.markName)
+                        putExtra(Constants.GROUP_OWNER, groupVO.creatorId)
                     }
                     this.overridePendingTransition(R.anim.t_splash_open, R.anim.t_splash_close)
 
@@ -103,7 +128,12 @@ class MyGroupActivity : AppCompatActivity() {
                     adapter.notifyDataSetChanged()
             }
         }
+        vm.newGroupObserver.observe(this) {
+            val response = it.getOrNull()
+            if (response != null) {
+                TPhoneUtil.showToast(this, response.msg)
+                vm.getGroupList()
+            }
+        }
     }
-
-
 }

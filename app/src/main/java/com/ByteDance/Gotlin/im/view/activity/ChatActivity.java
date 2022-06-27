@@ -4,6 +4,7 @@ import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -43,6 +45,7 @@ import java.util.LinkedList;
  * @author: Hx
  * @date: 2022年06月11日 19:31
  */
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class ChatActivity extends AppCompatActivity {
 
     private static SessionVO session;

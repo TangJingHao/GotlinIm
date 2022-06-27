@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.model.LoginLiveData
 import com.ByteDance.Gotlin.im.model.RegisterCodeLiveData
 import com.ByteDance.Gotlin.im.model.RegisterForUserLiveData
 
@@ -21,6 +22,19 @@ class RegisterViewModel:ViewModel() {
     private val mRegisterCodeLiveData=MutableLiveData<RegisterCodeLiveData>()
     //接受注册信息
     private val mRegisterUserLiveData=MutableLiveData<RegisterForUserLiveData>()
+    //获取输入结果
+    private val mLoginLiveData = MutableLiveData<LoginLiveData>()
+    //接受返回结果
+    val loginObserverData = Transformations.switchMap(mLoginLiveData) {
+        Repository.login(it.userName, it.userPass)
+    }
+
+    /**
+     * 暴露给外部调用
+     */
+    fun login(loginLiveData: LoginLiveData) {
+        mLoginLiveData.postValue(loginLiveData)
+    }
     //接受返回结果
     val registerObserverCodeData=Transformations.switchMap(mRegisterCodeLiveData){
         Repository.registerForCode(it.userName,it.email)
@@ -39,5 +53,7 @@ class RegisterViewModel:ViewModel() {
     fun registerUser(registerForUserLiveData: RegisterForUserLiveData){
         mRegisterUserLiveData.postValue(registerForUserLiveData)
     }
+
+
 
 }

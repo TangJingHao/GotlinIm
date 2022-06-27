@@ -9,12 +9,15 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.databinding.TActivityInitBinding
+import com.ByteDance.Gotlin.im.databinding.TActivityInitNightBinding
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.LoginActivity
 import com.ByteDance.Gotlin.im.view.activity.MainActivity
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
+import com.ByteDance.Gotlin.im.view.activity.MainActivity
 
 /**
  * @Author 唐靖豪

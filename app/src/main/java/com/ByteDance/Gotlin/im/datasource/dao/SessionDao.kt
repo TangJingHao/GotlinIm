@@ -16,6 +16,13 @@ interface SessionDao {
     @Query("select * from SessionTable")
     fun queryAllSession(): LiveData<List<SessionVO>>
 
+    /** 通过用户id返回会话类 */
+    @Query(
+        "select * from SessionTable " +
+                "where sessionId = (select sid from SessionUserTable where uid = :uid)"
+    )
+    fun querySessionByUid(uid: Int): SessionVO
+
 
     @Query(
         "select * from SessionTable " +
@@ -39,5 +46,5 @@ interface SessionDao {
         "select * from SessionTable " +
                 "where name = :name"
     )
-    fun querySessionByName(name:String): SessionVO
+    fun querySessionByName(name: String): SessionVO
 }

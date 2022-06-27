@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.*
 import com.ByteDance.Gotlin.im.datasource.dao.MessageDao
 import com.ByteDance.Gotlin.im.datasource.dao.SessionDao
+import com.ByteDance.Gotlin.im.datasource.dao.SessionUserDao
 import com.ByteDance.Gotlin.im.datasource.dao.UserDao
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import java.sql.Date
@@ -16,12 +18,16 @@ import java.sql.Date
  * @Email 1520483847@qq.com
  * @Description 学习测试用数据库
  */
-@Database(entities = [UserVO::class, SessionVO::class, MessageEntity::class], version = 3)
+@Database(
+    entities = [UserVO::class, SessionVO::class, MessageEntity::class, SessionUserEntity::class],
+    version = 4
+)
 @TypeConverters(Converters::class)
 abstract class SQLDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun sessionDao(): SessionDao
     abstract fun messageDao(): MessageDao
+    abstract fun suDao(): SessionUserDao
 
     companion object {
 

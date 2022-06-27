@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import cn.bingoogolapple.badgeview.BGABadgeView
 import cn.bingoogolapple.badgeview.BGABadgeable
 import com.ByteDance.Gotlin.im.R
+import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.adapter.RedPointListener
 import com.ByteDance.Gotlin.im.adapter.UserMsgBGAAdapter
 import com.ByteDance.Gotlin.im.application.BaseApp
@@ -130,6 +131,10 @@ class MessageFragment : Fragment() {
                 }
                 Constants.WS_SEND_MESSAGE -> {
                     TPhoneUtil.showToast(requireActivity(), "新消息通知")
+                }
+                Constants.WS_TOKEN_EXPIRED -> {
+                    TPhoneUtil.showToast(requireActivity(), "token失效")
+                    Repository.getAndSetToken()
                 }
             }
             // 消息页面更新（小红点之类的）

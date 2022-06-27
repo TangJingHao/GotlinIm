@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.view.activity
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -22,6 +23,7 @@ import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
+import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.v
 import com.ByteDance.Gotlin.im.util.Mutils.MToastUtil.showToast
 import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
@@ -44,12 +46,6 @@ class GroupInfoActivity : AppCompatActivity() {
     private val mGroupType by lazy { intent.getIntExtra(Constants.GROUP_TYPE,Constants.GROUP_IS) }
     private val groupId by lazy { intent.getIntExtra(Constants.GROUP_ID,1) }
     private val groupName by lazy { intent.getStringExtra(Constants.GROUP_NAME) }
-    private lateinit var tvName : TextView
-    private lateinit var tvGroupName : TextView
-    private lateinit var tvGroupOwner : TextView
-    private lateinit var tvGroupId : TextView
-    private lateinit var tvGroupMembers : TextView
-    private lateinit var tvGroupMyName : TextView
     private lateinit var mSession :SessionVO
     private lateinit var mConfirmPW: ConfirmPopupWindow
     private lateinit var mInputPW: InputPopupWindow
@@ -57,7 +53,19 @@ class GroupInfoActivity : AppCompatActivity() {
     private var INPUT_NICK_NAME = 0
     private var mInputType :Int = INPUT_GROUP_NAME
 
-
+    companion object{
+        /**
+         * 群聊类型 Constants.GROUP_IS Constants.GROUP_NO
+         *
+         */
+        fun startGroupInfoActivity(context: Context, groupType:Int, groupId:Int, groupName: String){
+            startActivity<GroupInfoActivity>(context){
+                putExtra(Constants.GROUP_TYPE,groupType)
+                putExtra(Constants.GROUP_ID,groupId)
+                putExtra(Constants.GROUP_NAME,groupName)
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = MActivityGroupInfoBinding.inflate(layoutInflater)
@@ -136,16 +144,26 @@ class GroupInfoActivity : AppCompatActivity() {
             mBinding.tabAddStartGroup.tvBlue.text = this.resources.getString(R.string.tab_red_group_add)
             mBinding.tabLayoutGroup.visibility = View.INVISIBLE
         }
+        thread {
+            val sessionVO =Repository.querySessionByUid(groupId)
+            runOnUiThread {
+                v(
+                    Constants.TAG_FRIEND_INFO,
+                    "信息为===${sessionVO.name};${sessionVO.sessionId};${sessionVO.number}"
+                )
+                mSession = sessionVO
+            }
+        }
     }
 
     private fun setListener() {
         mBinding.toolbarGroupInfo.imgChevronLeft.onClick {
             this.finish()
-            MLogUtil.v(Constants.TAG_FRIEND_INFO,"--返回--")
+            v(Constants.TAG_FRIEND_INFO,"--返回--")
             mViewModel.getGroupInfo(groupId)
         }
         mBinding.tabGroupName.root.onClick {
-            MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊名称--")
+            v(Constants.TAG_GROUP_INFO,"--群聊名称--")
             if (mOwnerType == OWNER_IS){
                 "群主可修改".showToast(this)
                 //TODO:弹窗修改
@@ -164,33 +182,25 @@ class GroupInfoActivity : AppCompatActivity() {
             this.overridePendingTransition(R.anim.t_splash_open,R.anim.t_splash_close)
         }
         mBinding.tabGroupNickname.root.onClick {
-            MLogUtil.v(Constants.TAG_GROUP_INFO,"--我的群昵称（弹窗修改）--")
+            v(Constants.TAG_GROUP_INFO,"--我的群昵称（弹窗修改）--")
             //TODO:弹窗修改界面
             mInputType = INPUT_NICK_NAME
             mInputPW.show()
         }
         mBinding.tabItemInfoSearch.root.onClick {
-            MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")
+            v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")
             //TODO:跳转到搜索聊天消息,需要会话id
-            //  SearchActivity.startMsgSearch(this,sessionId )
+            SearchActivity.startMsgSearch(this,mSession.sessionId )
         }
         mBinding.tabDeleteGroup.root.onClick {
-            MLogUtil.v(Constants.TAG_GROUP_INFO,"--删除群聊--")
-//            if (mOwnerType == OWNER_IS){
-//                "确定解散群聊".showToast(this)
-//                //TODO:弹窗解散群聊
-//            }else if(mOwnerType == OWNER_NO){
-//                "确定退出群聊".showToast(this)
-//                //TODO:弹窗退出群聊
-//            }
+            v(Constants.TAG_GROUP_INFO,"--删除群聊:解散群聊or退出群聊--")
             mConfirmPW.show()
         }
         mBinding.tabAddStartGroup.root.onClick {
             if (mGroupType == GROUP_IS){
-                MLogUtil.v(Constants.TAG_GROUP_INFO,"----加入群聊----")
+                v(Constants.TAG_GROUP_INFO,"----加入群聊----")
                 //TODO:跳转到聊天
                 ChatActivity.startChat(this,mSession)
-
             }else if(mGroupType == GROUP_NO){
                 //TODO:弹窗进行申请加入
                 mConfirmPW.show()
