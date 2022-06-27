@@ -27,6 +27,7 @@ class MainViewModel : ViewModel() {
     // 通用=========================================================================================
     val TAG = "MainViewModel"
 
+
     fun getUserId() = Repository.getUserId()
 
     // 好友列表======================================================================================
@@ -172,7 +173,7 @@ class MainViewModel : ViewModel() {
         runBlocking {
             val res = async {
                 val session: SessionVO = withContext(Dispatchers.IO) {
-                    Repository.querySessionByUid(it.userId)
+                    Repository.querySessionById(it.userId)
                 }
                 MutableLiveData(SessionUserLiveData(session, it))
             }.await()

@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.view.activity
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -57,7 +58,19 @@ class GroupInfoActivity : AppCompatActivity() {
     private var INPUT_NICK_NAME = 0
     private var mInputType :Int = INPUT_GROUP_NAME
 
-
+    companion object{
+        /**
+         * 群聊类型 Constants.GROUP_IS Constants.GROUP_NO
+         *
+         */
+        fun startGroupInfoActivity(context: Context, groupType:Int, groupId:Int, groupName: String, nickname: String){
+            startActivity<GroupInfoActivity>(context){
+                putExtra(Constants.GROUP_TYPE,groupType)
+                putExtra(Constants.GROUP_ID,groupId)
+                putExtra(Constants.GROUP_NAME,groupName)
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = MActivityGroupInfoBinding.inflate(layoutInflater)

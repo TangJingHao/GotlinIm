@@ -2,15 +2,14 @@ package com.ByteDance.Gotlin.im.view.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
-import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ByteDance.Gotlin.im.R
-import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.DActivityMyGroupBinding
 import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.util.Constants

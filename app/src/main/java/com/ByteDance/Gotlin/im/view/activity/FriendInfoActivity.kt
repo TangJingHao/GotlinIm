@@ -2,6 +2,7 @@ package com.ByteDance.Gotlin.im.view.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.View
 import android.widget.Switch
 import android.widget.TextView
@@ -50,8 +51,24 @@ class FriendInfoActivity : AppCompatActivity() {
     private lateinit var userName:String
     private lateinit var session:SessionVO
     private lateinit var mDeletePopupWindow:ConfirmPopupWindow
+    private val mContext by lazy { this }
     private val friendId by lazy { intent.getIntExtra(Constants.FRIEND_ID,0) }
 
+    companion object{
+        /**
+         * 好友类型 Constants.FRIEND_IS Constants.FRIEND_NO
+         * 好友id，好友名字，好友昵称
+         */
+        fun startFriendInfoFromChat(context: Context,friendType:Int,friendId:Int,friendName: String,nickname: String){
+            startActivity<FriendInfoActivity>(context){
+                putExtra(FRIEND_TYPE,friendType)
+                putExtra(FRIEND_ID,friendId)
+                putExtra(FRIEND_NAME,friendName)
+                putExtra(FRIEND_NICKNAME,nickname)
+                putExtra(FRIEND_GROUPING, "")
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = MActivityFriendInfoBinding.inflate(layoutInflater)
@@ -84,18 +101,6 @@ class FriendInfoActivity : AppCompatActivity() {
 
             })
         }
-    }
-
-    /**
-     *  是否为好友  用户唯一标识（账号） 好友名字
-     */
-    private fun startFriendInfo(context: Context, friendType:Int,friendAccount: Int,friendName:String) {
-        startActivity<FriendInfoActivity>(context){
-            putExtra(FRIEND_TYPE, friendType)
-            putExtra(FRIEND_ID,friendAccount)
-            putExtra(FRIEND_NAME,friendName)
-        }
-        this.overridePendingTransition(R.anim.t_splash_open,R.anim.t_splash_close)
     }
 
     /**
