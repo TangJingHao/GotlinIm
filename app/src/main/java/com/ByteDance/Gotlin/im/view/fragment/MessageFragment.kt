@@ -93,7 +93,7 @@ class MessageFragment : Fragment() {
                 mAdapter.setRedPonitInterface(redPointListener)
                 b.rvLayout.adapter = mAdapter
                 b.rvLayout.layoutManager = LinearLayoutManager(requireActivity())
-                if (messageList != null && messageList.size != 0){
+                if (messageList != null && messageList.size != 0) {
                     mAdapter.notifyDataSetChanged()
                     // 小红点数据变化
                     var count = 0
@@ -135,6 +135,9 @@ class MessageFragment : Fragment() {
                 Constants.WS_TOKEN_EXPIRED -> {
                     TPhoneUtil.showToast(requireActivity(), "token失效")
                     Repository.getAndSetToken()
+                }
+                Constants.WS_SESSION_REQUEST -> {
+                    TPhoneUtil.showToast(requireActivity(), "新申请通知")
                 }
             }
             // 消息页面更新（小红点之类的）

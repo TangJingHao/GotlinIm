@@ -99,6 +99,8 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
     // 点击更多的事件，此处一般用于好友申请接收状态
     public interface OnMoreClickListener {
         void onMoreClick(View v, int groupPosition, int relativePosition);
+
+        void onCancelClick(View v, int groupPosition, int relativePosition);
     }
 
     public OnItemClickListener mItemOnClickListener = null;
@@ -285,16 +287,22 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                                 switch (reqStatus) {
                                     case 0:
                                     case 1: {
-                                        h.b.tvStatue.setText("操作");
+                                        h.b.tvStatue.setText("同意");
                                         h.b.tvStatue.setTextColor(AttrColorUtils.
                                                 getValueOfColorAttr(mContext, R.attr.fill_white));
                                         h.b.tvStatue.setBackgroundColor(AttrColorUtils.
                                                 getValueOfColorAttr(mContext, R.attr.text_link));
                                         // 为操作选项提供回调接口
+
                                         h.b.tvStatue.setOnClickListener(view -> {
                                             if (mOnMoreClickListener != null) {
-                                                DLogUtils.i(TAG,"点击了状态");
                                                 mOnMoreClickListener.onMoreClick(view, group, relativePosition);
+                                            }
+                                        });
+                                        h.b.tvStatueCancel.setVisibility(View.VISIBLE);
+                                        h.b.tvStatueCancel.setOnClickListener(view -> {
+                                            if (mOnMoreClickListener != null) {
+                                                mOnMoreClickListener.onCancelClick(view, group, relativePosition);
                                             }
                                         });
                                         break;
@@ -354,7 +362,7 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                                 switch (reqStatus) {
                                     case 0:
                                     case 1: {
-                                        h.b.tvStatue.setText("操作");
+                                        h.b.tvStatue.setText("同意");
                                         h.b.tvStatue.setTextColor(AttrColorUtils.
                                                 getValueOfColorAttr(mContext, R.attr.fill_white));
                                         h.b.tvStatue.setBackgroundColor(AttrColorUtils.
@@ -362,8 +370,14 @@ public class TabWithTitleAdapter<E> extends RecyclerView.Adapter {
                                         // 为操作选项提供回调接口
                                         h.b.tvStatue.setOnClickListener(view -> {
                                             if (mOnMoreClickListener != null) {
-                                                DLogUtils.i(TAG,"点击了状态");
+                                                DLogUtils.i(TAG, "点击了状态");
                                                 mOnMoreClickListener.onMoreClick(view, group, relativePosition);
+                                            }
+                                        });
+                                        h.b.tvStatueCancel.setVisibility(View.VISIBLE);
+                                        h.b.tvStatueCancel.setOnClickListener(view -> {
+                                            if (mOnMoreClickListener != null) {
+                                                mOnMoreClickListener.onCancelClick(view, group, relativePosition);
                                             }
                                         });
                                         break;

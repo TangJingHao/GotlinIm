@@ -2,6 +2,8 @@ package com.ByteDance.Gotlin.im.view.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -21,9 +23,12 @@ import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel
+import com.xuexiang.xui.widget.dialog.DialogLoader
+import com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy
 import java.sql.Date
 
 class SearchFragment : Fragment() {
+
 
     companion object {
         private const val TAG = "SearchFragment"
@@ -40,6 +45,8 @@ class SearchFragment : Fragment() {
         private const val SEARCH_GROUP_CHAT_NICKNAME = 4
         private const val REQUEST_GROUP_CHAR = 5
         private const val SEARCH_HISTORY_MESSAGE = 6
+
+        val mDialogLoader = DialogLoader.getInstance().setIDialogStrategy(MaterialDialogStrategy())
 
         /**
          * 工厂模式创建Fragment实例类
@@ -90,6 +97,7 @@ class SearchFragment : Fragment() {
                 )
             }
         }
+
     }
 
     override fun onCreateView(
@@ -209,37 +217,28 @@ class SearchFragment : Fragment() {
                             titleList,
                             TabWithTitleAdapter.TYPE_USER_INFO_STATUE
                         )
-                        adapter.setMoreOnClickListener { v, groupPosition, relativePosition ->
-                            // TODO 弹窗确定是否通过申请
-                            ConfirmPopupWindow(
-                                requireActivity(),
-                                "确认添加${friendRequest[relativePosition].user.userName}\n" +
-                                        "${friendRequest[relativePosition].user.email}为好友？",
-                                object : PopupWindowListener {
-                                    val reqId = friendRequest[relativePosition].reqId
-                                    override fun onConfirm(input: String?) {
-                                        // TODO "确认逻辑，发送确认消息"
-                                        vm.patchRequestHandle(reqId, true)
-                                        // 发送确认后刷新页面
-                                        vm.getAllRequestData()
-                                    }
-
-                                    override fun onCancel() {
-                                        vm.patchRequestHandle(reqId, false)
-                                        // 发送确认后刷新页面
-                                        vm.getAllRequestData()
-                                    }
-
-                                    override fun onDismiss() {
-
-                                    }
-                                }).apply {
-                                setConfirmText("确认添加")
-                                setCancelText("取消添加")
-                                show()
+                        adapter.setMoreOnClickListener(object :
+                            TabWithTitleAdapter.OnMoreClickListener {
+                            override fun onMoreClick(
+                                v: View?,
+                                groupPosition: Int,
+                                relativePosition: Int
+                            ) {
+                                // TODO 弹窗确定是否通过申请
+                                val reqId = friendRequest[relativePosition].reqId
+                                TPhoneUtil.showToast(requireActivity(), "同意")
                             }
-                            TPhoneUtil.showToast(requireActivity(), "好友申请操作确认弹窗")
-                        }
+
+                            override fun onCancelClick(
+                                v: View?,
+                                groupPosition: Int,
+                                relativePosition: Int
+                            ) {
+                                val reqId = friendRequest[relativePosition].reqId
+                                TPhoneUtil.showToast(requireActivity(), "拒绝")
+                            }
+
+                        })
 
                         b.rvLayout.adapter = adapter
                         b.rvLayout.layoutManager = LinearLayoutManager(requireActivity())
@@ -280,37 +279,32 @@ class SearchFragment : Fragment() {
                             TabWithTitleAdapter.TYPE_USER_INFO_STATUE
                         )
 
-                        adapter.setMoreOnClickListener { v, groupPosition, relativePosition ->
-//                            ConfirmPopupWindow(
-//                                requireActivity(),
-//                                "确认加入该群聊？",
-//                                object : PopupWindowListener {
-//                                    val reqId = groupRequest[relativePosition].reqId
-//                                    override fun onConfirm(input: String?) {
-//                                        // TODO "确认逻辑，发送确认消息"
-//                                        vm.patchRequestHandle(reqId, true)
-//                                        // 发送确认后刷新页面
-//                                        vm.getAllRequestData()
-//                                        // 发送确认后刷新页面
-//                                        vm.getAllRequestData()
-//                                    }
-//
-//                                    override fun onCancel() {
-//                                        vm.patchRequestHandle(reqId, false)
-//                                        // 发送确认后刷新页面
-//                                        vm.getAllRequestData()
-//                                    }
-//
-//                                    override fun onDismiss() {
-//
-//                                    }
-//                                }).apply {
-//                                setConfirmText("确认加入")
-//                                setCancelText("取消加入")
-//                                show()
-//                            }
-                            TPhoneUtil.showToast(requireActivity(), "群聊申请操作确认弹窗")
-                        }
+                        adapter.setMoreOnClickListener(object :
+                            TabWithTitleAdapter.OnMoreClickListener {
+                            override fun onMoreClick(
+                                v: View?,
+                                groupPosition: Int,
+                                relativePosition: Int
+                            ) {
+                                // TODO 弹窗确定是否通过申请
+                                val reqId = groupRequest[relativePosition].reqId
+                                vm.patchRequestHandle(reqId,true)
+                                vm.getAllRequestData()
+                                TPhoneUtil.showToast(requireActivity(), "同意")
+                            }
+
+                            override fun onCancelClick(
+                                v: View?,
+                                groupPosition: Int,
+                                relativePosition: Int
+                            ) {
+                                val reqId = groupRequest[relativePosition].reqId
+                                vm.patchRequestHandle(reqId,false)
+                                vm.getAllRequestData()
+                                TPhoneUtil.showToast(requireActivity(), "拒绝")
+                            }
+
+                        })
 
                         b.rvLayout.adapter = adapter
                         b.rvLayout.layoutManager = LinearLayoutManager(requireActivity())
@@ -336,4 +330,41 @@ class SearchFragment : Fragment() {
             imm.hideSoftInputFromWindow(v.windowToken, 0)
         }
     }
+
+
+//    private lateinit var mConfirmPopupWindow: ConfirmPopupWindow
+//
+//    private fun showConfirmDialog(reqId: Int, user: UserVO) {
+//
+//        val popupWindowListener: PopupWindowListener = object : PopupWindowListener {
+//            override fun onConfirm(input: String) {
+//                vm.patchRequestHandle(reqId, true)
+//                // 发送确认后刷新页面
+//                vm.getAllRequestData()
+//            }
+//
+//            override fun onCancel() {
+//                vm.patchRequestHandle(reqId, false)
+//                // 发送确认后刷新页面
+//                vm.getAllRequestData()
+//                mConfirmPopupWindow.dismiss()
+//            }
+//
+//            override fun onDismiss() {
+//                mConfirmPopupWindow.dismiss()
+//            }
+//        }
+//
+//        mConfirmPopupWindow =
+//            ConfirmPopupWindow(
+//                requireContext(), "确认添加${user.userName}\n" +
+//                        "${user.email}为好友？", popupWindowListener
+//            )
+//        mConfirmPopupWindow.apply {
+//            setConfirmText("确认添加")
+//            setCancelText("取消添加")
+//        }
+//        mConfirmPopupWindow.show()
+//    }
+
 }
