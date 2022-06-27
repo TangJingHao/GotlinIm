@@ -68,7 +68,7 @@ object ServiceCreator {
             it.proceed(request)
         })
         .pingInterval(30, TimeUnit.SECONDS)
-        .connectTimeout(10, TimeUnit.SECONDS)
+        .connectTimeout(60, TimeUnit.SECONDS)
         .build()
 
 
