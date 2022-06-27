@@ -144,16 +144,16 @@ class GroupInfoActivity : AppCompatActivity() {
             mBinding.tabAddStartGroup.tvBlue.text = this.resources.getString(R.string.tab_red_group_add)
             mBinding.tabLayoutGroup.visibility = View.INVISIBLE
         }
-        thread {
-            val sessionVO =Repository.querySessionByUid(groupId)
-            runOnUiThread {
-                v(
-                    Constants.TAG_FRIEND_INFO,
-                    "信息为===${sessionVO.name};${sessionVO.sessionId};${sessionVO.number}"
-                )
-                mSession = sessionVO
-            }
-        }
+//        thread {
+//            val sessionVO =Repository.querySessionByUid(groupId)
+//            runOnUiThread {
+//                v(
+//                    Constants.TAG_FRIEND_INFO,
+//                    "信息为===${sessionVO.name};${sessionVO.sessionId};${sessionVO.number}"
+//                )
+//                mSession = sessionVO
+//            }
+//        }
     }
 
     private fun setListener() {

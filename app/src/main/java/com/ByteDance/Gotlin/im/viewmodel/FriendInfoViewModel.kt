@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.ByteDance.Gotlin.im.Repository
-import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil.i
 import kotlinx.coroutines.async
@@ -56,6 +55,18 @@ class FriendInfoViewModel : ViewModel() {
     fun getFriendInfo(friendAccount:Int) {
         i(TAG_FRIEND_INFO,"---获取好友信息---")
         friendAccountLivaData.postValue(friendAccount)
+    }
+    //修改的昵称
+    private val getSessionLiveData = MutableLiveData<Int>()
+
+    //申请修改后的数据
+    val sessionLiveData =Transformations.switchMap(getSessionLiveData){ id->
+        i(TAG_FRIEND_INFO,"===中转：向仓库层搜索session===")
+        Repository.getSessionByUid(id)
+    }
+
+    fun getSession(uid:Int){
+        getSessionLiveData.postValue(uid)
     }
 
 }

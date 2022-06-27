@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
@@ -22,6 +23,7 @@ import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NICKNAME
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NO
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_TYPE
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
+import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils.toJson
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.Mutils.MLogUtil
@@ -43,7 +45,7 @@ class FriendInfoActivity : AppCompatActivity() {
 
     private lateinit var mBinding: MActivityFriendInfoBinding
     private val mViewModel by lazy { ViewModelProvider(this).get(FriendInfoViewModel::class.java) }
-    private var mFriendType = 1
+    private val mFriendType by lazy { intent.getIntExtra(FRIEND_TYPE, 0) }
     private lateinit var tvNickname: TextView
     private lateinit var tvSex: TextView
     private lateinit var tvAccount: TextView
@@ -132,6 +134,11 @@ class FriendInfoActivity : AppCompatActivity() {
 //                mBinding.tvGrouping.text = intent.getStringExtra(Constants.FRIEND_GROUPING)
             }
         })
+        mViewModel.sessionLiveData.observe(this, Observer {
+            it.getOrNull().apply {
+                session = this!!
+            }
+        })
     }
 
     /**
@@ -186,9 +193,8 @@ class FriendInfoActivity : AppCompatActivity() {
         tvGrouping = mBinding.tvGrouping
         switchIsCared = mBinding.switchIsCared
         //获取类型并设置账号获取信息
-        mFriendType = intent.getIntExtra(FRIEND_TYPE, 0)
-        mViewModel.getFriendInfo(intent.getIntExtra(FRIEND_ID,0))
-        userName = intent.getStringExtra(FRIEND_NAME).toString()
+        mViewModel.getFriendInfo(friendId)
+        mViewModel.getSession(friendId)
         //控件初始化
         mBinding.toolbarFriendInfo.title.text = this.resources.getString(R.string.title_info_friend)
         mBinding.tabSetRemarks.tvItemMainText.text =
@@ -207,20 +213,6 @@ class FriendInfoActivity : AppCompatActivity() {
             mBinding.tvCare.text = resources.getString(R.string.tab_text_care_not)
             switchIsCared.isClickable = false
         }
-        thread {
-            val sessionVO =Repository.querySessionByUid(friendId)
-            runOnUiThread {
-                session = sessionVO
-                v(TAG_FRIEND_INFO,"信息为===${sessionVO.name};${sessionVO.sessionId};${sessionVO.number}")
-            }
-        }
-
-//        //获取好友session
-//        thread{
-//            session = Repository.querySessionByName(userName)
-//            i(TAG_FRIEND_INFO,"好友会话信息：${session.sessionId.toString()+session.name}")
-//
-//        }
     }
 
 }
