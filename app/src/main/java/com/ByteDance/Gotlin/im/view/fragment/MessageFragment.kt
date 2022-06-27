@@ -119,15 +119,9 @@ class MessageFragment : Fragment() {
                     // 具体处理
                     // 再转换为对应的websocket接收类
                     val wsReceiveUserOnline = it.toAny(WebSocketReceiveUserOnline::class.java)
-
-//                    val userVO =
-//                        wsReceiveUserOnline?.wsContent?.userId?.let { it1 ->
-//                            Repository.queryUserById(
-//                                it1
-//                            )
-//                        }
-//                    val nickName = userVO?.nickName
-//                    TPhoneUtil.showToast(requireActivity(), "好友 $nickName 上线了")
+                    if(wsReceiveUserOnline?.wsContent?.userId == vm.getUserId()){
+                        TPhoneUtil.showToast(requireActivity(), "您的账号可能在异地登录")
+                    }
                 }
                 Constants.WS_SEND_MESSAGE -> {
                     TPhoneUtil.showToast(requireActivity(), "新消息通知")

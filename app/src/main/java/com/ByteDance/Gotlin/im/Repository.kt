@@ -141,7 +141,7 @@ object Repository {
 
     // 会话数据表
     /** 根据用户id返回sessionVO 的 LiveData */
-    fun querySessionByUid(uid: Int) = db.sessionDao().querySessionByUid(uid)
+    fun querySessionById(uid: Int) = db.sessionDao().querySessionByUid(uid)
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
@@ -178,7 +178,7 @@ object Repository {
 
     /** 根据uid检索并切换线程返回Session的LiveDat*/
     fun getSessionByUid(uid: Int) = fire(Dispatchers.IO) {
-        val session = querySessionByUid(uid)
+        val session = querySessionById(uid)
         if (session != null) {
             Result.success(session)
         } else {
