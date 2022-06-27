@@ -45,6 +45,7 @@ import kotlin.coroutines.CoroutineContext
 object Repository {
     //临时存放token
     var mToken = ""
+
     private const val TAG = "仓库层"
 
     /*
