@@ -71,8 +71,8 @@ object Constants {
     const val GROUP_NO = 0
 
     //suzy：全局TAG
-    const val TAG_FRIEND_INFO = "FriendInfoActivity"
-    const val TAG_GROUP_INFO = "GroupInfoActivity"
+    const val TAG_FRIEND_INFO = "---FriendInfoActivity---"
+    const val TAG_GROUP_INFO = "---GroupInfoActivity---"
     const val TAG_SET_FRIEND_INFO = "SetFriendInfoActivity"
 
     //suzy：跳转

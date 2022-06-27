@@ -273,32 +273,8 @@ class AddressBookFragment : Fragment() {
 
     private fun startActivity2FriendInfo(user: UserVO, session: SessionVO) {
         if (hasSave) {
-            // TODO 舒欣请在此处编写跳转到好友详细信息页面的逻辑
-            val intent = Intent(this.context, FriendInfoActivity::class.java)
-            intent.apply {
-                putExtra(
-                    Constants.FRIEND_TYPE,
-                    Constants.FRIEND_IS
-                )
-                putExtra(
-                    Constants.FRIEND_ID,
-                    user.userId
-                )
-                putExtra(
-                    Constants.FRIEND_NAME,
-                    user.userName
-                )
-                putExtra(
-                    Constants.FRIEND_NICKNAME,
-                    user.nickName
-                )
-                putExtra(
-                    Constants.FRIEND_GROUPING,
-                    "大学同学"
-                )
-            }
-            // TODO 我把启动备注掉了
-//            startActivity(intent)
+            // TODO 跳转到好友详细信息页面
+            this.context?.let { FriendInfoActivity.startFriendInfoActivity(it,user.userId) }
         }
     }
 
