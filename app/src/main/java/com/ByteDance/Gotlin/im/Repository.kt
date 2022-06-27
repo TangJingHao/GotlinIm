@@ -7,6 +7,7 @@ import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
@@ -44,6 +45,7 @@ import kotlin.coroutines.CoroutineContext
 object Repository {
     //临时存放token
     var mToken = ""
+
     private const val TAG = "仓库层"
 
     /*
@@ -62,7 +64,7 @@ object Repository {
     private const val MMKV_USER_SEX = "user_sex"
     private const val MMKV_USER_EMAIL = "user_email"
     private const val MMKV_USER_DATA = "user_data"
-    private const val MMKV_USER_TOKEN="user_token"
+    private const val MMKV_USER_TOKEN = "user_token"
 
     private const val MMKV_LOGIN_USER_NICKNAME="login_user_name"
     private const val MMKV_LOGIN_USER_SEX="login_user_sex"
@@ -136,13 +138,12 @@ object Repository {
     private val db = SQLDatabase.getDatabase(BaseApp.getContext())
 
     // 会话数据表
-    fun queryAllSessions() = db.sessionDao().queryAllSession()
-    fun querySessionById(sessionId: Int) = db.sessionDao().querySessionById(sessionId)
+    /** 根据用户id返回sessionVO 的 LiveData */
+    fun querySessionByUid(uid: Int) = db.sessionDao().querySessionByUid(uid)
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
     fun deleteAllSession() = db.sessionDao().deleteAllSession()
-    fun querySessionByName(name:String) = db.sessionDao().querySessionByName(name)
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
@@ -153,14 +154,7 @@ object Repository {
     fun deleteAllUser() = db.userDao().deleteAllUser()
 
     // 消息数据表
-    /**
-     * 根据会话id查找
-     */
-    fun queryMsgBySid(sid: Int) = db.messageDao().queryMsgBySid(sid)
-
-    /**
-     * 根据会话id，发送者id,时间范围以及消息模糊查找
-     */
+    /** 根据会话id，发送者id,时间范围以及消息模糊查找 */
     fun queryMessage(sid: Int, from: Date, to: Date, content: String, limit: Int) =
         db.messageDao().queryMessage(sid, from, to, content, limit)
 
@@ -171,10 +165,23 @@ object Repository {
     fun deleteAllMessage() = db.messageDao().deleteAllMessage()
 
 
+    // session - user 关系表
+    fun insertSU(su: SessionUserEntity) = db.suDao().insertSU(su)
+
     fun deleteAllTable() {
         deleteAllUser()
         deleteAllSession()
         deleteAllMessage()
+    }
+
+    /** 根据uid检索并切换线程返回Session的LiveDat*/
+    fun getSessionByUid(uid: Int) = fire(Dispatchers.IO) {
+        val session = querySessionByUid(uid)
+        if (session != null) {
+            Result.success(session)
+        } else {
+            Result.failure(RuntimeException("数据库检索不到对应session"))
+        }
     }
 
     /*
@@ -220,8 +227,8 @@ object Repository {
                 response: retrofit2.Response<LoginDataResponse>
             ) {
                 val responseBody = response.body()
-                if(responseBody!=null){
-                    mToken =responseBody.data.token
+                if (responseBody != null) {
+                    mToken = responseBody.data.token
                 }
             }
 
@@ -251,6 +258,19 @@ object Repository {
     /**
      * 获取群聊列表
      */
+    fun newGroup(groupName: String) = fire(Dispatchers.IO) {
+        val newGroup = NetWork.newGroup(getUserId(), groupName)
+        val status = newGroup.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+            Result.success(newGroup)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${newGroup.status}"))
+        }
+    }
+
+    /**
+     * 获取群聊列表
+     */
     fun getGroupList(userId: Int) = fire(Dispatchers.IO) {
         val groupListDataResponse = NetWork.getGroupList(userId)
         val status = groupListDataResponse.status
@@ -265,7 +285,7 @@ object Repository {
      * 获取群聊成员列表
      */
     fun getGroupMembersList(userId: Int) = fire(Dispatchers.IO) {
-        val groupMemberListDataResponse = NetWork.patchRequestHandle(userId)
+        val groupMemberListDataResponse = NetWork.getGroupMemberList(userId)
         val status = groupMemberListDataResponse.status
         if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
             Result.success(groupMemberListDataResponse)
@@ -389,6 +409,17 @@ object Repository {
             Result.success(defaultResponse)
         } else {
             Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
+        }
+    }
+
+    /** 搜索新好友接口 */
+    fun searchUser(key: String) = fire(Dispatchers.IO) {
+        val searchUserList = NetWork.searchUser(key)
+        val status = searchUserList.status
+        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+            Result.success(searchUserList)
+        } else {
+            Result.failure(RuntimeException("返回值的status的${searchUserList.status}"))
         }
     }
 

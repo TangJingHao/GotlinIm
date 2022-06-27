@@ -14,6 +14,7 @@ import com.ByteDance.Gotlin.im.model.MsgSearchLiveData
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import kotlinx.coroutines.*
+import okhttp3.Response
 import java.sql.Date
 
 /**
@@ -104,54 +105,28 @@ class SearchViewModel : ViewModel() {
         )
     }
 
-    // 新好友搜索【邮箱】===============================================================================
+    // 新好友搜索=====================================================================================
 
-    private val mNewFriendSearchByEmailData = MutableLiveData<String>()
-    fun searchNewFriendByEmail(input: String) {
-        mNewFriendSearchByEmailData.postValue(input)
+    private val mNewFriendSearchData = MutableLiveData<String>()
+    fun searchNewFriend(input: String) {
+        mNewFriendSearchData.postValue(input)
     }
 
-    val newFriendSearchByEmailObserver = Transformations.switchMap(mNewFriendSearchByEmailData) {
-        // TODO 返回网络获取的邮箱搜素结果
-        MutableLiveData<String>()
+    val newFriendSearchObserver = Transformations.switchMap(mNewFriendSearchData) {
+        Repository.searchUser(it)
     }
 
-    // 新好友搜索【昵称】===============================================================================
+    // 新群聊搜索=====================================================================================
 
-    private val mNewFriendSearchByNameData = MutableLiveData<String>()
-    fun searchNewFriendByName(input: String) {
-        mNewFriendSearchByNameData.postValue(input)
+    private val mNewGroupChatSearchData = MutableLiveData<String>()
+    fun searchNewGroupChat(input: String) {
+        mNewGroupChatSearchData.postValue(input)
     }
 
-    val newFriendSearchByNameObserver = Transformations.switchMap(mNewFriendSearchByNameData) {
-        // TODO 返回网络获取的昵称搜素结果
-        MutableLiveData<String>()
-    }
-
-    // 新群聊搜索【群id】==============================================================================
-
-    private val mNewGroupChatSearchByIdData = MutableLiveData<String>()
-    fun searchNewGroupChatById(input: String) {
-        mNewGroupChatSearchByIdData.postValue(input)
-    }
-
-    val newGroupChatSearchByIdObserver = Transformations.switchMap(mNewGroupChatSearchByIdData) {
+    val newGroupChatSearchObserver = Transformations.switchMap(mNewGroupChatSearchData) {
         // TODO 返回网络获取的群聊id搜素结果
         MutableLiveData<String>()
     }
-
-    // 新群聊搜索【群昵称】==============================================================================
-
-    private val mNewGroupChatSearchByNameData = MutableLiveData<String>()
-    fun searchNewGroupChatByName(input: String) {
-        mNewGroupChatSearchByNameData.postValue(input)
-    }
-
-    val newGroupChatSearchByNameObserver =
-        Transformations.switchMap(mNewGroupChatSearchByNameData) {
-            // TODO 返回网络获取的群昵称搜素结果
-            MutableLiveData<String>()
-        }
 
     // 新好友搜索【我的申请】============================================================================
 

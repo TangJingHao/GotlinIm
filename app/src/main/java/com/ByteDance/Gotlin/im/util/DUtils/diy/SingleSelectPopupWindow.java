@@ -45,7 +45,7 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
         options[0] = option0;
         options[1] = option1;
 
-        b.tvPopTitle.setText(title);
+        setTitleText(title);
         b.options1.setText(options[0]);
         b.options2.setText(options[1]);
 
@@ -91,6 +91,11 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
                 mListener.onDismiss();
             });
         }
+    }
+
+    @Override
+    void setTitleText(String text) {
+        b.tvPopTitle.setText(text);
     }
 
     @Override

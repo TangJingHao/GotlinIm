@@ -44,6 +44,7 @@ object Constants {
     const val BASE_WS_URL = "ws://chatspace.iceclean.top/space/ws/chat/"
     const val WS_SEND_MESSAGE = "SEND_MESSAGE"
     const val WS_USER_ONLINE = "USER_ONLINE"
+    const val WS_TOKEN_EXPIRED = "TOKEN_EXPIRED"
     const val BASE_AVATAR_URL="http://chatspace.iceclean.top"
 
     //suzy：好友类型选择
