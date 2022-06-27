@@ -40,7 +40,7 @@ class FriendInfoViewModel : ViewModel() {
     //申请修改后的数据
     val nickNameLiveData =Transformations.switchMap(saveNicknameLiveData){ newNickname->
         i(TAG_FRIEND_INFO,"===中转：向仓库层申请修改===")
-        Repository.getFriendInfo(newNickname)
+        Repository.getNickNameSave(newNickname)
     }
 
     fun saveNickName(nickName:String){

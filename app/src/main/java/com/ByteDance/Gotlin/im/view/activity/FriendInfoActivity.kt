@@ -66,6 +66,12 @@ class FriendInfoActivity : AppCompatActivity() {
                 putExtra(FRIEND_ID,friendId)
             }
         }
+        fun startFriendInfoFromNotFriend(context: Context, friendId:Int){
+            startActivity<FriendInfoActivity>(context){
+                putExtra(FRIEND_TYPE,FRIEND_NO)
+                putExtra(FRIEND_ID,friendId)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
