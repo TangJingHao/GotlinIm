@@ -1,7 +1,8 @@
 package com.ByteDance.Gotlin.im.view.fragment
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
@@ -74,8 +75,6 @@ class MyInformationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        mViewModel=ViewModelProvider(requireActivity()).get(StatusViewModel::class.java)
-//        mViewModel.mStatus.value=Repository.getUserStatus()
         initConfig()
     }
 
@@ -93,8 +92,8 @@ class MyInformationFragment : Fragment() {
         mBinding.toolbarRl.imgChevronLeft.visibility = View.GONE
         var userData = Repository.getUserData()
         mBinding.nicknameTv.text = Repository.getUserLoginNickname()
-        mBinding.emailTv.text =userData.email
-        var avatar = userData.avatar
+        mBinding.emailTv.text = userData.email
+
         //判断用户是否有修改模式
         var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
         mBinding.sbIosBtn.isChecked = flag
@@ -111,13 +110,7 @@ class MyInformationFragment : Fragment() {
                 mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
             }
         }
-        //头像字符串拼接
-        if (avatar != null) {
-            var index = avatar.indexOf(".")
-            var substring = avatar.substring(index + 1)
-            var s = Constants.BASE_AVATAR_URL + substring
-            Glide.with(requireContext()).load(s).into(mBinding.iconIv)
-        }
+        Glide.with(requireContext()).load(Repository.getUserLoginAvatar()).into(mBinding.iconIv)
     }
 
     /**
@@ -139,6 +132,7 @@ class MyInformationFragment : Fragment() {
             val nicknamePopupWindowListener: PopupWindowListener = object : PopupWindowListener {
                 override fun onConfirm(input: String) {
                     mBinding.nicknameTv.text = input
+                    Repository.setUserLoginNickname(input)
                 }
 
                 override fun onCancel() {
@@ -205,13 +199,19 @@ class MyInformationFragment : Fragment() {
         mBinding.loginConfigIv.setOnClickListener {
             val popupWindowListener: PopupWindowListener = object : PopupWindowListener {
                 override fun onConfirm(input: String) {
-                    Thread(){
+                    Thread() {
                         Repository.deleteAllTable()
                         Repository.deleteUserId()
-                        requireActivity().startActivity(Intent(requireActivity(),LoginActivity::class.java))
+                        requireActivity().startActivity(
+                            Intent(
+                                requireActivity(),
+                                LoginActivity::class.java
+                            )
+                        )
                         requireActivity().finish()
                     }.start()
                 }
+
                 override fun onCancel() {
                     mConfirmPopupWindow.dismiss()
                 }
@@ -220,7 +220,8 @@ class MyInformationFragment : Fragment() {
                     mConfirmPopupWindow.dismiss()
                 }
             }
-            mConfirmPopupWindow = ConfirmPopupWindow(requireContext(), "确定要退出吗", popupWindowListener)
+            mConfirmPopupWindow =
+                ConfirmPopupWindow(requireContext(), "确定要退出吗", popupWindowListener)
             mConfirmPopupWindow.setConfirmText("确认")
             mConfirmPopupWindow.setCancelText("我在想想")
             mConfirmPopupWindow.setWarnTextColorType()
@@ -256,30 +257,33 @@ class MyInformationFragment : Fragment() {
                 val media = selectList[0]
                 val cut = media.isCut
                 TLogUtil.d(media.realPath)
-                var filepath=media.realPath
+                var filepath = media.availablePath
                 if (cut) {
                     //是裁剪过的
                     Glide.with(requireContext()).load(media.cutPath).into(mBinding.iconIv)
+                    Repository.setUserLoginAvatar(media.cutPath)
                 } else { //没有裁剪过的
                     Glide.with(requireContext()).load(media.path).into(mBinding.iconIv)
+                    Repository.setUserLoginAvatar(media.path)
                 }
                 val retrofitHead = Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                val file = File(Environment.getExternalStorageDirectory().absolutePath+filepath)
-                val requestBody = RequestBody.create(MediaType.parse("image/jpg"), file)
+                val file = File(Environment.getExternalStorageDirectory().absolutePath + filepath)
+                val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
                 val createFormData =
-                    MultipartBody.Part.createFormData("file", file.name, requestBody)
+                    MultipartBody.Part.createFormData("avatar", file.name, requestBody)
                 val mSender = retrofitHead.create(SendImageService::class.java)
-                val sendImage = mSender.sendImage(Repository.getToken(),Repository.getUserId(), createFormData)
-                sendImage.enqueue(object :Callback<ImageData>{
+                val sendImage =
+                    mSender.sendImage(Repository.getToken(), Repository.getUserId(), createFormData)
+                sendImage.enqueue(object : Callback<ImageData> {
                     override fun onResponse(call: Call<ImageData>, response: Response<ImageData>) {
-                        if(response?.body() != null){
+                        if (response?.body() != null) {
                             val status = response.body()!!.status
-                            if(status==Constants.SUCCESS_STATUS){
+                            if (status == Constants.SUCCESS_STATUS) {
                                 TLogUtil.d("头像上传成功")
-                                TPhoneUtil.showToast(requireContext(),"头像上传成功")
+                                TPhoneUtil.showToast(requireContext(), "头像上传成功")
                             }
                         }
                     }
