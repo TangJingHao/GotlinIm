@@ -31,8 +31,7 @@ public class ConfirmPopupWindow extends BasePopupWindow {
                         true),
                 listener
         );
-
-        b.tvConfirmMsg.setText(title);
+        setTitleText(title);
     }
 
     public static DPopupWindowConfirmBinding getBinding(Context context) {
@@ -76,6 +75,11 @@ public class ConfirmPopupWindow extends BasePopupWindow {
                 mListener.onDismiss();
             });
         }
+    }
+
+    @Override
+    void setTitleText(String text) {
+        b.tvConfirmMsg.setText(text);
     }
 
 
