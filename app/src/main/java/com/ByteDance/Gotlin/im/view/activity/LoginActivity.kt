@@ -73,9 +73,20 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 TPhoneUtil.showToast(mContext, responseData.msg)
                 if (responseData.msg == "登录成功") {
+                    //数据存储
                     Repository.saveUserId(responseData.data.user.userId)
                     Repository.setUserData(responseData.data.user)
                     Repository.setToken(responseData.data.token)
+
+                    var avatar = responseData.data.user.avatar
+                    if (avatar != null) {
+                        var index = avatar.indexOf(".")
+                        var substring = avatar.substring(index + 1)
+                        var s = Constants.BASE_AVATAR_URL + substring
+                        Repository.setUserLoginAvatar(s)
+                    }
+                    Repository.setUserLoginNickname(responseData.data.user.nickName.toString())
+                    Repository.setUserLoginSex(responseData.data.user.sex.toString())
                     Repository.setUserLoginPassword(mPassword)
                     Repository.setUserLoginUserName(mUserName)
                     Repository.mToken = responseData.data.token
@@ -115,7 +126,6 @@ class LoginActivity : AppCompatActivity() {
         }
         mBinding.registerTv.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
-            finish()
             this.overridePendingTransition(
                 R.anim.t_splash_open, R.anim.t_splash_close
             )
@@ -160,14 +170,5 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==100){
-            if(data!=null){
-                mBinding.emailEt.setText(data.getStringExtra("username"))
-                mBinding.passwordEt.setText(data.getStringExtra("password"))
-            }
-        }
-    }
 
 }

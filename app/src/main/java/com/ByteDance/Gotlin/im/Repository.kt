@@ -44,7 +44,6 @@ import kotlin.coroutines.CoroutineContext
 object Repository {
     //临时存放token
     var mToken = ""
-
     private const val TAG = "仓库层"
 
     /*
@@ -65,8 +64,13 @@ object Repository {
     private const val MMKV_USER_DATA = "user_data"
     private const val MMKV_USER_TOKEN="user_token"
 
+    private const val MMKV_LOGIN_USER_NICKNAME="login_user_name"
+    private const val MMKV_LOGIN_USER_SEX="login_user_sex"
+
     private const val MMKV_LOGIN_USER_NAME = "login_user_name"//用户账户
     private const val MMKV_LOGIN_PASSWORD = "login_user_password"//用户密码
+    private const val MMKV_LOGIN_AVATAR="login_user_avatar"
+    private const val MMKV_LOGIN_NICKNAME="login_user_nickname"
 
     //用户数据
     fun getUserData(): User = mmkv.decodeParcelable(MMKV_USER_DATA, User::class.java)
@@ -75,6 +79,13 @@ object Repository {
     fun setToken(token:String)= mmkv.encode(MMKV_USER_TOKEN,token)
     fun getToken():String= mmkv.decodeString(MMKV_USER_TOKEN)
     fun deleteToken()= mmkv.removeValueForKey(MMKV_USER_TOKEN)
+    fun setUserLoginAvatar(avatar:String)= mmkv.encode(MMKV_LOGIN_AVATAR,avatar)
+    fun getUserLoginAvatar():String= mmkv.decodeString(MMKV_LOGIN_AVATAR,"ABC")
+    //用户昵称和性别（保存本地）
+    fun setUserLoginNickname(userName: String)= mmkv.encode(MMKV_LOGIN_USER_NAME,userName)
+    fun getUserLoginNickname():String= mmkv.decodeString(MMKV_LOGIN_USER_NAME)
+    fun setUserLoginSex(sex: String)= mmkv.encode(MMKV_LOGIN_PASSWORD,sex)
+    fun getUserLoginSex():String= mmkv.decodeString(MMKV_LOGIN_PASSWORD)
     //用户密码和账户(保存在本地的)
     fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")
     fun setUserLoginUserName(loginUserName: String) =

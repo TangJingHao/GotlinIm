@@ -1,5 +1,7 @@
 package com.ByteDance.Gotlin.im.network.base
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.util.Constants
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeUnit
  * @Email 762795632@qq.com
  * @Description
  */
-
+@RequiresApi(Build.VERSION_CODES.Q)
 object ServiceCreator {
 
     // 缓存头
