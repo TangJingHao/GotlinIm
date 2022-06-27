@@ -3,6 +3,7 @@ package com.ByteDance.Gotlin.im.network.netImpl
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.bean.ChangeUserInfoBean
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netInterfaces.*
 import okhttp3.Request
@@ -11,7 +12,6 @@ import okhttp3.WebSocketListener
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Query
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -30,6 +30,10 @@ object NetWork {
     private val groupService = ServiceCreator.create<GroupService>()
     private val requestService = ServiceCreator.create<RequestService>()
     private val registerService = ServiceCreator.create<RegisterService>()
+    private val changeUserDataService = ServiceCreator.create<ChangeUserDataService>()
+
+    suspend fun changeUserInfo(userId: Int, sex: String, nickname: String) =
+        changeUserDataService.changeUserInfo(Repository.getToken(), userId, sex, nickname).await()
 
     suspend fun login(userName: String, userPass: String) =
         loginService.login(userName, userPass).await()

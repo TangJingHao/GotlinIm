@@ -73,6 +73,7 @@ object Repository {
 
     private const val MMKV_LOGIN_USER_NAME = "login_user_name"//用户账户
     private const val MMKV_LOGIN_PASSWORD = "login_user_password"//用户密码
+    private const val MMKV_LOGIN_SEX="login_user_sex"
     private const val MMKV_LOGIN_AVATAR = "login_user_avatar"
     private const val MMKV_LOGIN_NICKNAME = "login_user_nickname"
 
@@ -89,8 +90,8 @@ object Repository {
     //用户昵称和性别（保存本地）
     fun setUserLoginNickname(userName: String)= mmkv.encode(MMKV_LOGIN_USER_NAME,userName)
     fun getUserLoginNickname():String= mmkv.decodeString(MMKV_LOGIN_USER_NAME)
-    fun setUserLoginSex(sex: String)= mmkv.encode(MMKV_LOGIN_PASSWORD,sex)
-    fun getUserLoginSex():String= mmkv.decodeString(MMKV_LOGIN_PASSWORD)
+    fun setUserLoginSex(sex: String)= mmkv.encode(MMKV_LOGIN_SEX,sex)
+    fun getUserLoginSex():String= mmkv.decodeString(MMKV_LOGIN_SEX)
     //用户密码和账户(保存在本地的)
     fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")
     fun setUserLoginUserName(loginUserName: String) =
@@ -190,6 +191,17 @@ object Repository {
     /*
     * 网络请求=======================================================================================
     * */
+
+    fun changeUserInfoObserverData(userId: Int, sex: String, nickname: String)= fire(Dispatchers.IO){
+        val changeUserInfoResponse=NetWork.changeUserInfo(userId, sex, nickname)
+        val status=changeUserInfoResponse.status
+        if(status==Constants.SUCCESS_STATUS){
+            Result.success(changeUserInfoResponse)
+        }else{
+            Result.failure(RuntimeException("返回值的status的$status"))
+        }
+    }
+
 
     /**
      * 登录

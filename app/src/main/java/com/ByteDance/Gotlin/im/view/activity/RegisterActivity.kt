@@ -82,6 +82,7 @@ class RegisterActivity : AppCompatActivity() {
             }else{
                 TPhoneUtil.showToast(this,responseData.msg)
                 if(responseData.msg=="注册成功"){
+                    //保存到仓库层，方便调用
                     Repository.setUserLoginUserName(mUserName)
                     Repository.setUserLoginPassword(mPassword)
                     mViewModel.login(LoginLiveData(mUserName,mPassword))
