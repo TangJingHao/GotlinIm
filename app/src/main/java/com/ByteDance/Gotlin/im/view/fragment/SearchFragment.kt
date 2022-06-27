@@ -226,7 +226,9 @@ class SearchFragment : Fragment() {
                             ) {
                                 // TODO 弹窗确定是否通过申请
                                 val reqId = friendRequest[relativePosition].reqId
-                                TPhoneUtil.showToast(requireActivity(), "同意")
+                                vm.patchRequestHandle(reqId,true)
+                                vm.getAllRequestData()
+                                TPhoneUtil.showToast(requireActivity(), "同意好友")
                             }
 
                             override fun onCancelClick(
@@ -235,6 +237,8 @@ class SearchFragment : Fragment() {
                                 relativePosition: Int
                             ) {
                                 val reqId = friendRequest[relativePosition].reqId
+                                vm.patchRequestHandle(reqId,false)
+                                vm.getAllRequestData()
                                 TPhoneUtil.showToast(requireActivity(), "拒绝")
                             }
 

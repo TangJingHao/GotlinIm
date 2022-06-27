@@ -10,16 +10,19 @@ import com.ByteDance.Gotlin.im.entity.MessageEntity
 import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
+import com.ByteDance.Gotlin.im.info.response.DefaultResponse
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
 import com.ByteDance.Gotlin.im.network.netInterfaces.LoginService
+import com.ByteDance.Gotlin.im.network.netInterfaces.RequestService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
 import okhttp3.Request
@@ -365,6 +368,7 @@ object Repository {
      * 获取与用户相关的所有申请，分为 4 类
      */
     fun getRequestList() = fire(Dispatchers.IO) {
+        i(TAG, "====获取与用户相关的所有申请====")
         val requestList = NetWork.getRequestList(getUserId())
         val status = requestList.status
         if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
@@ -377,41 +381,83 @@ object Repository {
     /**
      * 申请添加某用户为好友
      */
-    fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
-        val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
-        val status = defaultResponse.status
-        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+    fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) {
+        i(TAG, "====申请添加某用户为好友====")
+        val response = ServiceCreator.create<RequestService>()
+            .postRequestFriend(mToken, getUserId(), userId, reqSrc, reqRemark)
 
-            Result.success(defaultResponse)
-        } else {
-            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
-        }
+        response.enqueue(object : Callback<DefaultResponse> {
+            override fun onResponse(
+                call: Call<DefaultResponse>,
+                response: retrofit2.Response<DefaultResponse>
+            ) {
+                val body = response.body()
+                if (body != null) {
+                    TPhoneUtil.showToast(BaseApp.getContext(), "发送成功")
+                    DLogUtils.i(TAG, "申请添加某用户为好友发送：${body.msg}")
+                }
+            }
+
+            override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                TPhoneUtil.showToast(BaseApp.getContext(), "发送失败")
+                DLogUtils.i(TAG, "申请添加某用户消息发送失败：$t")
+            }
+
+        })
     }
 
     /**
      *  申请加入某群聊
      */
-    fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
-        val defaultResponse = NetWork.postRequestGroup(getUserId(), groupId, reqSrc, reqRemark)
-        val status = defaultResponse.status
-        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
-            Result.success(defaultResponse)
-        } else {
-            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
-        }
+    fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) {
+        i(TAG, "====同意或拒绝某用户的申请====")
+        val requestHandle = ServiceCreator.create<RequestService>()
+            .postRequestGroup(mToken, getUserId(), groupId, reqSrc, reqRemark)
+
+        requestHandle.enqueue(object : Callback<DefaultResponse> {
+            override fun onResponse(
+                call: Call<DefaultResponse>,
+                response: retrofit2.Response<DefaultResponse>
+            ) {
+                val body = response.body()
+                if (body != null) {
+                    TPhoneUtil.showToast(BaseApp.getContext(), "发送成功")
+                    DLogUtils.i(TAG, "申请添加群聊发送：$body.msg")
+                }
+            }
+
+            override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                TPhoneUtil.showToast(BaseApp.getContext(), "发送失败")
+                DLogUtils.i(TAG, "申请添加群聊消息发送失败：$t")
+            }
+
+        })
     }
 
     /**
      * 同意或拒绝某用户的申请
      */
-    fun patchRequestHandle(reqId: Int, access: Boolean) = fire(Dispatchers.IO) {
-        val defaultResponse = NetWork.patchRequestHandle(reqId, access)
-        val status = defaultResponse.status
-        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
-            Result.success(defaultResponse)
-        } else {
-            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
-        }
+    fun patchRequestHandle(reqId: Int, access: Boolean) {
+        i(TAG, "====同意或拒绝某用户的申请====")
+        val requestHandle = ServiceCreator.create<RequestService>()
+            .patchRequestHandle(mToken, reqId, access)
+
+        requestHandle.enqueue(object : Callback<DefaultResponse> {
+            override fun onResponse(
+                call: Call<DefaultResponse>,
+                response: retrofit2.Response<DefaultResponse>
+            ) {
+                val body = response.body()
+                if (body != null) {
+                    DLogUtils.i(TAG, "申请消息发送：${body.msg}")
+                }
+            }
+
+            override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                DLogUtils.i(TAG, "申请消息发送失败：$t")
+            }
+
+        })
     }
 
     /** 搜索新好友接口 */
