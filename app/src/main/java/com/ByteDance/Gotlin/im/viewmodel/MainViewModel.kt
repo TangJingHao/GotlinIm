@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.viewmodel
 
-import androidx.lifecycle.LiveData
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -20,10 +21,14 @@ import okhttp3.WebSocket
  * @Email 1520483847@qq.com
  * @Description
  */
+@RequiresApi(Build.VERSION_CODES.Q)
 class MainViewModel : ViewModel() {
 
     // 通用=========================================================================================
     val TAG = "MainViewModel"
+
+
+    fun getUserId() = Repository.getUserId()
 
     // 好友列表======================================================================================
 

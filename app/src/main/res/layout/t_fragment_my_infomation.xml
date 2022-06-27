@@ -56,10 +56,12 @@
                     android:textColor="?attr/text_medium"
                     android:textSize="@dimen/im_text_small" />
 
-                <ImageView
-                    android:id="@+id/stauts_iv"
-                    android:layout_width="@dimen/im_icon_small"
-                    android:layout_height="@dimen/im_icon_small" />
+                <TextView
+                    android:text="在线"
+                    android:background="?attr/icon_secondary"
+                    android:id="@+id/status_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
