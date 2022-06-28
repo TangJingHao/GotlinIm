@@ -106,7 +106,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.nameRight.setText(userVO.getNickName());
             loadPic(avatarImg, binding.headerRight.img);
             //设置头像点击回调
-            binding.headerRight.img.setOnClickListener(v -> callBack.onClick(binding.headerRight.img, userVO.getUserId()));
+            binding.headerRight.img.setOnClickListener(v -> callBack.onClick(binding.headerRight.img, userVO));
 
             if (message.getType() == Constants.MESSAGE_TEXT) {
                 binding.msgRight.setText(message.getContent());
@@ -121,7 +121,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.nameLeft.setText(userVO.getNickName());
             loadPic(avatarImg, binding.headerLeft.img);
             //设置头像点击回调
-            binding.headerLeft.img.setOnClickListener(v -> callBack.onClick(binding.headerLeft.img, userVO.getUserId()));
+            binding.headerLeft.img.setOnClickListener(v -> callBack.onClick(binding.headerLeft.img, userVO));
 
             if (message.getType() == Constants.MESSAGE_TEXT) {
                 binding.msgLeft.setText(message.getContent());
@@ -190,7 +190,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     }
 
     public interface AvatarCallBack {
-        void onClick(View view, int userId);
+        void onClick(View view, UserVO user);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

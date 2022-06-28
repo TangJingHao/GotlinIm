@@ -1,6 +1,5 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_IMG;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
 import static com.ByteDance.Gotlin.im.util.Constants.WS_SEND_MESSAGE;
 import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
@@ -16,16 +15,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.ByteDance.Gotlin.im.Repository;
 import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
@@ -47,6 +49,8 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import okhttp3.Response;
 
 /**
  * @author: Hx
@@ -114,8 +118,11 @@ public class ChatActivity extends AppCompatActivity {
         manager.setOrientation(RecyclerView.VERTICAL);
         manager.setSmoothScrollbarEnabled(true);
         chatList.setLayoutManager(manager);
-//        model.getAdapter().setCallBack((view, userId) ->
-//                FriendInfoActivity.Companion.startFriendInfoActivity(this, userId));
+        model.getAdapter().setCallBack((view, user) -> {
+//            FriendInfoActivity.Companion.startFriendInfoActivity(this, userId);
+//            Toast.makeText(this, user.getNickName(), Toast.LENGTH_SHORT).show();
+            HLog.i(user);
+        });
         chatList.setAdapter(model.getAdapter());
     }
 
@@ -138,24 +145,36 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         //开启链接
-        model.getWsOpenObserverData().observe(this, response -> HLog.i("[开启链接] " + response.toString()));
+        model.getWsOpenObserverData().observe(this, new Observer<Response>() {
+            @Override
+            public void onChanged(Response response) {
+                HLog.i("[开启链接] " + response.toString());
+            }
+        });
         //接收消息
-        model.getWsMessageObserverData().observe(this, s -> {
-            HLog.i("[回调] " + s);
-            WebSocketReceiveChatMsg msg = gson.fromJson(s, WebSocketReceiveChatMsg.class);
-            if (msg.getWsType().equals(WS_SEND_MESSAGE)) {
-                ThreadManager.getDefFixThreadPool().execute(() -> {
-                    int type = msg.getWsContent().getType();
-                    if (type == MESSAGE_TEXT) {
-                        model.receivedText(msg);
-                    } else if (type == MESSAGE_IMG) {
+        model.getWsMessageObserverData().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                HLog.i("[回调] " + s);
+                WebSocketReceiveChatMsg msg = gson.fromJson(s, WebSocketReceiveChatMsg.class);
+                if (msg.getWsType().equals(WS_SEND_MESSAGE)) {
+                    ThreadManager.getDefFixThreadPool().execute(() -> {
+                        int type = msg.getWsContent().getType();
+                        if (type == MESSAGE_TEXT) {
+                            model.receivedText(msg);
+                        }
                         //TODO:处理图片信息
-                    }
-                });
+                    });
+                }
             }
         });
         //关闭链接
-        model.getFailureObserverData().observe(this, throwable -> HLog.e("[链接关闭]" + (throwable == null ? null : throwable.getMessage())));
+        model.getFailureObserverData().observe(this, new Observer<Throwable>() {
+            @Override
+            public void onChanged(Throwable throwable) {
+                HLog.e("[链接关闭]" + (throwable == null ? null : throwable.getMessage()));
+            }
+        });
 
         //输入文本监测
         input.addTextChangedListener(new TextWatcher() {
@@ -198,14 +217,21 @@ public class ChatActivity extends AppCompatActivity {
             int chatType = session.getType();
             //跳转到群聊信息页面
             if (chatType == Constants.CHAT_GROUP) {
+                final int[] groupId = {0};
+                ThreadManager.getDefFixThreadPool().execute(() ->
+                        groupId[0] = Repository.INSTANCE.queryGidBySid(session.getSessionId()));
+
                 //跳转群聊信息页面
                 GroupInfoActivity.Companion.startGroupInfoActivity(this, session.getType(),
-                        session.getSessionId(), session.getName());
+                        groupId[0], session.getName());
             }
             //跳转到好友信息页面
             else if (chatType == Constants.CHAT_PRIVATE) {
+                final int[] friendId = new int[1];
+                ThreadManager.getDefFixThreadPool().execute(() ->
+                        friendId[0] = Repository.INSTANCE.queryUidBySid(session.getSessionId()));
                 //跳转好友信息页面
-                FriendInfoActivity.Companion.startFriendInfoActivity(this, session.getSessionId());
+                FriendInfoActivity.Companion.startFriendInfoActivity(this, friendId[0]);
             }
         });
     }
