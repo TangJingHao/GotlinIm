@@ -2,11 +2,9 @@ package com.ByteDance.Gotlin.im.datasource.database
 
 import android.content.Context
 import androidx.room.*
-import com.ByteDance.Gotlin.im.datasource.dao.MessageDao
-import com.ByteDance.Gotlin.im.datasource.dao.SessionDao
-import com.ByteDance.Gotlin.im.datasource.dao.SessionUserDao
-import com.ByteDance.Gotlin.im.datasource.dao.UserDao
+import com.ByteDance.Gotlin.im.datasource.dao.*
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionGroupEntity
 import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
@@ -19,8 +17,9 @@ import java.sql.Date
  * @Description 学习测试用数据库
  */
 @Database(
-    entities = [UserVO::class, SessionVO::class, MessageEntity::class, SessionUserEntity::class],
-    version = 4
+    entities = [UserVO::class, SessionVO::class, MessageEntity::class,
+        SessionUserEntity::class, SessionGroupEntity::class],
+    version = 5
 )
 @TypeConverters(Converters::class)
 abstract class SQLDatabase : RoomDatabase() {
@@ -28,6 +27,7 @@ abstract class SQLDatabase : RoomDatabase() {
     abstract fun sessionDao(): SessionDao
     abstract fun messageDao(): MessageDao
     abstract fun suDao(): SessionUserDao
+    abstract fun sgDao(): SessionGroupDao
 
     companion object {
 

@@ -35,5 +35,8 @@ data class GroupVO(
     val inTime: String,
 
     /** 用户最后一条已阅的消息 ID  */
-    val lastMsgId: Int
+    val lastMsgId: Int,
+
+    /** 该群聊的会话 ID */
+    val sessionId: Int
 )
