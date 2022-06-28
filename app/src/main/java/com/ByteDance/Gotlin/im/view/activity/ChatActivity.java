@@ -33,7 +33,6 @@ import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.util.Constants;
-import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils;
 import com.ByteDance.Gotlin.im.util.Hutils.DifferCallback;
 import com.ByteDance.Gotlin.im.util.Hutils.HLog;
 import com.ByteDance.Gotlin.im.util.Tutils.TPictureSelectorUtil.TGlideEngine;
@@ -115,8 +114,8 @@ public class ChatActivity extends AppCompatActivity {
         manager.setOrientation(RecyclerView.VERTICAL);
         manager.setSmoothScrollbarEnabled(true);
         chatList.setLayoutManager(manager);
-        model.getAdapter().setCallBack((view, userId) ->
-                FriendInfoActivity.Companion.startFriendInfoActivity(ChatActivity.this, userId));
+//        model.getAdapter().setCallBack((view, userId) ->
+//                FriendInfoActivity.Companion.startFriendInfoActivity(this, userId));
         chatList.setAdapter(model.getAdapter());
     }
 
@@ -156,9 +155,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         //关闭链接
-        model.getFailureObserverData().observe(this, throwable -> {
-            HLog.e("[链接关闭]" + (throwable == null ? null : throwable.getMessage()));
-        });
+        model.getFailureObserverData().observe(this, throwable -> HLog.e("[链接关闭]" + (throwable == null ? null : throwable.getMessage())));
 
         //输入文本监测
         input.addTextChangedListener(new TextWatcher() {

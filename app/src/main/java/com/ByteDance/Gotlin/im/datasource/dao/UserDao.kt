@@ -24,6 +24,12 @@ interface UserDao {
     )
     fun queryUserById(userId: Int): LiveData<UserVO>
 
+    @Query(
+        "select * from userTable " +
+                "where userId = (select uid from SessionUserTable where sid = :sid)"
+    )
+    fun queryUserBySId(sid: Int): LiveData<UserVO>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUser(user: UserVO)
 
