@@ -12,6 +12,7 @@ import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.response.DefaultResponse
+import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
@@ -130,6 +131,7 @@ object Repository {
     // 会话数据表
     /** 根据用户id返回sessionVO 的 LiveData */
     fun querySessionByUserId(uid: Int) = db.sessionDao().querySessionByUid(uid)
+    /** 根据群聊id返回sessionVO 的 LiveData */
     fun querySessionByGroupId(gid: Int) = db.sessionDao().querySessionByGid(gid)
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
@@ -145,6 +147,14 @@ object Repository {
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
     fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)
     fun deleteAllUser() = db.userDao().deleteAllUser()
+
+    // 群聊数据表
+    fun queryAllGroup() = db.groupDao().queryAllGroups()
+    fun queryGroupById(gid: Int) = db.groupDao().queryGroupById(gid)
+    fun insertGroup(group: GroupVO) = db.groupDao().insertGroup(group)
+    fun upDataGroup(group: GroupVO) = db.groupDao().upDataGroup(group)
+    fun deleteGroup(group: GroupVO) = db.groupDao().deleteGroup(group)
+    fun deleteAllGroup() = db.groupDao().deleteAllGroup()
 
     // 消息数据表
     /** 根据会话id，发送者id,时间范围以及消息模糊查找 */
@@ -175,6 +185,7 @@ object Repository {
         deleteAllUser()
         deleteAllSession()
         deleteAllMessage()
+        deleteAllGroup()
         deleteAllSU()
         deleteAllSG()
     }
@@ -558,7 +569,7 @@ object Repository {
         this.webSocket = ws
     }
 
-    fun refreshWebSocket(){
+    fun refreshWebSocket() {
         this.webSocket = getWebSocketAndConnect()
     }
 
@@ -594,7 +605,7 @@ object Repository {
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             DLogUtils.i(TAG, "链接失败\t$t\n$response")
-            while(count-- > 0){
+            while (count-- > 0) {
                 refreshWebSocket()
             }
             onWsFailureObserverData.postValue(t)

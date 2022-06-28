@@ -55,6 +55,7 @@ class MyGroupViewModel : ViewModel() {
             for (group in groupList) {
                 // sg 关系表
                 Repository.insertSG(SessionGroupEntity(group.sessionId, group.groupId))
+                Repository.insertGroup(group)
             }
 
         }

@@ -6,6 +6,7 @@ import com.ByteDance.Gotlin.im.datasource.dao.*
 import com.ByteDance.Gotlin.im.entity.MessageEntity
 import com.ByteDance.Gotlin.im.entity.SessionGroupEntity
 import com.ByteDance.Gotlin.im.entity.SessionUserEntity
+import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import java.sql.Date
@@ -17,13 +18,14 @@ import java.sql.Date
  * @Description 学习测试用数据库
  */
 @Database(
-    entities = [UserVO::class, SessionVO::class, MessageEntity::class,
+    entities = [UserVO::class, SessionVO::class, GroupVO::class, MessageEntity::class,
         SessionUserEntity::class, SessionGroupEntity::class],
-    version = 5
+    version = 6
 )
 @TypeConverters(Converters::class)
 abstract class SQLDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun groupDao(): GroupDao
     abstract fun sessionDao(): SessionDao
     abstract fun messageDao(): MessageDao
     abstract fun suDao(): SessionUserDao
