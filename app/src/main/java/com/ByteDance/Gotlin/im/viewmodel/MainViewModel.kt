@@ -173,7 +173,7 @@ class MainViewModel : ViewModel() {
         runBlocking {
             val res = async {
                 val session: SessionVO = withContext(Dispatchers.IO) {
-                    Repository.querySessionById(it.userId)
+                    Repository.querySessionByUserId(it.userId)
                 }
                 MutableLiveData(SessionUserLiveData(session, it))
             }.await()
