@@ -17,6 +17,13 @@ interface ChangeUserDataService {
         @Header("token")token:String,
         @Path("userId")userId:Int,
         @Query("sex") sex: String,
+        @Query("nickName")nickName:String
+    ):Call<DefaultResponse>
+
+    @PATCH("user/info/{userId}")
+    fun changeFriendNickName(
+        @Header("token")token:String,
+        @Path("userId")userId:Int,
         @Query("nickname")nickname:String
     ):Call<DefaultResponse>
 }

@@ -481,56 +481,9 @@ object Repository {
         }
     }
 
-    /**
-     * 保存备注
-     */
-    fun saveNickName(friendId: String, nickname: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---保存${friendId}的新备注${nickname}---")
-        //emit(groupId)
-    }
 
     /**
-     * 获取分组
-     */
-    fun getAllGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
-
-    /**
-     * 获取分组
-     */
-    fun getSelectedGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
-
-    /**
-     * 保存分组
-     */
-    fun saveGrouping(myId: String, grouping: List<Map<String, Boolean>>) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---保存分组---")
-        emit(myId)
-    }
-
-    /**
-     * 获取群聊信息
-     */
-    fun getGroupInfo(groupId: Int) = liveData<Int> {
-        i(TAG_FRIEND_INFO, "---$groupId---")
-        emit(groupId)
-    }
-
-    /**
-     * 获取好友信息
-     */
-    fun getFriendInfo(account: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---$account---")
-        emit(account)
-    }
-
-    /**
-     * 获取好友信息
+     * 保存备注修改
      */
     fun getNickNameSave(nickname: String) = liveData<String> {
         i(TAG_FRIEND_INFO, "---$nickname---")

@@ -4,20 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.TFragmentAddressBookBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
-import com.ByteDance.Gotlin.im.info.vo.TestUser
 import com.ByteDance.Gotlin.im.info.vo.UserVO
-import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.AttrColorUtils
-import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DSortUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.activity.FriendInfoActivity
@@ -28,7 +23,6 @@ import com.ByteDance.Gotlin.im.view.custom.TSideBar
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
-import kotlinx.coroutines.runBlocking
 
 /**
  * @Author 唐靖豪
@@ -273,32 +267,8 @@ class AddressBookFragment : Fragment() {
 
     private fun startActivity2FriendInfo(user: UserVO, session: SessionVO) {
         if (hasSave) {
-            // TODO 舒欣请在此处编写跳转到好友详细信息页面的逻辑
-            val intent = Intent(this.context, FriendInfoActivity::class.java)
-            intent.apply {
-                putExtra(
-                    Constants.FRIEND_TYPE,
-                    Constants.FRIEND_IS
-                )
-                putExtra(
-                    Constants.FRIEND_ID,
-                    user.userId
-                )
-                putExtra(
-                    Constants.FRIEND_NAME,
-                    user.userName
-                )
-                putExtra(
-                    Constants.FRIEND_NICKNAME,
-                    user.nickName
-                )
-                putExtra(
-                    Constants.FRIEND_GROUPING,
-                    "大学同学"
-                )
-            }
-            // TODO 我把启动备注掉了
-//            startActivity(intent)
+            // TODO 跳转到好友详细信息页面
+            this.context?.let { FriendInfoActivity.startFriendInfoActivity(it,user.userId) }
         }
     }
 
