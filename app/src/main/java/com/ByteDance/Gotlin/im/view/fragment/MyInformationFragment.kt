@@ -269,6 +269,13 @@ class MyInformationFragment : Fragment() {
                         Repository.deleteAllTable()
                         Repository.deleteUserId()
                         Repository.deleteUserMode()
+                        Repository.deleteUserLoginAvatar()
+                        Repository.deleteUserLoginNickname()
+                        Repository.deleteLoginUserName()
+                        Repository.deleteLoginPassword()
+                        Repository.deleteUserLoginSex()
+                        Repository.deleteUserData()
+                        Repository.deleteUserId()
                         requireActivity().startActivity(
                             Intent(
                                 requireActivity(),
@@ -336,7 +343,7 @@ class MyInformationFragment : Fragment() {
                 }
             }
             mPasswordPopupWindow =
-                InputPopupWindow(requireContext(), "昵称修改", passwordPopupWindowListener)
+                InputPopupWindow(requireContext(), "密码修改", passwordPopupWindowListener)
             mPasswordPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
             mPasswordPopupWindow.show()
         }
