@@ -221,9 +221,11 @@ public class ChatActivity extends AppCompatActivity {
             if (chatType == Constants.CHAT_GROUP) {
                 final int[] groupId = {0};
                 final GroupVO[] groupVO = new GroupVO[1];
-                ThreadManager.getDefFixThreadPool().execute(() ->
-                        groupId[0] = Repository.INSTANCE.queryGidBySid(session.getSessionId()));
-                //ThreadManager.getDefFixThreadPool().execute(() -> groupVO[0] = Repository.INSTANCE.queryGroupById(groupId[0]).getValue());
+                ThreadManager.getDefFixThreadPool().execute(() ->{
+                            groupId[0] = Repository.INSTANCE.queryGidBySid(session.getSessionId());
+                            groupVO[0] = Repository.INSTANCE.queryGroupById(groupId[0]).getValue();
+                        }
+                        );
                 //跳转群聊信息页面
                 GroupInfoActivity.Companion.startGroupInfoActivity(this,groupVO[0]);
             }
