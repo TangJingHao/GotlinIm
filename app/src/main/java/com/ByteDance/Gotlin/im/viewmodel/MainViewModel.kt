@@ -2,7 +2,6 @@ package com.ByteDance.Gotlin.im.viewmodel
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -174,7 +173,7 @@ class MainViewModel : ViewModel() {
         runBlocking {
             val res = async {
                 val session: SessionVO = withContext(Dispatchers.IO) {
-                    Repository.querySessionByUid(it.userId)
+                    Repository.querySessionByUserId(it.userId)
                 }
                 MutableLiveData(SessionUserLiveData(session, it))
             }.await()

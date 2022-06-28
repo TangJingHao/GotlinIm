@@ -7,19 +7,23 @@ import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionGroupEntity
 import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
+import com.ByteDance.Gotlin.im.info.response.DefaultResponse
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netImpl.NetWork
 import com.ByteDance.Gotlin.im.network.netInterfaces.LoginService
+import com.ByteDance.Gotlin.im.network.netInterfaces.RequestService
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils.i
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
 import okhttp3.Request
@@ -70,6 +74,7 @@ object Repository {
 
     private const val MMKV_LOGIN_USER_NAME = "login_user_name"//用户账户
     private const val MMKV_LOGIN_PASSWORD = "login_user_password"//用户密码
+    private const val MMKV_LOGIN_SEX = "login_user_sex"
     private const val MMKV_LOGIN_AVATAR = "login_user_avatar"
     private const val MMKV_LOGIN_NICKNAME = "login_user_nickname"
 
@@ -86,8 +91,8 @@ object Repository {
     //用户昵称和性别（保存本地）
     fun setUserLoginNickname(userName: String) = mmkv.encode(MMKV_LOGIN_USER_NAME, userName)
     fun getUserLoginNickname(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME)
-    fun setUserLoginSex(sex: String) = mmkv.encode(MMKV_LOGIN_PASSWORD, sex)
-    fun getUserLoginSex(): String = mmkv.decodeString(MMKV_LOGIN_PASSWORD)
+    fun setUserLoginSex(sex: String) = mmkv.encode(MMKV_LOGIN_SEX, sex)
+    fun getUserLoginSex(): String = mmkv.decodeString(MMKV_LOGIN_SEX)
 
     //用户密码和账户(保存在本地的)
     fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")
@@ -124,7 +129,8 @@ object Repository {
 
     // 会话数据表
     /** 根据用户id返回sessionVO 的 LiveData */
-    fun querySessionByUid(uid: Int) = db.sessionDao().querySessionByUid(uid)
+    fun querySessionByUserId(uid: Int) = db.sessionDao().querySessionByUid(uid)
+    fun querySessionByGroupId(gid: Int) = db.sessionDao().querySessionByGid(gid)
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
@@ -153,16 +159,28 @@ object Repository {
 
     // session - user 关系表
     fun insertSU(su: SessionUserEntity) = db.suDao().insertSU(su)
+    fun deleteAllSU() = db.suDao().deleteAllSU()
+    fun queryUidBySid(sid: Int) = db.suDao().queryUidBySid(sid)
+    fun querySidByUid(uid: Int) = db.suDao().querySidByUid(uid)
+
+
+    // session - group 关系表
+    fun insertSG(sg: SessionGroupEntity) = db.sgDao().insertSG(sg)
+    fun deleteAllSG() = db.sgDao().deleteAllSG()
+    fun queryGidBySid(sid: Int) = db.sgDao().queryGidBySid(sid)
+    fun querySidByGid(gid: Int) = db.sgDao().querySidByGid(gid)
 
     fun deleteAllTable() {
         deleteAllUser()
         deleteAllSession()
         deleteAllMessage()
+        deleteAllSU()
+        deleteAllSG()
     }
 
     /** 根据uid检索并切换线程返回Session的LiveDat*/
     fun getSessionByUid(uid: Int) = fire(Dispatchers.IO) {
-        val session = querySessionByUid(uid)
+        val session = querySessionByUserId(uid)
         if (session != null) {
             Result.success(session)
         } else {
@@ -173,6 +191,18 @@ object Repository {
     /*
     * 网络请求=======================================================================================
     * */
+
+    fun changeUserInfoObserverData(userId: Int, sex: String, nickname: String) =
+        fire(Dispatchers.IO) {
+            val changeUserInfoResponse = NetWork.changeUserInfo(userId, sex, nickname)
+            val status = changeUserInfoResponse.status
+            if (status == Constants.SUCCESS_STATUS) {
+                Result.success(changeUserInfoResponse)
+            } else {
+                Result.failure(RuntimeException("返回值的status的$status"))
+            }
+        }
+
 
     /**
      * 登录
@@ -349,6 +379,7 @@ object Repository {
      * 获取与用户相关的所有申请，分为 4 类
      */
     fun getRequestList() = fire(Dispatchers.IO) {
+        i(TAG, "====获取与用户相关的所有申请====")
         val requestList = NetWork.getRequestList(getUserId())
         val status = requestList.status
         if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
@@ -361,41 +392,83 @@ object Repository {
     /**
      * 申请添加某用户为好友
      */
-    fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
-        val defaultResponse = NetWork.postRequestFriend(getUserId(), userId, reqSrc, reqRemark)
-        val status = defaultResponse.status
-        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
+    fun postRequestFriend(userId: Int, reqSrc: String, reqRemark: String) {
+        i(TAG, "====申请添加某用户为好友====")
+        val response = ServiceCreator.create<RequestService>()
+            .postRequestFriend(mToken, getUserId(), userId, reqSrc, reqRemark)
 
-            Result.success(defaultResponse)
-        } else {
-            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
-        }
+        response.enqueue(object : Callback<DefaultResponse> {
+            override fun onResponse(
+                call: Call<DefaultResponse>,
+                response: retrofit2.Response<DefaultResponse>
+            ) {
+                val body = response.body()
+                if (body != null) {
+                    TPhoneUtil.showToast(BaseApp.getContext(), "发送成功")
+                    DLogUtils.i(TAG, "申请添加某用户为好友发送：${body.msg}")
+                }
+            }
+
+            override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                TPhoneUtil.showToast(BaseApp.getContext(), "发送失败")
+                DLogUtils.i(TAG, "申请添加某用户消息发送失败：$t")
+            }
+
+        })
     }
 
     /**
      *  申请加入某群聊
      */
-    fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) = fire(Dispatchers.IO) {
-        val defaultResponse = NetWork.postRequestGroup(getUserId(), groupId, reqSrc, reqRemark)
-        val status = defaultResponse.status
-        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
-            Result.success(defaultResponse)
-        } else {
-            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
-        }
+    fun postRequestGroup(groupId: Int, reqSrc: String, reqRemark: String) {
+        i(TAG, "====同意或拒绝某用户的申请====")
+        val requestHandle = ServiceCreator.create<RequestService>()
+            .postRequestGroup(mToken, getUserId(), groupId, reqSrc, reqRemark)
+
+        requestHandle.enqueue(object : Callback<DefaultResponse> {
+            override fun onResponse(
+                call: Call<DefaultResponse>,
+                response: retrofit2.Response<DefaultResponse>
+            ) {
+                val body = response.body()
+                if (body != null) {
+                    TPhoneUtil.showToast(BaseApp.getContext(), "发送成功")
+                    DLogUtils.i(TAG, "申请添加群聊发送：$body.msg")
+                }
+            }
+
+            override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                TPhoneUtil.showToast(BaseApp.getContext(), "发送失败")
+                DLogUtils.i(TAG, "申请添加群聊消息发送失败：$t")
+            }
+
+        })
     }
 
     /**
      * 同意或拒绝某用户的申请
      */
-    fun patchRequestHandle(reqId: Int, access: Boolean) = fire(Dispatchers.IO) {
-        val defaultResponse = NetWork.patchRequestHandle(reqId, access)
-        val status = defaultResponse.status
-        if (status == Constants.SUCCESS_STATUS || status == Constants.TOKEN_EXPIRED) {
-            Result.success(defaultResponse)
-        } else {
-            Result.failure(RuntimeException("返回值的status的${defaultResponse.status}"))
-        }
+    fun patchRequestHandle(reqId: Int, access: Boolean) {
+        i(TAG, "====同意或拒绝某用户的申请====")
+        val requestHandle = ServiceCreator.create<RequestService>()
+            .patchRequestHandle(mToken, reqId, access)
+
+        requestHandle.enqueue(object : Callback<DefaultResponse> {
+            override fun onResponse(
+                call: Call<DefaultResponse>,
+                response: retrofit2.Response<DefaultResponse>
+            ) {
+                val body = response.body()
+                if (body != null) {
+                    DLogUtils.i(TAG, "申请消息发送：${body.msg}")
+                }
+            }
+
+            override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                DLogUtils.i(TAG, "申请消息发送失败：$t")
+            }
+
+        })
     }
 
     /** 搜索新好友接口 */
@@ -480,14 +553,20 @@ object Repository {
         return webSocket!!
     }
 
+    fun setWebSocket(ws: WebSocket) {
+        this.webSocket = ws
+    }
+
     class EchoWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             DLogUtils.i(TAG, "WebSocket链接开启$webSocket\n$response")
+            setWebSocket(webSocket)
             onWsOpenObserverData.postValue(response)
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
             DLogUtils.i(TAG, "回调$webSocket\n$text")
+            setWebSocket(webSocket)
             onWsMessageObserverData.postValue(text)
         }
 

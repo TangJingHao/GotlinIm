@@ -114,7 +114,7 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
                 b.rgSelectGroup.check(b.options1.getId());
             }
             case 1: {
-                b.rgSelectGroup.check(b.options1.getId());
+                b.rgSelectGroup.check(b.options2.getId());
             }
         }
     }

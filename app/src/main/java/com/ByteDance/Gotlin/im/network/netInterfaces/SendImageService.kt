@@ -14,10 +14,10 @@ import retrofit2.http.*
 
 interface SendImageService {
     @Multipart
-    @POST("user/avatar")
+    @POST("user/avatar/{userId}")
     fun sendImage(
         @Header("token")token:String,
-        @Query("userId")userId:Int,
+        @Path("userId")userId:Int,
         @Part body:MultipartBody.Part
     ):Call<ImageData>
 }

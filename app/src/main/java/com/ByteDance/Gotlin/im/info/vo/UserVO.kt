@@ -1,6 +1,7 @@
 package com.ByteDance.Gotlin.im.info.vo
 
 import androidx.room.Entity
+import java.io.Serializable
 
 /**
  * @Author Zhicong Deng
@@ -20,7 +21,7 @@ data class UserVO(
     val sex: String,
 
     /** 用户昵称 */
-    val nickName: String,
+    var nickName: String,
 
     /** 用户邮箱 */
     val email: String,
@@ -30,4 +31,4 @@ data class UserVO(
 
     /** 用户是否在线 */
     val online: Boolean
-)
+): Serializable
