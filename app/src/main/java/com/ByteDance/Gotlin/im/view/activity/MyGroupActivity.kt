@@ -123,7 +123,7 @@ class MyGroupActivity : AppCompatActivity() {
                 })
                 b.rvLayout.adapter = adapter
                 b.rvLayout.layoutManager = LinearLayoutManager(mContext)
-                if (groupList.size != 0)
+                if (groupList.isNotEmpty())
                     adapter.notifyDataSetChanged()
             }
         }

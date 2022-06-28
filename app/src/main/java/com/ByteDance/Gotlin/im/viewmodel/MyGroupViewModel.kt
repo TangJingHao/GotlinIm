@@ -23,6 +23,7 @@ class MyGroupViewModel : ViewModel() {
     val userIdObserverData = Transformations.switchMap(mUserIdLiveData) {
         Repository.getGroupList(it)
     }
+    
 
     fun getGroupList() {
         mUserIdLiveData.postValue(Repository.getUserId())
@@ -40,25 +41,25 @@ class MyGroupViewModel : ViewModel() {
     }
 
     // 跳转监听=======================================================================================
-//    val startActivityData = MutableLiveData<GroupVO>()
-//
-//    val startActivityObserver = Transformations.switchMap(startActivityData) {
-//        // 协程返回数据的方法
-//        runBlocking {
-//            val res = async {
-//                val session: SessionVO = withContext(Dispatchers.IO) {
-//                    Repository.querySessionById(it.groupId)
-//                }
-//                MutableLiveData(SessionGroupLiveData(session, it))
-//            }.await()
-//            // 阻塞等待返回结果
-//            return@runBlocking res
-//        }
-//    }
-//
-//    fun getSessionByGroup(group: GroupVO) {
-//        startActivityData.postValue(group)
-//    }
+    val startActivityData = MutableLiveData<GroupVO>()
+
+    val startActivityObserver = Transformations.switchMap(startActivityData) {
+        // 协程返回数据的方法
+        runBlocking {
+            val res = async {
+                val session: SessionVO = withContext(Dispatchers.IO) {
+                    Repository.querySessionById(it.groupId)
+                }
+                MutableLiveData(SessionGroupLiveData(session, it))
+            }.await()
+            // 阻塞等待返回结果
+            return@runBlocking res
+        }
+    }
+
+    fun getSessionByGroup(group: GroupVO) {
+        startActivityData.postValue(group)
+    }
 
 }
 
