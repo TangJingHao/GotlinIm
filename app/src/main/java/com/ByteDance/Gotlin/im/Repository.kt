@@ -193,7 +193,7 @@ object Repository {
         deleteAllSG()
     }
 
-    /** 根据uid检索并切换线程返回Session的LiveDat*/
+    /** 根据uid检索并切换线程返回Session的LiveData*/
     fun getSessionByUid(uid: Int) = fire(Dispatchers.IO) {
         val session = querySessionByUserId(uid)
         if (session != null) {
@@ -572,9 +572,16 @@ object Repository {
         this.webSocket = ws
     }
 
+    fun refreshWebSocket(){
+        this.webSocket = getWebSocketAndConnect()
+    }
+
+    var count = 5
+
     class EchoWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             DLogUtils.i(TAG, "WebSocket链接开启$webSocket\n$response")
+            count = 5
             setWebSocket(webSocket)
             onWsOpenObserverData.postValue(response)
         }
@@ -601,7 +608,9 @@ object Repository {
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             DLogUtils.i(TAG, "链接失败\t$t\n$response")
-            getWebSocket()
+            while(count-- > 0){
+                refreshWebSocket()
+            }
             onWsFailureObserverData.postValue(t)
         }
     }

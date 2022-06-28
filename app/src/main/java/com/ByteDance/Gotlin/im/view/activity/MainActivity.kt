@@ -13,6 +13,7 @@ import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.broadcast.NetWorkReceiver
 import com.ByteDance.Gotlin.im.databinding.TActivityMainBinding
 import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.Tutils.TLogUtil
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.view.custom.MainBnvVp2Mediator
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         const val INDEX_MESSAGE = 0
         const val INDEX_ADDRESS_BOOK = 1
         const val INDEX_MY_INFORMATION = 2
+        const val TAG = "MainActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                 mBinding.bnvMain.getOrCreateBadge(R.id.navigation_message_item).apply {
                     number = it
                     isVisible = true
-                    horizontalOffset  = 20
+                    horizontalOffset = 20
                     verticalOffset = 10
                 }
         }
@@ -84,10 +86,11 @@ class MainActivity : AppCompatActivity() {
             val response = it.getOrNull()
             if (response != null) {
                 val totalUnread = response.data.total
+                DLogUtils.i(TAG, "通讯录未读数：${totalUnread}")
                 if (totalUnread > 0)
                     mBinding.bnvMain.getOrCreateBadge(R.id.navigation_address_book_item).apply {
                         isVisible = true
-                        horizontalOffset  = 20
+                        horizontalOffset = 20
                         verticalOffset = 10
                     }
                 viewModelMain.setNewFriendRedPointNum(response.data.friend)
