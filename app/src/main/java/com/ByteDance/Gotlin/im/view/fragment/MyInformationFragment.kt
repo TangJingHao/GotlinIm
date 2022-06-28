@@ -23,7 +23,6 @@ import com.ByteDance.Gotlin.im.application.BaseActivity
 import com.ByteDance.Gotlin.im.databinding.TFragmentMyInfomationBinding
 import com.ByteDance.Gotlin.im.info.response.DefaultResponse
 import com.ByteDance.Gotlin.im.info.response.ImageData
-import com.ByteDance.Gotlin.im.info.response.UserIconResponse
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
 import com.ByteDance.Gotlin.im.network.netInterfaces.ChangeUserDataService
 import com.ByteDance.Gotlin.im.network.netInterfaces.SendImageService
@@ -41,8 +40,6 @@ import com.bumptech.glide.Glide
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.style.PictureSelectorStyle
 import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -381,52 +378,63 @@ class MyInformationFragment : Fragment() {
         mCropLauncher.launch(intent)
     }
 
-    private val mPictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult ->
-        if(activityResult.resultCode == Activity.RESULT_OK){
-            val data = activityResult.data?.data
-            cropPhoto(data)
-        }
-    }
-
-    private val mCropLauncher=registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ activityResult ->
-        if(activityResult.resultCode == Activity.RESULT_OK){
-            val data = activityResult.data?.extras
-            if(data!=null){
-                val imageBitmap= data.getParcelable<Bitmap>("data")
-                val file = imageBitmap?.let { compressImage(it) }
-                Glide.with(requireContext()).load(imageBitmap).into(mBinding.iconIv)
-                imageBitmap?.let { setPicToView(it) }
-                val retrofitHead = Retrofit.Builder()
-                    .baseUrl(Constants.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-                val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
-                val createFormData =
-                    MultipartBody.Part.createFormData("avatar", file?.name, requestBody)
-                val mSender = retrofitHead.create(SendImageService::class.java)
-                val sendImage = mSender.sendImage(Repository.getToken(), Repository.getUserId(), createFormData)
-                sendImage.enqueue(object : Callback<ImageData> {
-                    override fun onResponse(call: Call<ImageData>, response: Response<ImageData>) {
-                        if(response==null){
-                            TLogUtil.d("null")
-                        }
-                        if (response?.body() != null) {
-                            val status = response.body()!!.status
-                            if (status == Constants.SUCCESS_STATUS) {
-                                TLogUtil.d("头像上传成功")
-                                TPhoneUtil.showToast(requireContext(), "头像上传成功")
-                            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ImageData>, t: Throwable) {
-                        t.printStackTrace()
-                        TLogUtil.d("头像上传失败")
-                    }
-                })
+    /**
+     * 头像选择
+     */
+    private val mPictureLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                val data = activityResult.data?.data
+                cropPhoto(data)
             }
         }
-    }
+
+    private val mCropLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            if (activityResult.resultCode == Activity.RESULT_OK) {
+                val data = activityResult.data?.extras
+                if (data != null) {
+                    val imageBitmap = data.getParcelable<Bitmap>("data")
+                    val file = imageBitmap?.let { compressImage(it) }
+                    Glide.with(requireContext()).load(imageBitmap).into(mBinding.iconIv)
+
+                    val retrofitHead = Retrofit.Builder()
+                        .baseUrl(Constants.BASE_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+                    val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+                    val createFormData =
+                        MultipartBody.Part.createFormData("avatar", file?.name, requestBody)
+                    val mSender = retrofitHead.create(SendImageService::class.java)
+                    val sendImage = mSender.sendImage(
+                        Repository.getToken(),
+                        Repository.getUserId(),
+                        createFormData
+                    )
+                    sendImage.enqueue(object : Callback<ImageData> {
+                        override fun onResponse(
+                            call: Call<ImageData>,
+                            response: Response<ImageData>
+                        ) {
+                            if (response?.body() != null) {
+                                val status = response.body()!!.status
+                                val avatarName = response.body()!!.data.avatarName
+                                imageBitmap?.let { setPicToView(it, avatarName) }
+                                if (status == Constants.SUCCESS_STATUS) {
+                                    TLogUtil.d("头像上传成功")
+                                    TPhoneUtil.showToast(requireContext(), "头像上传成功")
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ImageData>, t: Throwable) {
+                            t.printStackTrace()
+                            TLogUtil.d("头像上传失败")
+                        }
+                    })
+                }
+            }
+        }
 
     /**
      * bitmap转File
@@ -470,16 +478,18 @@ class MyInformationFragment : Fragment() {
 
 
     //储存到sd卡的方法
-    private fun setPicToView(mBitmap: Bitmap) {
-        val tempImage="head.png"
-        val path=Environment.getExternalStorageDirectory().toString()
+    private fun setPicToView(mBitmap: Bitmap, tempImage: String) {
         val sdStatus = Environment.getExternalStorageState()
         if (sdStatus != Environment.MEDIA_MOUNTED) { // 检测sd是否可用
             return
         }
+        val temp = "head"
+        val path = Environment.getExternalStorageDirectory().path + "/" + temp
+        val tempFile = File(path)
+        if (!tempFile.exists()) {
+            tempFile.mkdirs()
+        }
         var b: FileOutputStream? = null
-        val file = File(path)
-        file.mkdirs() // 创建文件夹
         val fileName = "$path/$tempImage" //图片名字
         Repository.setUserLoginAvatar(fileName)
         try {
@@ -497,7 +507,6 @@ class MyInformationFragment : Fragment() {
             }
         }
     }
-
 
 }
 
