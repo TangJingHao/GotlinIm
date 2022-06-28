@@ -70,6 +70,7 @@
             android:exported="true" />
         <activity
             android:name=".view.activity.MainActivity"
+            android:launchMode="singleInstance"
             android:configChanges="uiMode"
             android:exported="true" />
         <activity

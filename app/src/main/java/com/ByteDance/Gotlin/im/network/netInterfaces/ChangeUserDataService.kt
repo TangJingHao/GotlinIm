@@ -19,4 +19,13 @@ interface ChangeUserDataService {
         @Query("sex") sex: String,
         @Query("nickName")nickName:String
     ):Call<DefaultResponse>
+
+
+    @PATCH("user/password/{userId}")
+    fun changeUserPassword(
+        @Header("token")token:String,
+        @Path("userId")userId:Int,
+        @Query("oldPassword")oldPassword: String,
+        @Query("newPassword")newPassword:String
+    ):Call<DefaultResponse>
 }
