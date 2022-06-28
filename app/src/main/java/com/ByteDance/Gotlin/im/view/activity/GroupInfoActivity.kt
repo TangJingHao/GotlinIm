@@ -13,12 +13,17 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
 import com.ByteDance.Gotlin.im.databinding.MActivityGroupInfoBinding
+import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.GROUP_IS
 import com.ByteDance.Gotlin.im.util.Constants.GROUP_NO
+import com.ByteDance.Gotlin.im.util.Constants.GROUP_SESSION_ID
+import com.ByteDance.Gotlin.im.util.Constants.GROUP_VO
 import com.ByteDance.Gotlin.im.util.Constants.OWNER_IS
 import com.ByteDance.Gotlin.im.util.Constants.OWNER_NO
+import com.ByteDance.Gotlin.im.util.Constants.OWNER_TYPE
+import com.ByteDance.Gotlin.im.util.Constants.TAG_GROUP_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
@@ -30,6 +35,7 @@ import com.ByteDance.Gotlin.im.viewmodel.FriendInfoViewModel
 import com.ByteDance.Gotlin.im.viewmodel.GroupInfoViewModel
 import com.qmuiteam.qmui.kotlin.onClick
 import kotlin.concurrent.thread
+import kotlin.properties.Delegates
 
 /**
  * @Description：群聊信息页面
@@ -42,11 +48,13 @@ class GroupInfoActivity : AppCompatActivity() {
 
     private lateinit var mBinding: MActivityGroupInfoBinding
     private val mViewModel by lazy { ViewModelProvider(this).get(GroupInfoViewModel::class.java) }
-    private var mOwnerType = 0
-    private val mGroupType by lazy { intent.getIntExtra(Constants.GROUP_TYPE,Constants.GROUP_IS) }
-    private val groupId by lazy { intent.getIntExtra(Constants.GROUP_ID,0) }
-    private val groupName by lazy { intent.getStringExtra(Constants.GROUP_NAME) }
+    private val mOwnerType by lazy { intent.getIntExtra(Constants.OWNER_TYPE,0) }
+    private var mGroupType by Delegates.notNull<Int>()
+    private var groupId by Delegates.notNull<Int>()
+    private lateinit var groupName :String
+    private lateinit var mGroupVO: GroupVO
     private lateinit var mSession :SessionVO
+    private var mSessionId by Delegates.notNull<Int>()
     private lateinit var mConfirmPW: ConfirmPopupWindow
     private lateinit var mInputPW: InputPopupWindow
     private var INPUT_GROUP_NAME = 1
@@ -58,11 +66,12 @@ class GroupInfoActivity : AppCompatActivity() {
          * 群聊类型 Constants.GROUP_IS Constants.GROUP_NO
          *
          */
-        fun startGroupInfoActivity(context: Context, groupType:Int, groupId:Int, groupName: String){
+        fun startGroupInfoActivity(context: Context, groupVO: GroupVO){
+            var groupType = if (groupVO.creatorId==Repository.getUserId()) OWNER_IS
+            else OWNER_NO
             startActivity<GroupInfoActivity>(context){
-                putExtra(Constants.GROUP_TYPE,groupType)
-                putExtra(Constants.GROUP_ID,groupId)
-                putExtra(Constants.GROUP_NAME,groupName)
+                putExtra(GROUP_VO,groupVO)
+                putExtra(OWNER_TYPE,groupType)
             }
         }
     }
@@ -70,6 +79,11 @@ class GroupInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = MActivityGroupInfoBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        mGroupVO = intent.getSerializableExtra(GROUP_VO) as GroupVO
+        mSessionId = mGroupVO.sessionId
+        mGroupType = GROUP_IS
+        groupId = mGroupVO.groupId
+        groupName = mGroupVO.groupName
 
         initView()
         setListener()
@@ -125,7 +139,6 @@ class GroupInfoActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        mOwnerType = intent.getIntExtra(Constants.OWNER_TYPE, OWNER_IS)
         mViewModel.getGroupInfo(groupId)
         mBinding.toolbarGroupInfo.title.text = this.resources.getString(R.string.title_info_group)
         mBinding.tabGroupName.tvItemMainText.text = this.resources.getString(R.string.tab_text_group_name)
@@ -145,16 +158,7 @@ class GroupInfoActivity : AppCompatActivity() {
             mBinding.tabAddStartGroup.tvBlue.text = this.resources.getString(R.string.tab_red_group_add)
             mBinding.tabLayoutGroup.visibility = View.INVISIBLE
         }
-//        thread {
-//            val sessionVO =Repository.querySessionByUid(groupId)
-//            runOnUiThread {
-//                v(
-//                    Constants.TAG_FRIEND_INFO,
-//                    "信息为===${sessionVO.name};${sessionVO.sessionId};${sessionVO.number}"
-//                )
-//                mSession = sessionVO
-//            }
-//        }
+
     }
 
     private fun setListener() {
@@ -176,7 +180,7 @@ class GroupInfoActivity : AppCompatActivity() {
             }
         }
         mBinding.tabGroupNumbers.root.onClick {
-            MLogUtil.v(Constants.TAG_GROUP_INFO,"--群聊人数：跳转到成员列表--")
+            v(Constants.TAG_GROUP_INFO,"--群聊人数：跳转到成员列表--")
             startActivity<GroupMembersActivity>(this){
                 putExtra(Constants.GROUP_ID,groupId)
             }
@@ -191,7 +195,7 @@ class GroupInfoActivity : AppCompatActivity() {
         mBinding.tabItemInfoSearch.root.onClick {
             v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")
             //TODO:跳转到搜索聊天消息,需要会话id
-            //SearchActivity.startMsgSearch(this,mSession.sessionId )
+            SearchActivity.startMsgSearch(this,mSession.sessionId )
         }
         mBinding.tabDeleteGroup.root.onClick {
             v(Constants.TAG_GROUP_INFO,"--删除群聊:解散群聊or退出群聊--")
@@ -201,7 +205,7 @@ class GroupInfoActivity : AppCompatActivity() {
             if (mGroupType == GROUP_IS){
                 v(Constants.TAG_GROUP_INFO,"----开始聊天----")
                 //TODO:跳转到聊天
-                //ChatActivity.startChat(this,mSession)
+                ChatActivity.startChat(this,mSession)
             }else if(mGroupType == GROUP_NO){
                 //TODO:弹窗进行申请加入
                 mConfirmPW.show()
@@ -210,13 +214,22 @@ class GroupInfoActivity : AppCompatActivity() {
     }
 
     private fun setGroupData() {
-        mViewModel.groupInfoLiveData.observe(this, Observer {
-            mBinding.tvGroupId.text = intent.getIntExtra(Constants.GROUP_ID,0).toString()
-            mBinding.tvName.text =intent.getStringExtra(Constants.GROUP_NAME).toString()
-            mBinding.tabGroupName.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_NAME).toString()
-            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text =intent.getStringExtra(Constants.GROUP_NUM).toString()
-            mBinding.tvBuilder.text =intent.getStringExtra(Constants.GROUP_OWNER).toString()
-            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = intent.getStringExtra(Constants.GROUP_MY_NAME).toString()
+        mViewModel.groupInfoLiveData.observe(this, Observer {result->
+            mBinding.tvGroupId.text = mGroupVO.groupId.toString()
+            mBinding.tvName.text =mGroupVO.groupName
+            mBinding.tabGroupName.tvItemAuxiliaryText.text = mGroupVO.groupName
+            mBinding.tabGroupNumbers.tvItemAuxiliaryText.text =mGroupVO.number.toString()
+            thread {
+                val userVO = Repository.queryUserByIdReturnName(mGroupVO.creatorId)
+                runOnUiThread {
+                    if (userVO!=null){
+                        mBinding.tvBuilder.text =userVO.userName
+                    }else{
+                        mBinding.tvBuilder.text = mGroupVO.creatorId.toString()
+                    }
+                }
+            }
+            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = Repository.getUserLoginNickname()
 //            mBinding.tvGroupId.text = it
 //            mBinding.tvName.text = "编译原理群"
 //            mBinding.tabGroupName.tvItemAuxiliaryText.text = "编译原理群"
@@ -224,6 +237,15 @@ class GroupInfoActivity : AppCompatActivity() {
 //            mBinding.tvBuilder.text ="李老师"
 //            mBinding.tabGroupNickname.tvItemAuxiliaryText.text = "20软卓副班长"
         })
+
+        thread {
+            v(TAG_GROUP_INFO,"===获取session===")
+            val session = Repository.querySessionByGroupId(mGroupVO.groupId)
+            runOnUiThread {
+                v(TAG_GROUP_INFO,"===成功得到session===")
+                mSession = session
+            }
+        }
     }
 
 }

@@ -138,6 +138,9 @@ class MyGroupActivity : AppCompatActivity() {
         if (hasSave) {
             // TODO 跳转到群聊详情页
             DLogUtils.i(TAG, "sid:${sessionId},gid${group.groupId}")
+            GroupInfoActivity.startGroupInfoActivity(this,group)
+
+
 //            startActivity<GroupInfoActivity>(this.mContext) {
 //                putExtra(Constants.GROUP_ID, group.groupId)
 //                putExtra(Constants.GROUP_NAME, group.groupName)

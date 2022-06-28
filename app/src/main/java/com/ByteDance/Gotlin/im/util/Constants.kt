@@ -71,6 +71,8 @@ object Constants {
     const val GROUP_OWNER = "GroupOwner"
     const val GROUP_IS = 1
     const val GROUP_NO = 0
+    const val GROUP_VO = "GroupVO"
+    const val GROUP_SESSION_ID = "GroupSessionId"
 
     //suzy：全局TAG
     const val TAG_FRIEND_INFO = "---FriendInfoActivity---"

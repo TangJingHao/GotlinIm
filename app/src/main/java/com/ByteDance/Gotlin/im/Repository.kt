@@ -155,6 +155,7 @@ object Repository {
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
     fun queryUserById(userId: Int) = db.userDao().queryUserById(userId)
+    fun queryUserByIdReturnName(userId: Int) = db.userDao().queryUserByIdReturnUser(userId)
     fun insertUser(user: UserVO) = db.userDao().insertUser(user)
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
     fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)
