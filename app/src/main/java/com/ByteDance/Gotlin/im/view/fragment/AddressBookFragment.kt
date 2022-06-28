@@ -185,6 +185,7 @@ class AddressBookFragment : Fragment() {
     }
 
     private fun initData() {
+        vm.getMsgRedPointNum()
         vm.getFriendList()
     }
 
