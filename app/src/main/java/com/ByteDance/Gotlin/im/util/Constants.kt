@@ -57,6 +57,7 @@ object Constants {
     const val FRIEND_EMAIL = "FriendEmail"
     const val FRIEND_IS = 1
     const val FRIEND_NO = 0
+    const val FRIEND_USER_VO = "userVO"
 
     //suzy：是否为群主
     const val GROUP_ID = "GroupId"

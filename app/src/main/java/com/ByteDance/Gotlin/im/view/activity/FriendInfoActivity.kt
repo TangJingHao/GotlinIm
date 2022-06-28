@@ -14,6 +14,7 @@ import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_ID
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_GROUPING
@@ -22,6 +23,7 @@ import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NAME
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NICKNAME
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_NO
 import com.ByteDance.Gotlin.im.util.Constants.FRIEND_TYPE
+import com.ByteDance.Gotlin.im.util.Constants.FRIEND_USER_VO
 import com.ByteDance.Gotlin.im.util.Constants.TAG_FRIEND_INFO
 import com.ByteDance.Gotlin.im.util.DUtils.JsonUtils.toJson
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
@@ -56,6 +58,7 @@ class FriendInfoActivity : AppCompatActivity() {
     private lateinit var mDeletePopupWindow:ConfirmPopupWindow
     private val mContext by lazy { this }
     private val friendId by lazy { intent.getIntExtra(Constants.FRIEND_ID,0) }
+    private lateinit var friendVO:UserVO
 
     companion object{
         /**
@@ -83,14 +86,14 @@ class FriendInfoActivity : AppCompatActivity() {
 
         initView()
         setListener()
-        setPopupWindow()
         setFriendData()
+        setPopupWindow()
     }
 
     private fun setPopupWindow() {
 
         if(mFriendType == FRIEND_IS){
-            mDeletePopupWindow = ConfirmPopupWindow(this,"确定删除好友${userName}?",object :PopupWindowListener{
+            mDeletePopupWindow = ConfirmPopupWindow(this,"确定删除好友?",object :PopupWindowListener{
                 override fun onConfirm(input: String?) {
                     v(TAG_FRIEND_INFO,"=====确定弹窗监听=====")
                     "暂无后台删除接口".showToast(this@FriendInfoActivity)
@@ -100,7 +103,7 @@ class FriendInfoActivity : AppCompatActivity() {
                 override fun onDismiss() { }
             })
         }else{
-            mDeletePopupWindow = ConfirmPopupWindow(this,"确定向${userName}发送好友申请?",object: PopupWindowListener{
+            mDeletePopupWindow = ConfirmPopupWindow(this,"确定发送好友申请?",object: PopupWindowListener{
                 override fun onConfirm(input: String?) {
                     v(TAG_FRIEND_INFO,"=====输入弹窗监听=====")
                     Repository.postRequestFriend(friendId,"通过ID"," ")
@@ -119,6 +122,7 @@ class FriendInfoActivity : AppCompatActivity() {
     private fun setFriendData() {
         mViewModel.friendInfoLiveData.observe(this, Observer { result->
             if(result!=null){
+                friendVO = result
                 //tvNickname.text = result
                 v(TAG_FRIEND_INFO,"======返回了数据库的好友信息=====")
                 //设置好友信息
@@ -154,6 +158,7 @@ class FriendInfoActivity : AppCompatActivity() {
             startActivity<FriendSettingActivity>(this){
                 putExtra(FRIEND_NICKNAME,intent.getStringExtra(Constants.FRIEND_NICKNAME))
                 putExtra(FRIEND_GROUPING,intent.getStringExtra(Constants.FRIEND_GROUPING))
+                putExtra(FRIEND_USER_VO,friendVO)
             }
         }
         mBinding.tabAddOrStart.root.onClick {
