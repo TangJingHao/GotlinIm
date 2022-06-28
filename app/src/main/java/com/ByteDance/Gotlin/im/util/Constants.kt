@@ -20,22 +20,19 @@ object Constants {
 
     //用户默认设置
     const val USER_DEFAULT_ID = -1
-    const val USER_DEFAULT_NAME = "name"
-    const val USER_DEFAULT_NICKNAME = "nickname"
-    const val USER_DEFAULT_EMAIL = "email"
-    const val USER_DEFAULT_SEX = "sex"
 
     //消息类型
     const val MESSAGE_TEXT = 0
     const val MESSAGE_IMG = 1
 
     //聊天类型
+    const val SEND_MESSAGE = "SEND_MESSAGE"
     const val CHAT_PRIVATE = 0
     const val CHAT_GROUP = 1
 
     //用户的状态设置
     const val USER_DEFAULT_MODE = 0//默认状态则不做处理
-    const val USER_CHANGE_MODE=1//用户修改界面
+    const val USER_CHANGE_MODE = 1//用户修改界面
     const val USER_DARK_MODE = 1
     const val USER_LIGHT_MODE = 2
 
@@ -57,6 +54,7 @@ object Constants {
     const val FRIEND_EMAIL = "FriendEmail"
     const val FRIEND_IS = 1
     const val FRIEND_NO = 0
+    const val FRIEND_USER_VO = "userVO"
 
     //suzy：是否为群主
     const val GROUP_ID = "GroupId"
@@ -70,10 +68,12 @@ object Constants {
     const val GROUP_OWNER = "GroupOwner"
     const val GROUP_IS = 1
     const val GROUP_NO = 0
+    const val GROUP_VO = "GroupVO"
+    const val GROUP_SESSION_ID = "GroupSessionId"
 
     //suzy：全局TAG
-    const val TAG_FRIEND_INFO = "FriendInfoActivity"
-    const val TAG_GROUP_INFO = "GroupInfoActivity"
+    const val TAG_FRIEND_INFO = "---FriendInfoActivity---"
+    const val TAG_GROUP_INFO = "---GroupInfoActivity---"
     const val TAG_SET_FRIEND_INFO = "SetFriendInfoActivity"
 
     //suzy：跳转
@@ -89,7 +89,4 @@ object Constants {
     const val SUCCESS_STATUS = 0
 
     const val TOKEN_EXPIRED=101
-
-    //发送
-    const val SEND_MESSAGE = "SEND_MESSAGE"
 }

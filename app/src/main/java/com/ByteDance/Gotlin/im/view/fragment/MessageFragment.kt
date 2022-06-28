@@ -45,6 +45,9 @@ class MessageFragment : Fragment() {
         private const val TAG = "MessageFragment"
     }
 
+    /** 判断数据库是已经存储完成 */
+    private var hasSave = false
+
     var gson = Gson()
 
     private val vm: MainViewModel by lazy {
@@ -69,7 +72,13 @@ class MessageFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun initListener() {
+        // 判断数据库是否已存储完成
+        vm.sessionDB.observe(requireActivity()) {
+            hasSave = it
+        }
+
         vm.sessionObserverData.observe(requireActivity()) { result ->
+
             val responseData = result.getOrNull()
             if (responseData == null) {
                 TPhoneUtil.showToast(BaseApp.getContext(), "消息列表返回值为NULL")
@@ -160,7 +169,7 @@ class MessageFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         vm.getWebSocket()
-        vm.getSessionList()
+        loadData()
     }
 
     private fun initView() {

@@ -8,15 +8,12 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.adapter.TabWithTitleAdapter
 import com.ByteDance.Gotlin.im.databinding.DActivityMyGroupBinding
 import com.ByteDance.Gotlin.im.info.vo.GroupVO
-import com.ByteDance.Gotlin.im.util.Constants
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.diy.InputPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
-import com.ByteDance.Gotlin.im.util.Mutils.startActivity
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
 import com.ByteDance.Gotlin.im.viewmodel.MyGroupViewModel
 
@@ -33,6 +30,9 @@ class MyGroupActivity : AppCompatActivity() {
     }
 
     private lateinit var mContext: Context
+
+    /** 判断数据库是已经存储完成 */
+    private var hasSave = false
 
     private val b: DActivityMyGroupBinding by lazy {
         DActivityMyGroupBinding.inflate(LayoutInflater.from(this))
@@ -110,20 +110,12 @@ class MyGroupActivity : AppCompatActivity() {
                         mContext,
                         groupVO.groupName + " gid:" + groupVO.groupId
                     )
-                    // TODO 跳转到群聊详情页
-                    startActivity<GroupInfoActivity>(this.mContext) {
-                        putExtra(Constants.GROUP_ID, groupVO.groupId)
-                        putExtra(Constants.GROUP_NAME, groupVO.groupName)
-                        putExtra(Constants.GROUP_NUM, groupVO.number)
-                        putExtra(Constants.GROUP_MY_NAME, groupVO.markName)
-                        putExtra(Constants.GROUP_OWNER, groupVO.creatorId)
-                    }
-                    this.overridePendingTransition(R.anim.t_splash_open, R.anim.t_splash_close)
-
+                    // 通知去查询相应Session并跳转
+                    vm.getSessionByGroup(groupVO)
                 })
                 b.rvLayout.adapter = adapter
                 b.rvLayout.layoutManager = LinearLayoutManager(mContext)
-                if (groupList.size != 0)
+                if (groupList != null && groupList.size != 0)
                     adapter.notifyDataSetChanged()
             }
         }
@@ -133,6 +125,31 @@ class MyGroupActivity : AppCompatActivity() {
                 TPhoneUtil.showToast(this, response.msg)
                 vm.getGroupList()
             }
+        }
+        vm.startActivityObserver.observe(this) {
+            startActivity2GroupInfo(it.sessionId, it.group)
+        }
+        vm.groupListDB.observe(this) {
+            hasSave = it
+        }
+    }
+
+    fun startActivity2GroupInfo(sessionId: Int, group: GroupVO) {
+        if (hasSave) {
+            // TODO 跳转到群聊详情页
+            DLogUtils.i(TAG, "sid:${sessionId},gid${group.groupId}")
+            GroupInfoActivity.startGroupInfoActivity(this,group)
+
+
+//            startActivity<GroupInfoActivity>(this.mContext) {
+//                putExtra(Constants.GROUP_ID, group.groupId)
+//                putExtra(Constants.GROUP_NAME, group.groupName)
+//                putExtra(Constants.GROUP_NUM, group.number)
+//                putExtra(Constants.GROUP_MY_NAME, group.markName)
+//                putExtra(Constants.GROUP_OWNER, group.creatorId)
+//            }
+//            this.overridePendingTransition(R.anim.t_splash_open, R.anim.t_splash_close)
+//            this.finish()
         }
     }
 }

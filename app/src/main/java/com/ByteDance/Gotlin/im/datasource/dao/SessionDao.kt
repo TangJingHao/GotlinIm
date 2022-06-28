@@ -24,6 +24,14 @@ interface SessionDao {
     fun querySessionByUid(uid: Int): SessionVO
 
 
+    /** 通过用户id返回会话类 */
+    @Query(
+        "select * from SessionTable " +
+                "where sessionId = (select sid from SessionGroupTable where gid = :gid)"
+    )
+    fun querySessionByGid(gid: Int): SessionVO
+
+
     @Query(
         "select * from SessionTable " +
                 "where sessionId = :sessionId"

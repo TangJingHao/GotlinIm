@@ -28,4 +28,11 @@ interface ChangeUserDataService {
         @Query("oldPassword")oldPassword: String,
         @Query("newPassword")newPassword:String
     ):Call<DefaultResponse>
+
+    @PATCH("user/info/{userId}")
+    fun changeFriendNickName(
+        @Header("token")token:String,
+        @Path("userId")userId:Int,
+        @Query("nickname")nickname:String
+    ):Call<DefaultResponse>
 }

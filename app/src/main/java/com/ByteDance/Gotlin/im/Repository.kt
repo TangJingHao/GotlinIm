@@ -7,10 +7,12 @@ import androidx.lifecycle.liveData
 import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.datasource.database.SQLDatabase
 import com.ByteDance.Gotlin.im.entity.MessageEntity
+import com.ByteDance.Gotlin.im.entity.SessionGroupEntity
 import com.ByteDance.Gotlin.im.entity.SessionUserEntity
 import com.ByteDance.Gotlin.im.info.LoginDataResponse
 import com.ByteDance.Gotlin.im.info.User
 import com.ByteDance.Gotlin.im.info.response.DefaultResponse
+import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.network.base.ServiceCreator
@@ -119,22 +121,6 @@ object Repository {
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
     fun deleteUserId() = mmkv.removeValueForKey(MMKV_USER_ID)
 
-    /**
-     * 获取当前用户nickName
-     */
-    fun getUsernickName() = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
-
-    /**
-     * 获取当前用户头像
-     */
-    fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, "../img/home.png")
-
-    fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
-
-    fun getUserSex() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
-
-    fun getUserEmail() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
-
     /*
     * 数据库=========================================================================================
     */
@@ -144,7 +130,9 @@ object Repository {
 
     // 会话数据表
     /** 根据用户id返回sessionVO 的 LiveData */
-    fun querySessionById(uid: Int) = db.sessionDao().querySessionByUid(uid)
+    fun querySessionByUserId(uid: Int) = db.sessionDao().querySessionByUid(uid)
+    /** 根据群聊id返回sessionVO 的 LiveData */
+    fun querySessionByGroupId(gid: Int) = db.sessionDao().querySessionByGid(gid)
     fun insertSession(session: SessionVO) = db.sessionDao().insertSession(session)
     fun updateSession(session: SessionVO) = db.sessionDao().updateSession(session)
     fun deleteSession(session: SessionVO) = db.sessionDao().deleteSession(session)
@@ -153,10 +141,20 @@ object Repository {
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
     fun queryUserById(userId: Int) = db.userDao().queryUserById(userId)
+    fun queryUserBySid(sid: Int) = db.userDao().queryUserBySId(sid)
+    fun queryUserByIdReturnName(userId: Int) = db.userDao().queryUserByIdReturnUser(userId)
     fun insertUser(user: UserVO) = db.userDao().insertUser(user)
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
     fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)
     fun deleteAllUser() = db.userDao().deleteAllUser()
+
+    // 群聊数据表
+    fun queryAllGroup() = db.groupDao().queryAllGroups()
+    fun queryGroupById(gid: Int) = db.groupDao().queryGroupById(gid)
+    fun insertGroup(group: GroupVO) = db.groupDao().insertGroup(group)
+    fun upDataGroup(group: GroupVO) = db.groupDao().upDataGroup(group)
+    fun deleteGroup(group: GroupVO) = db.groupDao().deleteGroup(group)
+    fun deleteAllGroup() = db.groupDao().deleteAllGroup()
 
     // 消息数据表
     /** 根据会话id，发送者id,时间范围以及消息模糊查找 */
@@ -172,16 +170,29 @@ object Repository {
 
     // session - user 关系表
     fun insertSU(su: SessionUserEntity) = db.suDao().insertSU(su)
+    fun deleteAllSU() = db.suDao().deleteAllSU()
+    fun queryUidBySid(sid: Int) = db.suDao().queryUidBySid(sid)
+    fun querySidByUid(uid: Int) = db.suDao().querySidByUid(uid)
+
+
+    // session - group 关系表
+    fun insertSG(sg: SessionGroupEntity) = db.sgDao().insertSG(sg)
+    fun deleteAllSG() = db.sgDao().deleteAllSG()
+    fun queryGidBySid(sid: Int) = db.sgDao().queryGidBySid(sid)
+    fun querySidByGid(gid: Int) = db.sgDao().querySidByGid(gid)
 
     fun deleteAllTable() {
         deleteAllUser()
         deleteAllSession()
         deleteAllMessage()
+        deleteAllGroup()
+        deleteAllSU()
+        deleteAllSG()
     }
 
-    /** 根据uid检索并切换线程返回Session的LiveDat*/
+    /** 根据uid检索并切换线程返回Session的LiveData*/
     fun getSessionByUid(uid: Int) = fire(Dispatchers.IO) {
-        val session = querySessionById(uid)
+        val session = querySessionByUserId(uid)
         if (session != null) {
             Result.success(session)
         } else {
@@ -483,56 +494,9 @@ object Repository {
         }
     }
 
-    /**
-     * 保存备注
-     */
-    fun saveNickName(friendId: String, nickname: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---保存${friendId}的新备注${nickname}---")
-        //emit(groupId)
-    }
 
     /**
-     * 获取分组
-     */
-    fun getAllGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
-
-    /**
-     * 获取分组
-     */
-    fun getSelectedGrouping(myId: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---获取分组---")
-        emit(myId)
-    }
-
-    /**
-     * 保存分组
-     */
-    fun saveGrouping(myId: String, grouping: List<Map<String, Boolean>>) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---保存分组---")
-        emit(myId)
-    }
-
-    /**
-     * 获取群聊信息
-     */
-    fun getGroupInfo(groupId: Int) = liveData<Int> {
-        i(TAG_FRIEND_INFO, "---$groupId---")
-        emit(groupId)
-    }
-
-    /**
-     * 获取好友信息
-     */
-    fun getFriendInfo(account: String) = liveData<String> {
-        i(TAG_FRIEND_INFO, "---$account---")
-        emit(account)
-    }
-
-    /**
-     * 获取好友信息
+     * 保存备注修改
      */
     fun getNickNameSave(nickname: String) = liveData<String> {
         i(TAG_FRIEND_INFO, "---$nickname---")
@@ -605,9 +569,16 @@ object Repository {
         this.webSocket = ws
     }
 
+    fun refreshWebSocket() {
+        this.webSocket = getWebSocketAndConnect()
+    }
+
+    var count = 5
+
     class EchoWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             DLogUtils.i(TAG, "WebSocket链接开启$webSocket\n$response")
+            count = 5
             setWebSocket(webSocket)
             onWsOpenObserverData.postValue(response)
         }
@@ -634,7 +605,9 @@ object Repository {
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             DLogUtils.i(TAG, "链接失败\t$t\n$response")
-            getWebSocket()
+            while (count-- > 0) {
+                refreshWebSocket()
+            }
             onWsFailureObserverData.postValue(t)
         }
     }

@@ -13,6 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.nio.charset.Charset
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -69,6 +70,10 @@ object ServiceCreator {
         })
         .pingInterval(30, TimeUnit.SECONDS)
         .connectTimeout(60, TimeUnit.SECONDS)
+        //.protocols(Collections.unmodifiableList(Arrays.asList(Protocol.HTTP_1_1)))//启用http1.1，禁用http 2.0
+        .protocols(
+            Collections.unmodifiableList(listOf(Protocol.HTTP_1_1, Protocol.HTTP_2))
+        )//启用http1.1  http2.0协议
         .build()
 
 

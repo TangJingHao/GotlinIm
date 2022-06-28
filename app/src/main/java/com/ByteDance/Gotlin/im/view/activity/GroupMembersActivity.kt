@@ -90,20 +90,8 @@ class GroupMembersActivity : AppCompatActivity() {
                             mContext,
                             memberUserVO.userName + " userId:" + memberUserVO.userId
                         )
-                        // TODO 跳转到好友详情页
-                        startActivity<FriendInfoActivity>(this.mContext) {
-                            putExtra(Constants.FRIEND_TYPE,Constants.FRIEND_IS)
-                            putExtra(Constants.FRIEND_ID,
-                                memberUserVO.userId)
-                            putExtra(Constants.FRIEND_NAME,
-                                memberUserVO.userName)
-                            putExtra(Constants.FRIEND_NICKNAME,
-                                memberUserVO.nickName)
-                            putExtra(Constants.FRIEND_GROUPING,
-                                "大学同学")
-                        }
-                        this.overridePendingTransition(R.anim.t_splash_close,R.anim.t_splash_open)
-//                            FriendInfoActivity.startFriendInfoActivity(this, FRIEND_IS,memberUserVO.userId,memberUserVO.userName,memberUserVO.nickName)
+                        // TODO 跳转到好友详情页  不跳了
+                        //  FriendInfoActivity.startFriendInfoActivity(this,memberUserVO.userId)
                     })
                 mBinding.rvMember.adapter = adapter
                 mBinding.rvMember.layoutManager = LinearLayoutManager(mContext)

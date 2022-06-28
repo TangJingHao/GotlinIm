@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 /**
@@ -46,11 +47,20 @@ public class DifferCallback extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         MessageVO o = oldData.get(oldItemPosition);
         MessageVO n = newData.get(newItemPosition);
-        if (!o.getSession().equals(n.getSession())) return false;
-        if (!o.getSender().equals(n.getSender())) return false;
-        if (o.getType() != n.getType()) return false;
-        if (!o.getContent().equals(n.getContent())) return false;
-        if (!o.getSendTime().equals(n.getSendTime())) return false;
-        return o.getSelf() == n.getSelf();
+        Field[] fc1 = oldData.get(oldItemPosition).getClass().getDeclaredFields();
+        Field[] fc2 = newData.get(newItemPosition).getClass().getDeclaredFields();
+
+        for (int i = 0; i < fc1.length; i++) {
+            try {
+                fc1[i].setAccessible(true);
+                fc2[i].setAccessible(true);
+                if (!fc1[i].get(o).toString().equals(fc2[i].get(n).toString())) {
+                    return false;
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

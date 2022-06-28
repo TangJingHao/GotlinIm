@@ -12,6 +12,8 @@ import com.ByteDance.Gotlin.im.info.MessageList
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.model.SessionUserLiveData
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.view.fragment.MessageFragment
 import kotlinx.coroutines.*
 import okhttp3.WebSocket
 
@@ -80,10 +82,12 @@ class MainViewModel : ViewModel() {
     private val mSessionData = MutableLiveData<Int>()
 
     val sessionObserverData = Transformations.switchMap(mSessionData) {
+        DLogUtils.i(TAG,"消息列表网络更新")
         Repository.getSessionList(it)
     }
 
     val sessionDB = Transformations.switchMap(sessionObserverData) {
+        DLogUtils.i(TAG,"消息列表数据库更新")
         val response = it.getOrNull()
         if (response == null) {
             // 网络请求失败，直接返回
@@ -119,6 +123,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun getSessionList() {
+        DLogUtils.i(TAG,"消息列表刷新")
         mSessionData.postValue(Repository.getUserId())
     }
 
@@ -135,6 +140,7 @@ class MainViewModel : ViewModel() {
     val msgRedPointObserver = MutableLiveData<Int>()
 
     fun setMsgRedPointNum(num: Int) {
+        DLogUtils.i(TAG,"消息列表小红点更新")
         msgRedPointObserver.postValue(num)
     }
 
@@ -142,11 +148,13 @@ class MainViewModel : ViewModel() {
     private val requestRedPointData = MutableLiveData<Int>()
 
     val requestRedPointObserver = Transformations.switchMap(requestRedPointData) {
+        DLogUtils.i(TAG,"网络请求：消息列表小红点更新")
         Repository.getRequestBadge()
     }
 
     /** 更新通讯录页的小红点 */
     fun getMsgRedPointNum() {
+        DLogUtils.i(TAG,"请求更新通讯录小红点")
         requestRedPointData.postValue(0)
     }
 
@@ -154,6 +162,7 @@ class MainViewModel : ViewModel() {
     val newFriendRedPointObserver = MutableLiveData<Int>()
 
     fun setNewFriendRedPointNum(num: Int) {
+        DLogUtils.i(TAG,"查找新好友小红点更新")
         newFriendRedPointObserver.postValue(num)
     }
 
@@ -161,6 +170,7 @@ class MainViewModel : ViewModel() {
     val newGroupChatRedPointObserver = MutableLiveData<Int>()
 
     fun setNewGroupChatRedPointNum(num: Int) {
+        DLogUtils.i(TAG,"查找新群聊小红点更新")
         newGroupChatRedPointObserver.postValue(num)
     }
 
@@ -173,7 +183,7 @@ class MainViewModel : ViewModel() {
         runBlocking {
             val res = async {
                 val session: SessionVO = withContext(Dispatchers.IO) {
-                    Repository.querySessionById(it.userId)
+                    Repository.querySessionByUserId(it.userId)
                 }
                 MutableLiveData(SessionUserLiveData(session, it))
             }.await()

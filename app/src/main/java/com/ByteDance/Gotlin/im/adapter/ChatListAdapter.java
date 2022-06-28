@@ -2,10 +2,10 @@ package com.ByteDance.Gotlin.im.adapter;
 
 import static com.ByteDance.Gotlin.im.util.Constants.BASE_URL;
 import static com.ByteDance.Gotlin.im.util.Constants.DEFAULT_IMG;
-import static com.ByteDance.Gotlin.im.util.Hutils.DensityUtil.px2dp;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ByteDance.Gotlin.im.R;
@@ -27,7 +28,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
 import java.util.LinkedList;
@@ -47,7 +47,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     private final int max_width;
     private final int max_height;
     private LinkedList<MessageVO> list;
+    private AvatarCallBack callBack;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public ChatListAdapter(LinkedList<MessageVO> list) {
         this.list = list;
         context = BaseApp.Companion.getContext();
@@ -56,6 +58,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         max_height = (int) (dm.heightPixels * IMAGE_H_SCALE);
         HLog.d("屏幕长度" + dm.heightPixels + "屏幕宽度" + dm.widthPixels);
         HLog.i("图片最大长度:" + max_height + "图片最大宽度" + max_width);
+    }
+
+    public void setCallBack(AvatarCallBack callBack) {
+        this.callBack = callBack;
     }
 
     /**
@@ -99,6 +105,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.left.setVisibility(View.GONE);
             binding.nameRight.setText(userVO.getNickName());
             loadPic(avatarImg, binding.headerRight.img);
+            //设置头像点击回调
+            binding.headerRight.img.setOnClickListener(v -> callBack.onClick(binding.headerRight.img, userVO));
 
             if (message.getType() == Constants.MESSAGE_TEXT) {
                 binding.msgRight.setText(message.getContent());
@@ -112,6 +120,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             binding.right.setVisibility(View.GONE);
             binding.nameLeft.setText(userVO.getNickName());
             loadPic(avatarImg, binding.headerLeft.img);
+            //设置头像点击回调
+            binding.headerLeft.img.setOnClickListener(v -> callBack.onClick(binding.headerLeft.img, userVO));
 
             if (message.getType() == Constants.MESSAGE_TEXT) {
                 binding.msgLeft.setText(message.getContent());
@@ -143,10 +153,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
     /**
      * 自适应加载图片
+     *
      * @param path 图片路径
-     * @param v 目标
+     * @param v    目标
      */
-    @Deprecated
     private void loadImg(String path, ImageView v) {
         CustomTarget<Drawable> target = new CustomTarget<Drawable>() {
             @Override
@@ -177,6 +187,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             }
         };
         Glide.with(context).load(path).into(target);
+    }
+
+    public interface AvatarCallBack {
+        void onClick(View view, UserVO user);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
