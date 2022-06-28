@@ -88,7 +88,7 @@ class GroupInviteActivity : AppCompatActivity() {
                     mConfirmPopupWindow = ConfirmPopupWindow(this,"确定邀请新成员?",object :PopupWindowListener{
                         override fun onConfirm(input: String?) {
                             "已发送邀请".showToast(this@GroupInviteActivity)
-                            Repository.postRequestGroup(mGroupId,"通过群聊添加","")
+                            //Repository.postRequestGroup(mGroupId,"通过群聊添加","")
                         }
 
                         override fun onCancel() {}

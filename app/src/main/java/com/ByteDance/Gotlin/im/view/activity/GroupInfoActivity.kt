@@ -62,10 +62,7 @@ class GroupInfoActivity : AppCompatActivity() {
     private var mInputType :Int = INPUT_GROUP_NAME
 
     companion object{
-        /**
-         * 群聊类型 Constants.GROUP_IS Constants.GROUP_NO
-         *
-         */
+
         fun startGroupInfoActivity(context: Context, groupVO: GroupVO){
             var groupType = if (groupVO.creatorId==Repository.getUserId()) OWNER_IS
             else OWNER_NO
