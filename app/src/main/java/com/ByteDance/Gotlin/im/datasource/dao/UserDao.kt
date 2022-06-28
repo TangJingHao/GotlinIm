@@ -25,6 +25,12 @@ interface UserDao {
     fun queryUserById(userId: Int): LiveData<UserVO>
 
     @Query(
+        "select * from userTable " +
+                "where userId = (select uid from SessionUserTable where sid = :sid)"
+    )
+    fun queryUserBySId(sid: Int): LiveData<UserVO>
+
+    @Query(
         "select * from UserTable " +
                 "where userId = :userId and userId"
     )

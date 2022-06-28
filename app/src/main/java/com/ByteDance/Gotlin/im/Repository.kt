@@ -120,22 +120,6 @@ object Repository {
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
     fun deleteUserId() = mmkv.removeValueForKey(MMKV_USER_ID)
 
-    /**
-     * 获取当前用户nickName
-     */
-    fun getUsernickName() = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
-
-    /**
-     * 获取当前用户头像
-     */
-    fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, "../img/home.png")
-
-    fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
-
-    fun getUserSex() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
-
-    fun getUserEmail() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
-
     /*
     * 数据库=========================================================================================
     */
@@ -155,6 +139,7 @@ object Repository {
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
     fun queryUserById(userId: Int) = db.userDao().queryUserById(userId)
+    fun queryUserBySid(sid: Int) = db.userDao().queryUserBySId(sid)
     fun queryUserByIdReturnName(userId: Int) = db.userDao().queryUserByIdReturnUser(userId)
     fun insertUser(user: UserVO) = db.userDao().insertUser(user)
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
