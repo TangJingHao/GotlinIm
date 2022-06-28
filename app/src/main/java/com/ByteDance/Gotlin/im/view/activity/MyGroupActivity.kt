@@ -119,11 +119,11 @@ class MyGroupActivity : AppCompatActivity() {
                         putExtra(Constants.GROUP_OWNER, groupVO.creatorId)
                     }
                     this.overridePendingTransition(R.anim.t_splash_open, R.anim.t_splash_close)
-
+                    this.finish()
                 })
                 b.rvLayout.adapter = adapter
                 b.rvLayout.layoutManager = LinearLayoutManager(mContext)
-                if (groupList.size != 0)
+                if (groupList!=null && groupList.size!=0)
                     adapter.notifyDataSetChanged()
             }
         }

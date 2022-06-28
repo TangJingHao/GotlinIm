@@ -44,7 +44,7 @@ class GroupInfoActivity : AppCompatActivity() {
     private val mViewModel by lazy { ViewModelProvider(this).get(GroupInfoViewModel::class.java) }
     private var mOwnerType = 0
     private val mGroupType by lazy { intent.getIntExtra(Constants.GROUP_TYPE,Constants.GROUP_IS) }
-    private val groupId by lazy { intent.getIntExtra(Constants.GROUP_ID,1) }
+    private val groupId by lazy { intent.getIntExtra(Constants.GROUP_ID,0) }
     private val groupName by lazy { intent.getStringExtra(Constants.GROUP_NAME) }
     private lateinit var mSession :SessionVO
     private lateinit var mConfirmPW: ConfirmPopupWindow
@@ -140,6 +140,7 @@ class GroupInfoActivity : AppCompatActivity() {
         }
         if (mGroupType == GROUP_IS){
             mBinding.tabAddStartGroup.tvBlue.text = this.resources.getString(R.string.tab_red_group_start)
+            mBinding.tabItemInfoSearch.root.visibility = View.VISIBLE
         }else if(mGroupType == GROUP_NO){
             mBinding.tabAddStartGroup.tvBlue.text = this.resources.getString(R.string.tab_red_group_add)
             mBinding.tabLayoutGroup.visibility = View.INVISIBLE
@@ -190,7 +191,7 @@ class GroupInfoActivity : AppCompatActivity() {
         mBinding.tabItemInfoSearch.root.onClick {
             v(Constants.TAG_GROUP_INFO,"--群聊消息搜索跳转--")
             //TODO:跳转到搜索聊天消息,需要会话id
-            SearchActivity.startMsgSearch(this,mSession.sessionId )
+            //SearchActivity.startMsgSearch(this,mSession.sessionId )
         }
         mBinding.tabDeleteGroup.root.onClick {
             v(Constants.TAG_GROUP_INFO,"--删除群聊:解散群聊or退出群聊--")
@@ -198,9 +199,9 @@ class GroupInfoActivity : AppCompatActivity() {
         }
         mBinding.tabAddStartGroup.root.onClick {
             if (mGroupType == GROUP_IS){
-                v(Constants.TAG_GROUP_INFO,"----加入群聊----")
+                v(Constants.TAG_GROUP_INFO,"----开始聊天----")
                 //TODO:跳转到聊天
-                ChatActivity.startChat(this,mSession)
+                //ChatActivity.startChat(this,mSession)
             }else if(mGroupType == GROUP_NO){
                 //TODO:弹窗进行申请加入
                 mConfirmPW.show()
