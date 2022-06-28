@@ -63,6 +63,7 @@ class MyInformationFragment : Fragment() {
     private lateinit var mMyEditMediaIListener: TMyEditMediaIListener
     private lateinit var mLauncherResult: ActivityResultLauncher<Intent>
     private lateinit var mInputPopupWindow: InputPopupWindow
+    private lateinit var mPasswordPopupWindow: InputPopupWindow
     private lateinit var mSingleSelectPopupWindow: SingleSelectPopupWindow
     private lateinit var mConfirmPopupWindow: ConfirmPopupWindow
     private lateinit var mViewModel: ChangeUserDataViewModel
@@ -102,23 +103,27 @@ class MyInformationFragment : Fragment() {
         var userData = Repository.getUserData()
         mBinding.nicknameTv.text = Repository.getUserLoginNickname()
         mBinding.emailTv.text = userData.email
-
-        //判断用户是否有修改模式
-        var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
-        mBinding.sbIosBtn.isChecked = flag
-        if (flag) {
-            if (Repository.getUserMode() == Constants.USER_LIGHT_MODE) {
-                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
-            } else {
-                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
-            }
-        } else {
-            if (TPhoneUtil.getPhoneMode(requireContext()) == Constants.USER_LIGHT_MODE) {
-                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
-            } else {
-                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
-            }
+        if(TPhoneUtil.getPhoneMode(requireContext())==Constants.LIGHT_MODE){
+            mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
+        }else{
+            mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
         }
+//        //判断用户是否有修改模式
+//        var flag = Repository.getUserChangeAction() != Constants.USER_DEFAULT_MODE
+//        mBinding.sbIosBtn.isChecked = flag
+//        if (flag) {
+//            if (Repository.getUserMode() == Constants.USER_LIGHT_MODE) {
+//                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
+//            } else {
+//                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
+//            }
+//        } else {
+//            if (TPhoneUtil.getPhoneMode(requireContext()) == Constants.USER_LIGHT_MODE) {
+//                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_sun)
+//            } else {
+//                mBinding.statusChangeIv.setImageResource(R.drawable.ic_24_moon)
+//            }
+//        }
         Glide.with(requireContext()).load(Repository.getUserLoginAvatar()).into(mBinding.iconIv)
     }
 
@@ -234,35 +239,36 @@ class MyInformationFragment : Fragment() {
             mSingleSelectPopupWindow.setCancelText("取消修改")
             mSingleSelectPopupWindow.show()
         }
-        //修改模式
-        mBinding.sbIosBtn.setOnCheckedChangeListener { compoundButton, isChecked ->
-            if (isChecked) {
-                TLogUtil.d("选中")
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                Repository.saveUserMode(Constants.DARK_MODE)
-                Repository.setUserChangeAction(Constants.USER_CHANGE_MODE)
-                TPhoneUtil.showToast(requireContext(), "重启切换夜间模式")
-            } else {
-                TLogUtil.d("未选中")
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                Repository.saveUserMode(Constants.LIGHT_MODE)
-                Repository.setUserChangeAction(Constants.USER_DEFAULT_MODE)
-                TPhoneUtil.showToast(requireContext(), "重启切换正常模式")
-            }
-            Handler(Looper.getMainLooper()).postDelayed({
-                requireActivity().startActivity(Intent(requireActivity(), BaseActivity::class.java))
-                requireActivity().finish()
-                requireActivity().overridePendingTransition(
-                    R.anim.t_enter, R.anim.t_close
-                )
-            }, 1000)
-        }
+//        //修改模式
+//        mBinding.sbIosBtn.setOnCheckedChangeListener { compoundButton, isChecked ->
+//            if (isChecked) {
+//                TLogUtil.d("选中")
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                Repository.saveUserMode(Constants.DARK_MODE)
+//                Repository.setUserChangeAction(Constants.USER_CHANGE_MODE)
+//                TPhoneUtil.showToast(requireContext(), "重启切换夜间模式")
+//            } else {
+//                TLogUtil.d("未选中")
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+//                Repository.saveUserMode(Constants.LIGHT_MODE)
+//                Repository.setUserChangeAction(Constants.USER_DEFAULT_MODE)
+//                TPhoneUtil.showToast(requireContext(), "重启切换正常模式")
+//            }
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                requireActivity().startActivity(Intent(requireActivity(), BaseActivity::class.java))
+//                requireActivity().finish()
+//                requireActivity().overridePendingTransition(
+//                    R.anim.t_enter, R.anim.t_close
+//                )
+//            }, 1000)
+//        }
         mBinding.loginConfigIv.setOnClickListener {
             val popupWindowListener: PopupWindowListener = object : PopupWindowListener {
                 override fun onConfirm(input: String) {
                     Thread() {
                         Repository.deleteAllTable()
                         Repository.deleteUserId()
+                        Repository.deleteUserMode()
                         requireActivity().startActivity(
                             Intent(
                                 requireActivity(),
@@ -283,10 +289,56 @@ class MyInformationFragment : Fragment() {
             }
             mConfirmPopupWindow =
                 ConfirmPopupWindow(requireContext(), "确定要退出吗", popupWindowListener)
+            mConfirmPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
             mConfirmPopupWindow.setConfirmText("确认")
             mConfirmPopupWindow.setCancelText("我在想想")
             mConfirmPopupWindow.setWarnTextColorType()
             mConfirmPopupWindow.show()
+        }
+        mBinding.passwordConfigIv.setOnClickListener {
+            val passwordPopupWindowListener: PopupWindowListener = object : PopupWindowListener {
+                override fun onConfirm(input: String) {
+                    val changeUserInfo = ServiceCreator.create<ChangeUserDataService>()
+                        .changeUserPassword(
+                            Repository.getToken(),
+                            Repository.getUserId(),
+                            Repository.getUserLoginPassword(),
+                            input
+                        )
+                    changeUserInfo.enqueue(object : Callback<DefaultResponse> {
+                        override fun onResponse(
+                            call: Call<DefaultResponse>,
+                            response: Response<DefaultResponse>
+                        ) {
+                            val body = response.body()
+                            if (body != null) {
+                                if (body?.status == Constants.SUCCESS_STATUS) {
+                                    TPhoneUtil.showToast(requireContext(), "修改成功")
+                                    Repository.setUserLoginNickname(input)
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<DefaultResponse>, t: Throwable) {
+                            t.printStackTrace()
+                            TLogUtil.d("修改失败")
+                        }
+
+                    })
+                }
+
+                override fun onCancel() {
+                    mPasswordPopupWindow.dismiss()
+                }
+
+                override fun onDismiss() {
+                    mPasswordPopupWindow.dismiss()
+                }
+            }
+            mPasswordPopupWindow =
+                InputPopupWindow(requireContext(), "昵称修改", passwordPopupWindowListener)
+            mPasswordPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
+            mPasswordPopupWindow.show()
         }
     }
 

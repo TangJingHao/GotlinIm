@@ -89,8 +89,8 @@ object Repository {
     fun getUserLoginAvatar(): String = mmkv.decodeString(MMKV_LOGIN_AVATAR, "ABC")
 
     //用户昵称和性别（保存本地）
-    fun setUserLoginNickname(userName: String) = mmkv.encode(MMKV_LOGIN_USER_NAME, userName)
-    fun getUserLoginNickname(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME)
+    fun setUserLoginNickname(userName: String) = mmkv.encode(MMKV_LOGIN_NICKNAME, userName)
+    fun getUserLoginNickname(): String = mmkv.decodeString(MMKV_LOGIN_NICKNAME)
     fun setUserLoginSex(sex: String) = mmkv.encode(MMKV_LOGIN_SEX, sex)
     fun getUserLoginSex(): String = mmkv.decodeString(MMKV_LOGIN_SEX)
 

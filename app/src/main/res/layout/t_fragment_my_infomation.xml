@@ -140,9 +140,8 @@
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/ic_24_chevron_right" />
             </RelativeLayout>
-
             <RelativeLayout
-                android:id="@+id/online_status_config_rl"
+                android:id="@+id/password_config_rl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/im_spacing_huge">
@@ -150,12 +149,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="修改在线状态"
+                    android:text="修改密码"
                     android:textColor="?attr/text_ultrastrong"
                     android:textSize="@dimen/im_text_medium" />
 
                 <ImageView
-                    android:id="@+id/online_status_config_iv"
+                    android:id="@+id/password_config_iv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -196,35 +195,35 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/config_setting_rl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/im_spacing_huge">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/config_setting_rl"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/im_spacing_huge">-->
 
-                <TextView
-                    android:id="@+id/config_setting_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="暗黑模式"
-                    android:textColor="?attr/text_ultrastrong"
-                    android:textSize="@dimen/im_text_medium" />
+<!--                <TextView-->
+<!--                    android:id="@+id/config_setting_tv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="暗黑模式"-->
+<!--                    android:textColor="?attr/text_ultrastrong"-->
+<!--                    android:textSize="@dimen/im_text_medium" />-->
 
-                <com.xuexiang.xui.widget.button.switchbutton.SwitchButton
-                    android:id="@+id/sb_ios_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    app:swb_animationDuration="300"
-                    app:swb_backDrawable="@drawable/t_ios_back_drawable"
-                    app:swb_thumbDrawable="@drawable/t_ios_thumb_selector"
-                    app:swb_thumbHeight="29dp"
-                    app:swb_thumbMarginBottom="-6dp"
-                    app:swb_thumbMarginLeft="-2dp"
-                    app:swb_thumbMarginRight="-2dp"
-                    app:swb_thumbMarginTop="-2.5dp"
-                    app:swb_thumbWidth="23dp" />
-            </RelativeLayout>
+<!--                <com.xuexiang.xui.widget.button.switchbutton.SwitchButton-->
+<!--                    android:id="@+id/sb_ios_btn"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    app:swb_animationDuration="300"-->
+<!--                    app:swb_backDrawable="@drawable/t_ios_back_drawable"-->
+<!--                    app:swb_thumbDrawable="@drawable/t_ios_thumb_selector"-->
+<!--                    app:swb_thumbHeight="29dp"-->
+<!--                    app:swb_thumbMarginBottom="-6dp"-->
+<!--                    app:swb_thumbMarginLeft="-2dp"-->
+<!--                    app:swb_thumbMarginRight="-2dp"-->
+<!--                    app:swb_thumbMarginTop="-2.5dp"-->
+<!--                    app:swb_thumbWidth="23dp" />-->
+<!--            </RelativeLayout>-->
 
             <RelativeLayout
                 android:id="@+id/theme_config_rl"
