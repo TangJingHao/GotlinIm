@@ -19,7 +19,6 @@ data class GroupVO(
     /** 群主 ID  */
     val creatorId: Int,
 
-    @ColumnInfo(name = "group_name")
     /** 群聊名称  */
     val groupName: String,
 
@@ -30,20 +29,17 @@ data class GroupVO(
     val number: Int,
 
     /** 当前群聊公告  */
-    val notice: String,
+    val notice: String? = null,
 
-    @ColumnInfo(name = "online_num")
     /** 群聊在线人数  */
     val onlineNum: Int,
 
-    @ColumnInfo(name = "mark_name")
     /** 用户群聊备注  */
-    val markName: String,
+    val markName: String? = null,
 
     /** 用户入群时间  */
     val inTime: String,
 
-    @ColumnInfo(name = "last_msg_id")
     /** 用户最后一条已阅的消息 ID  */
     val lastMsgId: Int,
 

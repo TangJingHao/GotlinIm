@@ -20,7 +20,7 @@ import java.sql.Date
 @Database(
     entities = [UserVO::class, SessionVO::class, GroupVO::class, MessageEntity::class,
         SessionUserEntity::class, SessionGroupEntity::class],
-    version = 6
+    version = 8
 )
 @TypeConverters(Converters::class)
 abstract class SQLDatabase : RoomDatabase() {

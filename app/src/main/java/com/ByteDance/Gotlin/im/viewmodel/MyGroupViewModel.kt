@@ -7,6 +7,7 @@ import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.entity.SessionGroupEntity
 import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
+import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import kotlinx.coroutines.*
 
 /**
@@ -17,14 +18,18 @@ import kotlinx.coroutines.*
  */
 class MyGroupViewModel : ViewModel() {
 
+    val TAG = "MyGroupViewModel"
+
     // 群聊列表=======================================================================================
     private val mUserIdLiveData = MutableLiveData<Int>()
 
     val userIdObserverData = Transformations.switchMap(mUserIdLiveData) {
+        DLogUtils.i(TAG,"网络请求：群聊相关数据库")
         Repository.getGroupList(it)
     }
 
     val groupListDB = Transformations.switchMap(userIdObserverData){
+        DLogUtils.i(TAG,"数据库：群聊相关数据库更新")
         val response = it.getOrNull()
         if (response == null) {
             // 网络请求失败，直接返回
@@ -57,7 +62,7 @@ class MyGroupViewModel : ViewModel() {
                 Repository.insertSG(SessionGroupEntity(group.sessionId, group.groupId))
                 Repository.insertGroup(group)
             }
-
+            DLogUtils.i(TAG,"数据库：群聊信息更新成功")
         }
        return MutableLiveData<Boolean>(true)
     }

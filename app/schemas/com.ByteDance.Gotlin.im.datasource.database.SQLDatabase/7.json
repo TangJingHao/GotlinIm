@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 6,
-    "identityHash": "6d3448813e3d86c3df02038afbf5bf21",
+    "version": 7,
+    "identityHash": "dbba62de6873f016f5169815a8d3d9ee",
     "entities": [
       {
         "tableName": "UserTable",
@@ -118,7 +118,7 @@
       },
       {
         "tableName": "GroupTable",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupId` INTEGER NOT NULL, `creatorId` INTEGER NOT NULL, `groupName` TEXT NOT NULL, `avatar` TEXT NOT NULL, `number` INTEGER NOT NULL, `notice` TEXT NOT NULL, `onlineNum` INTEGER NOT NULL, `markName` TEXT NOT NULL, `inTime` TEXT NOT NULL, `lastMsgId` INTEGER NOT NULL, `sessionId` INTEGER NOT NULL, PRIMARY KEY(`groupId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupId` INTEGER NOT NULL, `creatorId` INTEGER NOT NULL, `groupName` TEXT NOT NULL, `avatar` TEXT NOT NULL, `number` INTEGER NOT NULL, `notice` TEXT NOT NULL, `onlineNum` INTEGER NOT NULL, `markName` TEXT, `inTime` TEXT NOT NULL, `lastMsgId` INTEGER NOT NULL, `sessionId` INTEGER NOT NULL, PRIMARY KEY(`groupId`))",
         "fields": [
           {
             "fieldPath": "groupId",
@@ -166,7 +166,7 @@
             "fieldPath": "markName",
             "columnName": "markName",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "inTime",
@@ -316,7 +316,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6d3448813e3d86c3df02038afbf5bf21')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dbba62de6873f016f5169815a8d3d9ee')"
     ]
   }
 }
