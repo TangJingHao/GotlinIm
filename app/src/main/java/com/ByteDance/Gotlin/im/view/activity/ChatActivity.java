@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
+import static com.ByteDance.Gotlin.im.util.Constants.GROUP_VO;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
 import static com.ByteDance.Gotlin.im.util.Constants.WS_SEND_MESSAGE;
 import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
@@ -32,6 +33,7 @@ import com.ByteDance.Gotlin.im.application.ThreadManager;
 import com.ByteDance.Gotlin.im.databinding.DIncludeMyToolbarBinding;
 import com.ByteDance.Gotlin.im.databinding.HActivityChatBinding;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
+import com.ByteDance.Gotlin.im.info.vo.GroupVO;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.util.Constants;
@@ -218,12 +220,12 @@ public class ChatActivity extends AppCompatActivity {
             //跳转到群聊信息页面
             if (chatType == Constants.CHAT_GROUP) {
                 final int[] groupId = {0};
+                final GroupVO groupVO;
                 ThreadManager.getDefFixThreadPool().execute(() ->
                         groupId[0] = Repository.INSTANCE.queryGidBySid(session.getSessionId()));
-
+                //ThreadManager.getDefFixThreadPool().execute(() -> ));
                 //跳转群聊信息页面
-                GroupInfoActivity.Companion.startGroupInfoActivity(this, session.getType(),
-                        groupId[0], session.getName());
+                //GroupInfoActivity.Companion.startGroupInfoActivity(this,);
             }
             //跳转到好友信息页面
             else if (chatType == Constants.CHAT_PRIVATE) {
