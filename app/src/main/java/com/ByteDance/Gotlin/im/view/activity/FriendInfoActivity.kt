@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
 import com.ByteDance.Gotlin.im.databinding.MActivityFriendInfoBinding
+import com.ByteDance.Gotlin.im.info.vo.FriendVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.info.vo.UserVO
 import com.ByteDance.Gotlin.im.util.Constants
@@ -65,9 +66,10 @@ class FriendInfoActivity : AppCompatActivity() {
             }
         }
 
-        fun startFriendInfoFromNotFriend(context: Context, friendId: Int) {
+        fun startFriendInfoFromNotFriend(context: Context, friendVO: UserVO,friendId: Int) {
             startActivity<FriendInfoActivity>(context) {
                 putExtra(FRIEND_TYPE, FRIEND_NO)
+                putExtra(FRIEND_USER_VO,friendVO)
                 putExtra(FRIEND_ID, friendId)
             }
         }
@@ -122,13 +124,7 @@ class FriendInfoActivity : AppCompatActivity() {
                 friendVO = result
                 //tvNickname.text = result
                 v(TAG_FRIEND_INFO, "======返回了数据库的好友信息=====")
-                //设置好友信息
-                userName = result.userName
-                mBinding.tvFriendName.text = userName
-                mBinding.tvSex.text = result.sex
-                mBinding.tvNickname.text = result.nickName
-                mBinding.tvAccount.text = result.userId.toString()
-                mBinding.tvGrouping.text = this.resources.getString(R.string.grouping_default)
+                settingData(result)
 //                mBinding.tvFriendName.text = intent.getStringExtra(Constants.FRIEND_NAME)
 //                mBinding.tvNickname.text= intent.getStringExtra(Constants.FRIEND_NICKNAME)
 //                mBinding.tvAccount.text = intent.getStringExtra(FRIEND_ACCOUNT)
@@ -142,6 +138,15 @@ class FriendInfoActivity : AppCompatActivity() {
         })
     }
 
+    fun settingData(result: UserVO){
+        //设置好友信息
+        userName = result.userName
+        mBinding.tvFriendName.text = userName
+        mBinding.tvSex.text = result.sex
+        mBinding.tvNickname.text = result.nickName
+        mBinding.tvAccount.text = result.userId.toString()
+        mBinding.tvGrouping.text = this.resources.getString(R.string.grouping_default)
+    }
     /**
      * 设置点击事件
      */
@@ -195,8 +200,12 @@ class FriendInfoActivity : AppCompatActivity() {
         tvGrouping = mBinding.tvGrouping
         switchIsCared = mBinding.switchIsCared
         //获取类型并设置账号获取信息
-        mViewModel.getFriendInfo(friendId)
-        mViewModel.getSession(friendId)
+        if(mFriendType== FRIEND_IS){
+            mViewModel.getSession(friendId)
+            mViewModel.getFriendInfo(friendId)
+        }else{
+            friendVO = intent.getSerializableExtra(FRIEND_USER_VO) as UserVO
+        }
         //控件初始化
         mBinding.toolbarFriendInfo.title.text = this.resources.getString(R.string.title_info_friend)
         mBinding.tabSetRemarks.tvItemMainText.text =
@@ -214,6 +223,7 @@ class FriendInfoActivity : AppCompatActivity() {
             mBinding.cvDelete.visibility = View.INVISIBLE
             mBinding.tvCare.text = resources.getString(R.string.tab_text_care_not)
             switchIsCared.isClickable = false
+            settingData(friendVO)
         }
     }
 
