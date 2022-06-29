@@ -22,6 +22,7 @@ import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
 import com.ByteDance.Gotlin.im.util.DUtils.diy.ConfirmPopupWindow
 import com.ByteDance.Gotlin.im.util.DUtils.diy.PopupWindowListener
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil
+import com.ByteDance.Gotlin.im.view.activity.FriendInfoActivity
 import com.ByteDance.Gotlin.im.viewmodel.SearchViewModel
 import com.xuexiang.xui.widget.dialog.DialogLoader
 import com.xuexiang.xui.widget.dialog.strategy.impl.MaterialDialogStrategy
@@ -172,7 +173,7 @@ class SearchFragment : Fragment() {
                                 val user = resultUserList[relativePosition]
                                 TPhoneUtil.showToast(requireActivity(), "点击了用户${user.userName}")
                                 // TODO 舒欣，跳转到好友详情页（接上好友申请弹窗）
-
+                                context?.let { it1 -> FriendInfoActivity.startFriendInfoFromNotFriend(it1,user,user.userId) }
                             }
 
                         })
