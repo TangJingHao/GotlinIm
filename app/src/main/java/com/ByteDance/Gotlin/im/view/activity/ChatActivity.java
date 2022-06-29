@@ -1,6 +1,5 @@
 package com.ByteDance.Gotlin.im.view.activity;
 
-import static com.ByteDance.Gotlin.im.util.Constants.GROUP_VO;
 import static com.ByteDance.Gotlin.im.util.Constants.MESSAGE_TEXT;
 import static com.ByteDance.Gotlin.im.util.Constants.WS_SEND_MESSAGE;
 import static com.ByteDance.Gotlin.im.util.Hutils.StrUtils.isMsgValid;
@@ -16,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -159,7 +157,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onChanged(String s) {
                 HLog.i("[回调] " + s);
                 WebSocketReceiveChatMsg msg = gson.fromJson(s, WebSocketReceiveChatMsg.class);
-                if (msg.getWsType().equals(WS_SEND_MESSAGE)) {
+                if (msg.getWsType().equals(WS_SEND_MESSAGE) && !msg.getWsContent().getSelf()) {
                     ThreadManager.getDefFixThreadPool().execute(() -> {
                         int type = msg.getWsContent().getType();
                         if (type == MESSAGE_TEXT) {
@@ -221,19 +219,19 @@ public class ChatActivity extends AppCompatActivity {
             if (chatType == Constants.CHAT_GROUP) {
                 final int[] groupId = {0};
                 final GroupVO[] groupVO = new GroupVO[1];
-                ThreadManager.getDefFixThreadPool().execute(() ->{
-                            groupId[0] = Repository.INSTANCE.queryGidBySid(session.getSessionId());
-                            groupVO[0] = Repository.INSTANCE.queryGroupById(groupId[0]).getValue();
-                        }
-                        );
+                ThreadManager.getDefFixThreadPool().execute(() -> {
+                    groupId[0] = Repository.INSTANCE.queryGidBySid(session.getSessionId());
+                    groupVO[0] = Repository.INSTANCE.queryGroupById(groupId[0]).getValue();
+                });
                 //跳转群聊信息页面
-                GroupInfoActivity.Companion.startGroupInfoActivity(this,groupVO[0]);
+                GroupInfoActivity.Companion.startGroupInfoActivity(this, groupVO[0]);
             }
             //跳转到好友信息页面
             else if (chatType == Constants.CHAT_PRIVATE) {
                 final int[] friendId = new int[1];
-                ThreadManager.getDefFixThreadPool().execute(() ->
-                        friendId[0] = Repository.INSTANCE.queryUidBySid(session.getSessionId()));
+                ThreadManager.getDefFixThreadPool().execute(() -> {
+                    friendId[0] = Repository.INSTANCE.queryUidBySid(session.getSessionId());
+                });
                 //跳转好友信息页面
                 FriendInfoActivity.Companion.startFriendInfoActivity(this, friendId[0]);
             }
