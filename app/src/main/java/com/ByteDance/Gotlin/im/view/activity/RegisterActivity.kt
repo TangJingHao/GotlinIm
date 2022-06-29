@@ -96,6 +96,13 @@ class RegisterActivity : AppCompatActivity() {
                 Repository.saveUserId(responseData.data.user.userId)
                 Repository.setUserData(responseData.data.user)
                 Repository.setToken(responseData.data.token)
+                val avatar=responseData.data.user.avatar
+                if(avatar!=null){
+                    var index = avatar.indexOf(".")
+                    var substring = avatar.substring(index + 1)
+                    var s = Constants.BASE_AVATAR_URL + substring
+                    Repository.setUserLoginAvatar(s)
+                }
                 Repository.setUserLoginNickname(responseData.data.user.nickName.toString())
                 Repository.setUserLoginSex(responseData.data.user.sex.toString())
                 Repository.setUserLoginPassword(mPassword)
