@@ -2,8 +2,10 @@ package com.ByteDance.Gotlin.im.view.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +33,7 @@ import com.google.android.material.badge.BadgeUtils
  * @Description
  * 通讯录
  */
-
+@RequiresApi(Build.VERSION_CODES.Q)
 class AddressBookFragment : Fragment() {
     private lateinit var mFriendList: List<UserVO>
     private lateinit var mAdapter: TabWithTitleAdapter<UserVO>
@@ -241,6 +243,7 @@ class AddressBookFragment : Fragment() {
             rLayout.setOnClickListener {
                 SearchActivity.startSearchNewFriendSearch(requireActivity())
             }
+            imgAvatar.setImageResource(R.drawable.ic_36_search_new_friend)
         }
         // 查找新群聊
         b.sysNewGroupChat.apply {
@@ -248,6 +251,7 @@ class AddressBookFragment : Fragment() {
             rLayout.setOnClickListener {
                 SearchActivity.startSearchNewGroupSearch(requireActivity())
             }
+            imgAvatar.setImageResource(R.drawable.ic_36_search_new_group_chat)
         }
         // 我的群聊
         b.sysMyGroup.apply {
@@ -255,6 +259,7 @@ class AddressBookFragment : Fragment() {
             rLayout.setOnClickListener {
                 startActivity(Intent(requireActivity(), MyGroupActivity::class.java))
             }
+            imgAvatar.setImageResource(R.drawable.ic_36_my_group_chat)
         }
         // 测试用，添加新好友
         b.sysTestAddNew.apply {

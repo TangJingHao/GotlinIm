@@ -88,12 +88,15 @@ object Repository {
     fun deleteToken() = mmkv.removeValueForKey(MMKV_USER_TOKEN)
     fun setUserLoginAvatar(avatar: String) = mmkv.encode(MMKV_LOGIN_AVATAR, avatar)
     fun getUserLoginAvatar(): String = mmkv.decodeString(MMKV_LOGIN_AVATAR, "ABC")
+    fun deleteUserLoginAvatar()= mmkv.removeValueForKey(MMKV_LOGIN_AVATAR)
 
     //用户昵称和性别（保存本地）
     fun setUserLoginNickname(userName: String) = mmkv.encode(MMKV_LOGIN_NICKNAME, userName)
     fun getUserLoginNickname(): String = mmkv.decodeString(MMKV_LOGIN_NICKNAME)
+    fun deleteUserLoginNickname()= mmkv.removeValueForKey(MMKV_LOGIN_NICKNAME)
     fun setUserLoginSex(sex: String) = mmkv.encode(MMKV_LOGIN_SEX, sex)
     fun getUserLoginSex(): String = mmkv.decodeString(MMKV_LOGIN_SEX)
+    fun deleteUserLoginSex()= mmkv.removeValueForKey(MMKV_LOGIN_SEX)
 
     //用户密码和账户(保存在本地的)
     fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")

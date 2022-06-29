@@ -17,19 +17,20 @@
 
         <include
             android:id="@+id/sys_new_friend"
-            layout="@layout/d_item_user_info_simple"/>
+            layout="@layout/d_item_user_info_simple" />
 
         <include
             android:id="@+id/sys_new_group_chat"
-            layout="@layout/d_item_user_info_simple"/>
+            layout="@layout/d_item_user_info_simple" />
 
         <include
             android:id="@+id/sys_my_group"
-            layout="@layout/d_item_user_info_simple"/>
+            layout="@layout/d_item_user_info_simple" />
 
         <include
             android:id="@+id/sys_test_add_new"
-            layout="@layout/d_item_user_info_simple"/>
+            layout="@layout/d_item_user_info_simple"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -45,7 +46,6 @@
             android:layout_height="wrap_content" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
 
     <com.ByteDance.Gotlin.im.view.custom.TSideBar
