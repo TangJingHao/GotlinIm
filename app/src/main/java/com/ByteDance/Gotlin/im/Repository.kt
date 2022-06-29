@@ -88,12 +88,15 @@ object Repository {
     fun deleteToken() = mmkv.removeValueForKey(MMKV_USER_TOKEN)
     fun setUserLoginAvatar(avatar: String) = mmkv.encode(MMKV_LOGIN_AVATAR, avatar)
     fun getUserLoginAvatar(): String = mmkv.decodeString(MMKV_LOGIN_AVATAR, "ABC")
+    fun deleteUserLoginAvatar()= mmkv.removeValueForKey(MMKV_LOGIN_AVATAR)
 
     //用户昵称和性别（保存本地）
-    fun setUserLoginNickname(userName: String) = mmkv.encode(MMKV_LOGIN_USER_NAME, userName)
-    fun getUserLoginNickname(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME)
+    fun setUserLoginNickname(userName: String) = mmkv.encode(MMKV_LOGIN_NICKNAME, userName)
+    fun getUserLoginNickname(): String = mmkv.decodeString(MMKV_LOGIN_NICKNAME)
+    fun deleteUserLoginNickname()= mmkv.removeValueForKey(MMKV_LOGIN_NICKNAME)
     fun setUserLoginSex(sex: String) = mmkv.encode(MMKV_LOGIN_SEX, sex)
     fun getUserLoginSex(): String = mmkv.decodeString(MMKV_LOGIN_SEX)
+    fun deleteUserLoginSex()= mmkv.removeValueForKey(MMKV_LOGIN_SEX)
 
     //用户密码和账户(保存在本地的)
     fun getUserLoginUserName(): String = mmkv.decodeString(MMKV_LOGIN_USER_NAME, "")
@@ -121,22 +124,6 @@ object Repository {
     fun getUserId(): Int = mmkv.decodeInt(MMKV_USER_ID, Constants.USER_DEFAULT_ID)
     fun deleteUserId() = mmkv.removeValueForKey(MMKV_USER_ID)
 
-    /**
-     * 获取当前用户nickName
-     */
-    fun getUsernickName() = mmkv.decodeString(MMKV_USER_NICKNAME, Constants.USER_DEFAULT_NICKNAME)
-
-    /**
-     * 获取当前用户头像
-     */
-    fun getUserAvatar() = mmkv.decodeString(MMKV_USER_AVATAR, "../img/home.png")
-
-    fun getUserName() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_NAME)
-
-    fun getUserSex() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_SEX)
-
-    fun getUserEmail() = mmkv.decodeString(MMKV_USER_NAME, Constants.USER_DEFAULT_EMAIL)
-
     /*
     * 数据库=========================================================================================
     */
@@ -156,7 +143,9 @@ object Repository {
 
     // 用户数据表
     fun queryAllUsers() = db.userDao().queryAllUsers()
-    fun queryUserById(uid: Int) = db.userDao().queryUserById(uid)
+    fun queryUserById(userId: Int) = db.userDao().queryUserById(userId)
+    fun queryUserBySid(sid: Int) = db.userDao().queryUserBySId(sid)
+    fun queryUserByIdReturnName(userId: Int) = db.userDao().queryUserByIdReturnUser(userId)
     fun insertUser(user: UserVO) = db.userDao().insertUser(user)
     fun upDataUser(user: UserVO) = db.userDao().upDataUser(user)
     fun deleteUser(user: UserVO) = db.userDao().deleteUser(user)

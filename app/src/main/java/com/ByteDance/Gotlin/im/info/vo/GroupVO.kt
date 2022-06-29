@@ -3,6 +3,8 @@ package com.ByteDance.Gotlin.im.info.vo
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
+import java.io.Serializable
+
 /**
  * @Author Zhicong Deng
  * @Date 2022/6/14 20:35
@@ -43,4 +45,4 @@ data class GroupVO(
 
     /** 该群聊的会话 ID */
     val sessionId: Int
-)
+): Serializable

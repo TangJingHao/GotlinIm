@@ -1,5 +1,6 @@
 package com.ByteDance.Gotlin.im.view.activity
 
+import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Build
@@ -10,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.ByteDance.Gotlin.im.R
 import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.application.BaseActivity
+import com.ByteDance.Gotlin.im.application.BaseApp
 import com.ByteDance.Gotlin.im.broadcast.NetWorkReceiver
 import com.ByteDance.Gotlin.im.databinding.TActivityMainBinding
 import com.ByteDance.Gotlin.im.util.Constants
@@ -24,6 +27,8 @@ import com.ByteDance.Gotlin.im.view.fragment.MyInformationFragment
 import com.ByteDance.Gotlin.im.viewmodel.MainViewModel
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper
 import com.xuexiang.xui.XUI
+import java.util.*
+import kotlin.system.exitProcess
 
 /**
  * @Author 唐靖豪
@@ -34,6 +39,8 @@ import com.xuexiang.xui.XUI
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : AppCompatActivity() {
     private lateinit var mBinding: TActivityMainBinding
+    private val timer = Timer()
+    private var mode: Int = -1
     private val mNetWorkReceiver = NetWorkReceiver()//监听网络状态
     private val viewModelMain: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
@@ -58,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         mBinding = TActivityMainBinding.inflate(layoutInflater)
         initConfig()
         initView()
+        initListener()
         setContentView(mBinding.root)
         mBinding.apply {
             vp2Main.adapter = MainViewPagerAdapter(this@MainActivity, mFragments)
@@ -133,6 +141,31 @@ class MainActivity : AppCompatActivity() {
                 QMUIStatusBarHelper.setStatusBarLightMode(this)
             } else if (userStatus == Constants.USER_DARK_MODE) {
                 QMUIStatusBarHelper.setStatusBarDarkMode(this)
+            }
+        }
+    }
+
+    private fun initListener() {
+        timer.schedule(timerTask, 0, 1000)
+    }
+
+
+    private val timerTask: TimerTask = object : TimerTask() {
+        override fun run() {
+            val phoneMode = TPhoneUtil.getPhoneMode(BaseApp.getContext())
+            if (mode == -1) {
+                mode = phoneMode
+            } else if (mode != phoneMode) {
+                startActivity(Intent(this@MainActivity, BaseActivity::class.java))
+                mode = phoneMode
+                exitProcess(0)
+                overridePendingTransition(0, 0)
+//                if (Repository.getUserChangeAction() == Constants.USER_DEFAULT_MODE) {
+//                    startActivity(Intent(this@MainActivity, BaseActivity::class.java))
+//                    mode = phoneMode
+//                    exitProcess(0)
+//                    overridePendingTransition(0, 0)
+//                }
             }
         }
     }

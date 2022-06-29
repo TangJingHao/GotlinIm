@@ -2,10 +2,15 @@ package com.ByteDance.Gotlin.im.application
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.ByteDance.Gotlin.im.Repository
+import com.ByteDance.Gotlin.im.util.Constants
+import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil.getPhoneMode
 import com.tencent.mmkv.MMKV
 import java.util.*
+import kotlin.system.exitProcess
 
 /**
  * @Author 唐靖豪
@@ -16,8 +21,6 @@ import java.util.*
  */
 @RequiresApi(Build.VERSION_CODES.Q)
 class BaseApp : Application() {
-    private var mode: Int = -1
-
     companion object {
         var mContext: Application? = null
         fun getContext(): Context {
@@ -32,17 +35,7 @@ class BaseApp : Application() {
         val dir = filesDir.absolutePath + "/mmkv"
         // MMKV初始化
         val rootDir = MMKV.initialize(dir)
-        initListener()
-    }
-
-    private fun initListener() {
-
     }
 
 
-    private val timerTask: TimerTask = object : TimerTask() {
-        override fun run() {
-
-        }
-    }
 }

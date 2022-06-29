@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +46,7 @@ import okio.ByteString;
  * @Description 测试用Activity
  */
 @Deprecated
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DActivityTestBinding b;
