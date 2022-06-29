@@ -176,6 +176,27 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        model.friendLiveData.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer != null) {
+                    //跳转好友信息页面
+                    HLog.d(integer);
+                    FriendInfoActivity.Companion.startFriendInfoActivity(ChatActivity.this, integer);
+                }
+            }
+        });
+
+        model.groupLiveData.observe(ChatActivity.this, new Observer<GroupVO>() {
+            @Override
+            public void onChanged(GroupVO groupVO) {
+                if (groupVO != null) {
+                    //跳转群聊信息页面
+                    GroupInfoActivity.Companion.startGroupInfoActivity(ChatActivity.this, groupVO);
+                }
+            }
+        });
+
         //输入文本监测
         input.addTextChangedListener(new TextWatcher() {
             @Override
@@ -217,23 +238,19 @@ public class ChatActivity extends AppCompatActivity {
             int chatType = session.getType();
             //跳转到群聊信息页面
             if (chatType == Constants.CHAT_GROUP) {
-                final int[] groupId = {0};
-                final GroupVO[] groupVO = new GroupVO[1];
                 ThreadManager.getDefFixThreadPool().execute(() -> {
-                    groupId[0] = Repository.INSTANCE.queryGidBySid(session.getSessionId());
-                    groupVO[0] = Repository.INSTANCE.queryGroupById(groupId[0]).getValue();
+                    HLog.d(session.getSessionId());
+                    int groupId = Repository.INSTANCE.queryGidBySid(session.getSessionId());
+                    HLog.d(groupId);
+//                    model.groupLiveData
+//                            .postValue(Repository.INSTANCE.queryGroupById(groupId).getValue());
                 });
-                //跳转群聊信息页面
-                GroupInfoActivity.Companion.startGroupInfoActivity(this, groupVO[0]);
             }
-            //跳转到好友信息页面
             else if (chatType == Constants.CHAT_PRIVATE) {
-                final int[] friendId = new int[1];
                 ThreadManager.getDefFixThreadPool().execute(() -> {
-                    friendId[0] = Repository.INSTANCE.queryUidBySid(session.getSessionId());
+                    int friendId = Repository.INSTANCE.queryUidBySid(session.getSessionId());
+                    model.friendLiveData.postValue(friendId);
                 });
-                //跳转好友信息页面
-                FriendInfoActivity.Companion.startFriendInfoActivity(this, friendId[0]);
             }
         });
     }

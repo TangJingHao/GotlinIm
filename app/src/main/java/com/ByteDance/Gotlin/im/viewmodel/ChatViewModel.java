@@ -22,6 +22,7 @@ import com.ByteDance.Gotlin.im.info.WSreceiveContent;
 import com.ByteDance.Gotlin.im.info.WSsendContent;
 import com.ByteDance.Gotlin.im.info.WebSocketReceiveChatMsg;
 import com.ByteDance.Gotlin.im.info.WebSocketSendChatMsg;
+import com.ByteDance.Gotlin.im.info.vo.GroupVO;
 import com.ByteDance.Gotlin.im.info.vo.MessageVO;
 import com.ByteDance.Gotlin.im.info.vo.SessionVO;
 import com.ByteDance.Gotlin.im.info.vo.UserVO;
@@ -49,6 +50,8 @@ public class ChatViewModel extends ViewModel {
     private final static int LIST_BOTTOM = -1;
     private final static int LIST_TOP = 0;
     private final MutableLiveData<LinkedList<MessageVO>> messages;
+    public MutableLiveData<GroupVO> groupLiveData = new MutableLiveData<>();
+    public MutableLiveData<Integer> friendLiveData = new MutableLiveData<>();
     private final SessionVO session;
     private final ChatListAdapter adapter;
     private final UserVO user;

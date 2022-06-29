@@ -8,6 +8,7 @@ import com.ByteDance.Gotlin.im.entity.SessionGroupEntity
 import com.ByteDance.Gotlin.im.info.vo.GroupVO
 import com.ByteDance.Gotlin.im.info.vo.SessionVO
 import com.ByteDance.Gotlin.im.util.DUtils.DLogUtils
+import com.ByteDance.Gotlin.im.util.Hutils.HLog
 import kotlinx.coroutines.*
 
 /**
@@ -42,6 +43,7 @@ class MyGroupViewModel : ViewModel() {
                 val res = async {
                     // 先插入数据
                     if (groupList != null && groupList.size > 0) {
+                        HLog.d(groupList)
                         insertSG(groupList)
 
                         MutableLiveData<Boolean>(true)
@@ -60,6 +62,7 @@ class MyGroupViewModel : ViewModel() {
             for (group in groupList) {
                 // sg 关系表
                 Repository.insertSG(SessionGroupEntity(group.sessionId, group.groupId))
+                HLog.d("插入$group");
                 Repository.insertGroup(group)
             }
             DLogUtils.i(TAG,"数据库：群聊信息更新成功")
