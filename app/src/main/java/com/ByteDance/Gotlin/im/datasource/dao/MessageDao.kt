@@ -33,8 +33,7 @@ interface MessageDao {
                 "where (sessionId = :sid) " +
                 "and (sendTime between :from and :to)" +
                 "and (content like '%' || :content || '%') " +
-                "order by sendTime desc " +
-                "limit :limit"
+                "order by sendTime desc limit :limit"
     )
     fun queryMessage(
         sid: Int,

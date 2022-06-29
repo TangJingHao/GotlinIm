@@ -175,8 +175,8 @@ class MyInformationFragment : Fragment() {
                 }
             }
             mInputPopupWindow =
-                InputPopupWindow(requireContext(), "昵称修改", nicknamePopupWindowListener)
-            mInputPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
+                InputPopupWindow(requireActivity(), "昵称修改", nicknamePopupWindowListener)
+            mInputPopupWindow.animationStyle = R.style.t_popup_window_style
             mInputPopupWindow.show()
         }
         //修改性别
@@ -221,7 +221,7 @@ class MyInformationFragment : Fragment() {
                 }
             }
             mSingleSelectPopupWindow = SingleSelectPopupWindow(
-                requireContext(), "选择性别",
+                requireActivity(), "选择性别",
                 "男", "女", sexPopupWindowListener
             )
             if (Repository.getUserLoginSex() == "男") {
@@ -229,7 +229,7 @@ class MyInformationFragment : Fragment() {
             } else if (Repository.getUserLoginSex() == "女") {
                 mSingleSelectPopupWindow.setOptions(1)
             }
-            mSingleSelectPopupWindow.mPopupWindow.animationStyle = R.style.t_popup_window_style
+            mSingleSelectPopupWindow.animationStyle = R.style.t_popup_window_style
             mSingleSelectPopupWindow.setConfirmText("确认修改")
             mSingleSelectPopupWindow.setCancelText("取消修改")
             mSingleSelectPopupWindow.show()
@@ -282,7 +282,7 @@ class MyInformationFragment : Fragment() {
                 }
             }
             mConfirmPopupWindow =
-                ConfirmPopupWindow(requireContext(), "确定要退出吗", popupWindowListener)
+                ConfirmPopupWindow(requireActivity(), "确定要退出吗", popupWindowListener)
             mConfirmPopupWindow.setConfirmText("确认")
             mConfirmPopupWindow.setCancelText("我在想想")
             mConfirmPopupWindow.setWarnTextColorType()

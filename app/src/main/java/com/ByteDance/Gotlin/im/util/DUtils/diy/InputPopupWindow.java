@@ -1,14 +1,21 @@
 package com.ByteDance.Gotlin.im.util.DUtils.diy;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
+import androidx.annotation.RequiresApi;
+
+import com.ByteDance.Gotlin.im.application.BaseApp;
 import com.ByteDance.Gotlin.im.databinding.DPopupWindowInputBinding;
 import com.ByteDance.Gotlin.im.util.Tutils.TPhoneUtil;
+
+import java.util.Objects;
 
 /**
  * @Author Zhicong Deng
@@ -20,49 +27,45 @@ public class InputPopupWindow extends BasePopupWindow {
     @SuppressLint("StaticFieldLeak")
     private static DPopupWindowInputBinding b;
 
-    public InputPopupWindow(Context context, String title, PopupWindowListener listener) {
-        super(context,
-                new PopupWindow(
-                        getBinding(context).getRoot(),
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT, true),
-                listener);
+    public InputPopupWindow(Activity activity, String title, PopupWindowListener listener) {
+        super(activity, getBinding(activity).getRoot(), listener);
         setTitleText(title);
     }
 
-    public static DPopupWindowInputBinding getBinding(Context context) {
+    public static DPopupWindowInputBinding getBinding(Activity activity) {
         if (b == null) {
-            b = DPopupWindowInputBinding.inflate(LayoutInflater.from(context));
+            b = DPopupWindowInputBinding.inflate(LayoutInflater.from(activity));
         }
         return b;
     }
 
     @Override
     public void show() {
-        if (mPopupWindow != null && mPopupWindow.isShowing()) {
-            mPopupWindow.dismiss();
+        if (isShowing()) {
+            dismiss();
         } else {
             backgroundAlpha(0.8f);
-            mPopupWindow.showAtLocation(b.getRoot(), Gravity.CENTER, 0, 0);
+            showAtLocation(b.getRoot(), Gravity.CENTER, 0, 0);
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     void setPopupWindowListener() {
         if (mListener != null) {
             b.tvSelectConfirm.setOnClickListener(view -> {
                 if (b.etPopInput.getText().length() == 0) {
-                    TPhoneUtil.INSTANCE.showToast(mContext, "请输入内容");
+                    TPhoneUtil.INSTANCE.showToast(Objects.requireNonNull(activitySRF.get()), "请输入内容");
                 } else {
                     mListener.onConfirm(b.etPopInput.getText().toString());
-                    mPopupWindow.dismiss();
+                    dismiss();
                 }
             });
             b.tvSelectCancel.setOnClickListener(view -> {
                 mListener.onCancel();
-                mPopupWindow.dismiss();
+                dismiss();
             });
-            mPopupWindow.setOnDismissListener(() -> {
+            setOnDismissListener(() -> {
                 backgroundAlpha(1f);
                 b.etPopInput.clearComposingText();
                 mListener.onDismiss();
