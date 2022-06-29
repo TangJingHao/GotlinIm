@@ -34,8 +34,10 @@
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/drawable-v24/ic_36_search_new_friend.xml" value="0.303" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/drawable-v24/ic_36_search_new_group_chat.xml" value="0.303" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/drawable/ic_app_logo_yanshu.xml" value="0.303" />
+        <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/d_include_my_toolbar.xml" value="0.245018115942029" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/d_item_user_info_simple.xml" value="0.4036458333333333" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_activity_init.xml" value="0.2536231884057971" />
+        <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_activity_register.xml" value="0.4036458333333333" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_fragment_address_book.xml" value="0.4036458333333333" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_fragment_my_infomation.xml" value="0.2536231884057971" />
         <entry key="..\:/ByteDanceDemo/MyGotlinIMDemo/GotlinIm/app/src/main/res/layout/t_search_new_friend_item.xml" value="0.4036458333333333" />
