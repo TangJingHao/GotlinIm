@@ -1,6 +1,9 @@
 package com.ByteDance.Gotlin.im.viewmodel;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
@@ -13,7 +16,9 @@ import com.ByteDance.Gotlin.im.view.activity.ChatActivity;
  * @author: Hx
  * @date: 2022年06月17日 13:53
  */
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class ChatViewModelFactory implements ViewModelProvider.Factory {
+
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {

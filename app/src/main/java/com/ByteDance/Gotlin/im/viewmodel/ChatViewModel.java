@@ -47,6 +47,7 @@ import okhttp3.Response;
 @RequiresApi(api = Build.VERSION_CODES.Q)
 public class ChatViewModel extends ViewModel {
 
+    Repository re = Repository.INSTANCE;
     private final static int LIST_BOTTOM = -1;
     private final static int LIST_TOP = 0;
     private final MutableLiveData<LinkedList<MessageVO>> messages;
@@ -55,7 +56,6 @@ public class ChatViewModel extends ViewModel {
     private final SessionVO session;
     private final ChatListAdapter adapter;
     private final UserVO user;
-    Repository re = Repository.INSTANCE;
     private int page = 0;
 
     ChatViewModel(SessionVO session) {
