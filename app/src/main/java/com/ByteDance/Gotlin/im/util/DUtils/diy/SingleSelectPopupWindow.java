@@ -1,12 +1,11 @@
 package com.ByteDance.Gotlin.im.util.DUtils.diy;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
-import android.widget.RadioGroup;
 
 import com.ByteDance.Gotlin.im.databinding.DPopupWindowSingleSelectBinding;
 
@@ -32,15 +31,9 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
 
     String[] options = new String[]{"选项0", "选项1"};
 
-    public SingleSelectPopupWindow(Context context, String title, String option0, String option1,
+    public SingleSelectPopupWindow(Activity activity, String title, String option0, String option1,
                                    PopupWindowListener listener) {
-        super(
-                context,
-                new PopupWindow(getBinding(context).getRoot(),
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT, true),
-                listener
-        );
+        super(activity, getBinding(activity).getRoot(), listener);
 
         options[0] = option0;
         options[1] = option1;
@@ -58,20 +51,20 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
         });
     }
 
-    public static DPopupWindowSingleSelectBinding getBinding(Context context) {
+    public static DPopupWindowSingleSelectBinding getBinding(Activity activity) {
         if (b == null) {
-            b = DPopupWindowSingleSelectBinding.inflate(LayoutInflater.from(context));
+            b = DPopupWindowSingleSelectBinding.inflate(LayoutInflater.from(activity));
         }
         return b;
     }
 
     @Override
     public void show() {
-        if (mPopupWindow != null && mPopupWindow.isShowing()) {
-            mPopupWindow.dismiss();
+        if (isShowing()) {
+            dismiss();
         } else {
             backgroundAlpha(0.8f);
-            mPopupWindow.showAtLocation(b.getRoot(), Gravity.CENTER, 0, 0);
+            showAtLocation(b.getRoot(), Gravity.CENTER, 0, 0);
         }
     }
 
@@ -80,15 +73,17 @@ public class SingleSelectPopupWindow extends BasePopupWindow {
         if (mListener != null) {
             b.tvSelectConfirm.setOnClickListener(view -> {
                 mListener.onConfirm(options[selectIndex]);
-                mPopupWindow.dismiss();
+                dismiss();
             });
             b.tvSelectCancel.setOnClickListener(view -> {
                 mListener.onCancel();
-                mPopupWindow.dismiss();
+                dismiss();
+                dismiss();
             });
-            mPopupWindow.setOnDismissListener(() -> {
+            setOnDismissListener(() -> {
                 backgroundAlpha(1f);
                 mListener.onDismiss();
+                dismiss();
             });
         }
     }

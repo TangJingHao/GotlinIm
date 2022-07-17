@@ -136,19 +136,19 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
 
-        // 新建弹窗
-        confirmPopupWindow = new ConfirmPopupWindow(mContext, "测试", popupWindowListener);
-        confirmPopupWindow2 = new ConfirmPopupWindow(mContext, "测试222222222222", popupWindowListener);
-        // （可选）设置按钮文本
-        confirmPopupWindow.setConfirmText("确认文本");
-        confirmPopupWindow.setCancelText("取消测试文本");
-        // （可选）设置警告类型颜色模式
-        confirmPopupWindow.setWarnTextColorType();
-
-        inputPopupWindow = new InputPopupWindow(mContext, "输入弹窗测试", popupWindowListener);
-
-        singleSelectPopupWindow = new SingleSelectPopupWindow(mContext, "单选弹窗测试",
-                "选项一", "选项二", popupWindowListener);
+//        // 新建弹窗
+//        confirmPopupWindow = new ConfirmPopupWindow(mContext, "测试", popupWindowListener);
+//        confirmPopupWindow2 = new ConfirmPopupWindow(mContext, "测试222222222222", popupWindowListener);
+//        // （可选）设置按钮文本
+//        confirmPopupWindow.setConfirmText("确认文本");
+//        confirmPopupWindow.setCancelText("取消测试文本");
+//        // （可选）设置警告类型颜色模式
+//        confirmPopupWindow.setWarnTextColorType();
+//
+//        inputPopupWindow = new InputPopupWindow(mContext, "输入弹窗测试", popupWindowListener);
+//
+//        singleSelectPopupWindow = new SingleSelectPopupWindow(mContext, "单选弹窗测试",
+//                "选项一", "选项二", popupWindowListener);
     }
 
 

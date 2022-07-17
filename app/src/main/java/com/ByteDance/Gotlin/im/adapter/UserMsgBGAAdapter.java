@@ -82,7 +82,6 @@ public class UserMsgBGAAdapter extends BGARecyclerViewAdapter<MessageList> {
                 .apply(options)
                 .into(avatar);
 
-
         // 小红点
         BGABadgeView RedBadge = helper.getView(R.id.bga_red_point);
         if (badgeNum == 0) {

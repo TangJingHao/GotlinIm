@@ -3,10 +3,16 @@ package com.ByteDance.Gotlin.im.util.DUtils.diy;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import androidx.viewbinding.ViewBinding;
+
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 
 /**
  * @Author Zhicong Deng
@@ -16,13 +22,12 @@ import androidx.viewbinding.ViewBinding;
  */
 abstract class BasePopupWindow extends PopupWindow {
 
-    public Context mContext;
+    public WeakReference<Activity> activitySRF = null;
 
-    public PopupWindow mPopupWindow;
 
     public PopupWindowListener mListener;
 
-    abstract void show();
+    public abstract void show();
 
     abstract void setPopupWindowListener();
 
@@ -32,22 +37,22 @@ abstract class BasePopupWindow extends PopupWindow {
 
     abstract void setCancelText(String text);
 
-    public BasePopupWindow(Context mContext, PopupWindow mPopupWindow, PopupWindowListener mListener) {
-        this.mContext = mContext;
-        this.mPopupWindow = mPopupWindow;
+    public BasePopupWindow(Activity activity, View root, PopupWindowListener mListener) {
+        super(root, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        activitySRF = new WeakReference<Activity>(activity);
         this.mListener = mListener;
 
-        this.mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        this.mPopupWindow.setFocusable(true);
-        this.mPopupWindow.setOutsideTouchable(true);
+        setBackgroundDrawable(new BitmapDrawable());
+        setFocusable(true);
+        setOutsideTouchable(true);
 
         setPopupWindowListener();
     }
 
     public void backgroundAlpha(float f) {//透明函数
-        WindowManager.LayoutParams lp = ((Activity) mContext).getWindow().getAttributes();
+        WindowManager.LayoutParams lp = (activitySRF.get()).getWindow().getAttributes();
         lp.alpha = f;
-        ((Activity) mContext).getWindow().setAttributes(lp);
+        activitySRF.get().getWindow().setAttributes(lp);
     }
 
 }
